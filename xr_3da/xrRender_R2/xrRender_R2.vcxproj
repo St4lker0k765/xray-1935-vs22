@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Mixed|Win32">
+      <Configuration>Mixed</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{963BA4E5-499A-454D-B002-1D5ECE0527A6}</ProjectGuid>
+    <SccProjectName>
+    </SccProjectName>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">x:\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</IntDir>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">x:\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">x:\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">Mixed\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;XRRENDER_R2_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)xrRender_R2.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(OutDir)xrRender_R1.map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)xrRender_R2.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRRENDER_R2_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)xrRender_R2.dll</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <SubSystem>NotSet</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>$(OutDir)xrRender_R2.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <PreprocessorDefinitions>MIXED;WIN32;NDEBUG;_WINDOWS;_USRDLL;XRRENDER_R2_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)xrRender_R2.dll</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>$(OutDir)xrRender_R2.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="cl_intersect.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="xrRender_console.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PSLibrary.h" />
+    <ClInclude Include="r2.h" />
+    <ClInclude Include="r2_types.h" />
+    <ClInclude Include="r__dsgraph_structure.h" />
+    <ClInclude Include="r__dsgraph_types.h" />
+    <ClInclude Include="r__occlusion.h" />
+    <ClInclude Include="DetailFormat.h" />
+    <ClInclude Include="DetailManager.h" />
+    <ClInclude Include="DetailModel.h" />
+    <ClInclude Include="NvTriStrip.h" />
+    <ClInclude Include="NvTriStripObjects.h" />
+    <ClInclude Include="VertexCache.h" />
+    <ClInclude Include="xrStripify.h" />
+    <ClInclude Include="light.h" />
+    <ClInclude Include="Light_DB.h" />
+    <ClInclude Include="light_gi.h" />
+    <ClInclude Include="Light_Package.h" />
+    <ClInclude Include="Light_Render_Direct.h" />
+    <ClInclude Include="light_smapvis.h" />
+    <ClInclude Include="SMAP_Allocator.h" />
+    <ClInclude Include="WallmarksEngine.h" />
+    <ClInclude Include="blender_bloom_build.h" />
+    <ClInclude Include="blender_combine.h" />
+    <ClInclude Include="blender_deffer_aref.h" />
+    <ClInclude Include="blender_deffer_flat.h" />
+    <ClInclude Include="blender_deffer_model.h" />
+    <ClInclude Include="blender_light_direct.h" />
+    <ClInclude Include="blender_light_mask.h" />
+    <ClInclude Include="blender_light_occq.h" />
+    <ClInclude Include="blender_light_point.h" />
+    <ClInclude Include="blender_light_reflected.h" />
+    <ClInclude Include="blender_light_spot.h" />
+    <ClInclude Include="blender_luminance.h" />
+    <ClInclude Include="Blender_Particle.h" />
+    <ClInclude Include="uber_deffer.h" />
+    <ClInclude Include="Blender_detail_still.h" />
+    <ClInclude Include="Blender_Screen_SET.h" />
+    <ClInclude Include="Blender_tree.h" />
+    <ClInclude Include="ModelPool.h" />
+    <ClInclude Include="FTreeVisual.h" />
+    <ClInclude Include="ParticleEffect.h" />
+    <ClInclude Include="ParticleEffectDef.h" />
+    <ClInclude Include="ParticleGroup.h" />
+    <ClInclude Include="psvisual.h" />
+    <ClInclude Include="r__sector.h" />
+    <ClInclude Include="HOM.h" />
+    <ClInclude Include="occRasterizer.h" />
+    <ClInclude Include="du_sphere_part.h" />
+    <ClInclude Include="r2_rendertarget.h" />
+    <ClInclude Include="r2_rendertarget_wallmarks.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="xrRender_console.cpp" />
+    <ClCompile Include="xrRender_R2.cpp" />
+    <ClCompile Include="PSLibrary.cpp" />
+    <ClCompile Include="r2.cpp" />
+    <ClCompile Include="r2_blenders.cpp" />
+    <ClCompile Include="r2_loader.cpp" />
+    <ClCompile Include="r2_R_calculate.cpp" />
+    <ClCompile Include="r2_R_lights.cpp" />
+    <ClCompile Include="r2_R_render.cpp" />
+    <ClCompile Include="r2_R_sun.cpp" />
+    <ClCompile Include="r2_screenshot.cpp" />
+    <ClCompile Include="r2_sector_detect.cpp" />
+    <ClCompile Include="r__dsgraph_build.cpp" />
+    <ClCompile Include="r__dsgraph_render.cpp" />
+    <ClCompile Include="r__dsgraph_render_lods.cpp" />
+    <ClCompile Include="r__occlusion.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="DetailManager.cpp" />
+    <ClCompile Include="DetailManager_CACHE.cpp" />
+    <ClCompile Include="DetailManager_Decompress.cpp" />
+    <ClCompile Include="DetailManager_soft.cpp" />
+    <ClCompile Include="DetailManager_VS.cpp" />
+    <ClCompile Include="DetailModel.cpp" />
+    <ClCompile Include="NvTriStrip.cpp" />
+    <ClCompile Include="NvTriStripObjects.cpp" />
+    <ClCompile Include="VertexCache.cpp" />
+    <ClCompile Include="xrStripify.cpp" />
+    <ClCompile Include="light.cpp" />
+    <ClCompile Include="Light_DB.cpp" />
+    <ClCompile Include="light_GI.cpp" />
+    <ClCompile Include="Light_Package.cpp" />
+    <ClCompile Include="Light_Render_Direct.cpp" />
+    <ClCompile Include="Light_Render_Direct_ComputeXFS.cpp" />
+    <ClCompile Include="light_smapvis.cpp" />
+    <ClCompile Include="light_vis.cpp" />
+    <ClCompile Include="WallmarksEngine.cpp" />
+    <ClCompile Include="blender_bloom_build.cpp" />
+    <ClCompile Include="blender_combine.cpp" />
+    <ClCompile Include="blender_deffer_aref.cpp" />
+    <ClCompile Include="blender_deffer_flat.cpp" />
+    <ClCompile Include="blender_deffer_model.cpp" />
+    <ClCompile Include="blender_light_direct.cpp" />
+    <ClCompile Include="blender_light_mask.cpp" />
+    <ClCompile Include="blender_light_occq.cpp" />
+    <ClCompile Include="blender_light_point.cpp" />
+    <ClCompile Include="blender_light_reflected.cpp" />
+    <ClCompile Include="blender_light_spot.cpp" />
+    <ClCompile Include="blender_luminance.cpp" />
+    <ClCompile Include="Blender_Particle.cpp" />
+    <ClCompile Include="uber_deffer.cpp" />
+    <ClCompile Include="Blender_detail_still.cpp" />
+    <ClCompile Include="Blender_Screen_SET.cpp" />
+    <ClCompile Include="Blender_tree.cpp" />
+    <ClCompile Include="ModelPool.cpp" />
+    <ClCompile Include="FTreeVisual.cpp" />
+    <ClCompile Include="ParticleEffect.cpp" />
+    <ClCompile Include="ParticleEffectDef.cpp" />
+    <ClCompile Include="ParticleGroup.cpp" />
+    <ClCompile Include="psvisual.cpp" />
+    <ClCompile Include="r__sector.cpp" />
+    <ClCompile Include="r__sector_traversal.cpp" />
+    <ClCompile Include="HOM.cpp" />
+    <ClCompile Include="occRasterizer.cpp" />
+    <ClCompile Include="occRasterizer_core.cpp" />
+    <ClCompile Include="du_sphere_part.cpp" />
+    <ClCompile Include="r2_rendertarget.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_accum_direct.cpp" />
+    <ClCompile Include="r2_rendertarget_accum_omnipart_geom.cpp" />
+    <ClCompile Include="r2_rendertarget_accum_point.cpp" />
+    <ClCompile Include="r2_rendertarget_accum_point_geom.cpp" />
+    <ClCompile Include="r2_rendertarget_accum_reflected.cpp" />
+    <ClCompile Include="r2_rendertarget_accum_spot.cpp" />
+    <ClCompile Include="r2_rendertarget_accum_spot_geom.cpp" />
+    <ClCompile Include="r2_rendertarget_draw_volume.cpp" />
+    <ClCompile Include="r2_rendertarget_enable_scissor.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_accumulator.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_accumulator_init.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_bloom.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_combine.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_distortion.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_luminance.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_occq.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_scene.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_smap_D.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_smap_S.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\xrCore\xrCore.vcxproj">
+      <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
