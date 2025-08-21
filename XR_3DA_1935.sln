@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BEF9277A-2DD1-49AE-814D-613E6E34BC9E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XR_3DA", "xr_3da\XR_3DA.vcxproj", "{2578C6D8-660D-48AE-9322-7422F8664F06}"
@@ -27,10 +29,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrParticles", "xrParticles\xrParticles.vcxproj", "{94A1C366-3D19-48E6-8170-4ADC2E70DF97}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrNetServer", "xrNetServer\xrNetServer.vcxproj", "{435BAC9A-B225-457D-AB40-C9BD0CC8838C}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrSE_Factory", "xrSE_Factory\xrSE_Factory.vcxproj", "{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCompress", "xrCompress\xrCompress.vcxproj", "{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,22 +131,6 @@ Global
 		{435BAC9A-B225-457D-AB40-C9BD0CC8838C}.Release|Win32.Build.0 = Release|Win32
 		{435BAC9A-B225-457D-AB40-C9BD0CC8838C}.Template|Win32.ActiveCfg = Template|Win32
 		{435BAC9A-B225-457D-AB40-C9BD0CC8838C}.Template|Win32.Build.0 = Template|Win32
-		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Debug|Win32.Build.0 = Debug|Win32
-		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Mixed|Win32.ActiveCfg = Mixed|Win32
-		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Mixed|Win32.Build.0 = Mixed|Win32
-		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Release|Win32.ActiveCfg = Release|Win32
-		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Release|Win32.Build.0 = Release|Win32
-		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Template|Win32.ActiveCfg = Release|Win32
-		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Template|Win32.Build.0 = Release|Win32
-		{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}.Debug|Win32.Build.0 = Debug|Win32
-		{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}.Mixed|Win32.ActiveCfg = Release|Win32
-		{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}.Mixed|Win32.Build.0 = Release|Win32
-		{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}.Release|Win32.ActiveCfg = Release|Win32
-		{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}.Release|Win32.Build.0 = Release|Win32
-		{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}.Template|Win32.ActiveCfg = Release|Win32
-		{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}.Template|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
