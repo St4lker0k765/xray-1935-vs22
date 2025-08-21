@@ -34,30 +34,37 @@ void Touch::feel_touch_update	(Fvector& C, float R)
 	g_pGameLevel->ObjectSpace.GetNearest	(C,R);
 	xr_vector<CObject*>::iterator	n_begin	= g_pGameLevel->ObjectSpace.q_nearest.begin	();
 	xr_vector<CObject*>::iterator	n_end	= g_pGameLevel->ObjectSpace.q_nearest.end	();
-	if (n_end!=n_begin){
+	if (n_end != n_begin)
+	{
 		// Process results (NEW)
-		for (xr_vector<CObject*>::iterator it = n_begin; it!=n_end; it++)
+		for (xr_vector<CObject*>::iterator it = n_begin; it != n_end; ++it)
 		{
 			CObject* O = *it;
-			if (O->getDestroy())		continue;							// Don't touch candidates for destroy
-			if (!feel_touch_contact(O))	continue;							// Actual contact
+			if (O->getDestroy())        continue;   // Don't touch candidates for destroy
+			if (!feel_touch_contact(O)) continue;   // Actual contact
 
-			if (std::find(feel_touch.begin(),feel_touch.end(),O) == feel_touch.end())
+			if (std::find(feel_touch.begin(), feel_touch.end(), O) == feel_touch.end())
 			{
 				// check for deny
-				BOOL bDeny = FALSE;
-				for (dit=0; dit<feel_touch_disable.size(); dit++)
-					if (O == feel_touch_disable[dit].O)	{ bDeny=TRUE; break; }
+				bool bDeny = false;
+				for (size_t dit = 0; dit < feel_touch_disable.size(); ++dit)
+				{
+					if (O == feel_touch_disable[dit].O) {
+						bDeny = true;
+						break;
+					}
+				}
 
-				// _new _
+				// _new_
 				if (!bDeny)
 				{
-					feel_touch_new			(O);
-					feel_touch.push_back	(O);
+					feel_touch_new(O);
+					feel_touch.push_back(O);
 				}
 			}
 		}
 	}
+
 
 	// Process results (DELETE)
 	for (int d = 0; d<int(feel_touch.size()); d++)

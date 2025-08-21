@@ -247,91 +247,107 @@ void CFrustum::SimplifyPoly_AABB(sPoly* poly, Fplane& plane)
 
 void CFrustum::CreateOccluder(Fvector* p, int count, Fvector& vBase, CFrustum& clip)
 {
-	VERIFY(count<FRUSTUM_SAFE);
-	VERIFY(count>=3);
+	VERIFY(count < FRUSTUM_SAFE);
+	VERIFY(count >= 3);
 
-	BOOL	edge[FRUSTUM_SAFE];
-	float	cls	[FRUSTUM_SAFE];
-	ZeroMemory	(edge,sizeof(edge));
-	for (int i=0; i<clip.p_count; i++)
+	BOOL  edge[FRUSTUM_SAFE];
+	float cls[FRUSTUM_SAFE];
+	ZeroMemory(edge, sizeof(edge));
+
+	for (int i = 0; i < clip.p_count; i++)
 	{
 		// classify all points relative to plane #i
-		fplane &P = clip.planes[i];
-		for (int j=0; j<count; j++) cls[j]=_abs(P.classify(p[j]));
+		fplane& P = clip.planes[i];
+		for (int j = 0; j < count; j++)
+			cls[j] = _abs(P.classify(p[j]));
 
 		// test edges to see which lies directly on plane
-		for (j=0; j<count; j++) {
-			if (cls[j]<EPS_L)
+		for (int j = 0; j < count; j++)
+		{
+			if (cls[j] < EPS_L)
 			{
-				int next = j+1; if (next>=count) next=0;
-				if (cls[next]<EPS_L) {
-					// both points lies on plane - mark as 'open'
-					edge[j] = true;
+				int next = (j + 1) % count;
+				if (cls[next] < EPS_L)
+				{
+					// both points lie on plane - mark as 'open'
+					edge[j] = TRUE;
 				}
 			}
 		}
 	}
 
-	// here we have all edges marked accordenly to 'open' / 'closed' classification
-	_clear	();
-	_add	(p[0],p[1],p[2]);		// main plane
-	for (i=0; i<count; i++)
+	// here we have all edges marked accordingly to 'open' / 'closed'
+	_clear();
+	_add(p[0], p[1], p[2]); // main plane
+
+	for (int i = 0; i < count; i++)
 	{
-		if (!edge[i]) {
-			int next = i+1; if (next>=count) next=0;
-			_add(vBase,p[i],p[next]);
+		if (!edge[i])
+		{
+			int next = (i + 1) % count;
+			_add(vBase, p[i], p[next]);
 		}
 	}
 }
 
-sPoly*	CFrustum::ClipPoly(sPoly& S, sPoly& D) const
+sPoly* CFrustum::ClipPoly(sPoly& S, sPoly& D) const
 {
-	sPoly*	src		= &D;
-	sPoly*	dest	= &S;
-	for (int i=0; i<p_count; i++)
+	sPoly* src = &D;
+	sPoly* dest = &S;
+
+	for (int i = 0; i < p_count; i++)
 	{
 		// cache plane and swap lists
-		const fplane &P = planes[i];
-		std::swap		(src,dest);
-		dest->clear		();
+		const fplane& P = planes[i];
+		std::swap(src, dest);
+		dest->clear();
 
 		// classify all points relative to plane #i
-		float	cls	[FRUSTUM_SAFE];
-		for (u32 j=0; j<src->size(); j++) cls[j]=P.classify((*src)[j]);
+		float cls[FRUSTUM_SAFE + 1]; // +1 чтобы не выйти за границы
+		for (u32 j = 0; j < src->size(); j++)
+			cls[j] = P.classify((*src)[j]);
 
 		// clip everything to this plane
 		cls[src->size()] = cls[0];
 		src->push_back((*src)[0]);
-		Fvector D; float denum,t;
-		for (j=0; j<src->size()-1; j++)
+
+		Fvector seg;
+		float denum, t;
+
+		for (u32 j = 0; j < src->size() - 1; j++)
 		{
-			if ((*src)[j].similar((*src)[j+1],EPS_S)) continue;
+			if ((*src)[j].similar((*src)[j + 1], EPS_S))
+				continue;
 
 			if (negative(cls[j]))
 			{
 				dest->push_back((*src)[j]);
-				if (positive(cls[j+1]))
+
+				if (positive(cls[j + 1]))
 				{
 					// segment intersects plane
-					D.sub((*src)[j+1],(*src)[j]);
-					denum = P.n.dotproduct(D);
-					if (denum!=0) {
-						t = -cls[j]/denum; //VERIFY(t<=1.f && t>=0);
-						dest->last().mad((*src)[j],D,t);
+					seg.sub((*src)[j + 1], (*src)[j]);
+					denum = P.n.dotproduct(seg);
+					if (!fsimilar(denum, 0.f))
+					{
+						t = -cls[j] / denum;
+						dest->last().mad((*src)[j], seg, t);
 						dest->inc();
 					}
 				}
-			} else {
-				// J - outside
-				if (negative(cls[j+1]))
+			}
+			else
+			{
+				// j - outside
+				if (negative(cls[j + 1]))
 				{
-					// J+1  - inside
-					// segment intersects plane
-					D.sub((*src)[j+1],(*src)[j]);
-					denum = P.n.dotproduct(D);
-					if (denum!=0) {
-						t = -cls[j]/denum; //VERIFY(t<=1.f && t>=0);
-						dest->last().mad((*src)[j],D,t);
+					// j+1 - inside
+					seg.sub((*src)[j + 1], (*src)[j]);
+					denum = P.n.dotproduct(seg);
+					if (!fsimilar(denum, 0.f))
+					{
+						t = -cls[j] / denum;
+						dest->last().mad((*src)[j], seg, t);
 						dest->inc();
 					}
 				}
@@ -339,10 +355,12 @@ sPoly*	CFrustum::ClipPoly(sPoly& S, sPoly& D) const
 		}
 
 		// here we end up with complete polygon in 'dest' which is inside plane #i
-		if (dest->size()<3) return 0;
+		if (dest->size() < 3)
+			return nullptr;
 	}
 	return dest;
 }
+
 
 BOOL CFrustum::CreateFromClipPoly(Fvector* p, int count, Fvector& vBase, CFrustum& clip)
 {

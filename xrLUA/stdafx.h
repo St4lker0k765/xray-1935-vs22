@@ -25,9 +25,9 @@
 #include "lualib.h"
 
 #ifdef __BORLANDC__
-#pragma comment( lib, "x:\\xrCoreB.lib"	)
+#pragma comment( lib, "xrCoreB.lib"	)
 #else
-#pragma comment( lib, "x:\\xrCore.lib"	)
+#pragma comment( lib, "xrCore.lib"	)
 #endif
 
 #endif //stdafxH
