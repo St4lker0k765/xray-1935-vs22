@@ -142,7 +142,7 @@ BOOL IPureServer::Connect(LPCSTR options)
 	if (strchr(options,'/'))	strcpy(session_options, strchr(options,'/')+1);
 	if (strstr(options, "psw="))
 	{
-		char* PSW = strstr(options, "psw=") + 4;
+		const char* PSW = strstr(options, "psw=") + 4;
 		if (strchr(PSW, '/')) 
 			strncpy(password_str, PSW, strchr(PSW, '/') - PSW);
 		else

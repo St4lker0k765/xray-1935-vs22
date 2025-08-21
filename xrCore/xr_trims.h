@@ -39,7 +39,7 @@ XRCORE_API std::string& __stdcall	_TrimLeft				( std::string& src );
 XRCORE_API std::string& __stdcall	_TrimRight				( std::string& src );
 XRCORE_API LPCSTR		__stdcall 	_CopyVal 				( LPCSTR src, std::string& dst, char separator=',' );
 XRCORE_API LPCSTR		__stdcall	_GetItem				( LPCSTR src, int, std::string& p, char separator=',', LPCSTR ="", bool trim=true );
-XRCORE_API std::string	__stdcall	_ListToSequence			( const SStringVec& lst );
+XRCORE_API xr_string	__stdcall	_ListToSequence			( const SStringVec& lst );
 XRCORE_API shared_str	__stdcall	_ListToSequence			( const RStringVec& lst );
 
 #endif

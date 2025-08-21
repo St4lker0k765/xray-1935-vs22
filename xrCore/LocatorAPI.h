@@ -76,7 +76,7 @@ public:
 		u32						size_compressed;// if (size_real==size_compressed) - uncompressed
         u32						modif;			// for editor
 	};
-	struct	file_pred: public 	std::binary_function<file&, file&, bool> 
+	struct	file_pred
 	{	
 		IC bool operator()	(const file& x, const file& y) const
 		{	return xr_strcmp(x.name,y.name)<0;	}

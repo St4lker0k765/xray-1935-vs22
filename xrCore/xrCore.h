@@ -35,7 +35,7 @@
 #include <math.h>
 #include <string.h>
 #include <process.h>
-#include <typeinfo.h>
+#include <typeinfo>
 
 #ifndef DEBUG
 	#ifdef _DEBUG

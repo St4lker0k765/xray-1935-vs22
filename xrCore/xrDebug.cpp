@@ -4,7 +4,8 @@
 #include "xrdebug.h"
 #include "resource.h"
 #include "dbghelp.h"
- 
+#include <new>
+
 #include "dxerr9.h"
 
 #ifdef __BORLANDC__
@@ -25,6 +26,10 @@
 	#pragma comment			(lib,"dxerr9.lib")
 #endif
 #endif
+
+extern "C" int __vsnwprintf(wchar_t* buffer, size_t count, const wchar_t* format, va_list argptr) {
+    return _vsnwprintf(buffer, count, format, argptr);
+}
 
 XRCORE_API	xrDebug		Debug;
 
@@ -307,17 +312,16 @@ namespace std{
         ::SetUnhandledExceptionFilter	( UnhandledFilter );	// exception handler to all "unhandled" exceptions
     }
 #else
-    typedef int		(__cdecl * _PNH)( size_t );
-    _CRTIMP int		__cdecl _set_new_mode( int );
-    _CRTIMP _PNH	__cdecl _set_new_handler( _PNH );
-
-    void	xrDebug::_initialize		()
-    {
-        _set_new_mode					(1);					// gen exception if can't allocate memory
-        _set_new_handler				(_out_of_memory	);		// exception-handler for 'out of memory' condition
-		set_terminate					(_terminate);
-		set_unexpected					(_terminate);
-        ::SetUnhandledExceptionFilter	( UnhandledFilter );	// exception handler to all "unhandled" exceptions
-    }
+static void __cdecl def_new_handler()
+{
+    _out_of_memory(static_cast<size_t>(~0u));
+}
+void    xrDebug::_initialize()
+{
+    std::set_new_handler(def_new_handler);
+    std::set_terminate(_terminate);
+    std::set_unexpected(_terminate);
+    ::SetUnhandledExceptionFilter(UnhandledFilter);
+}
 #endif
 

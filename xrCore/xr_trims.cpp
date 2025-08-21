@@ -3,12 +3,18 @@
 
 LPSTR _TrimLeft( LPSTR str )
 {
-	LPSTR p 	= str;
-	while( *p && ((*p)<=' ') ) p++;
-    if (p!=str){
-        for (LPSTR t=str; *p; t++,p++) *t=*p;
-        *t = 0;
-    }
+	LPSTR p = str;
+	while (*p && (*p <= ' '))
+		p++;
+
+	if (p != str) {
+		LPSTR t = str;
+		while (*p) {
+			*t++ = *p++;
+		}
+		*t = 0;
+	}
+
 	return str;
 }
 
@@ -327,17 +333,18 @@ void _SequenceToList(RStringVec& lst, LPCSTR in, char separator)
 	}
 }
 
-std::string	_ListToSequence(const SStringVec& lst)
+xr_string	_ListToSequence(const SStringVec& lst)
 {
-	static std::string	out;
+	static xr_string	out;
 	out = "";
 	if (lst.size()){
     	out			= lst.front();
 		for (SStringVec::const_iterator s_it=lst.begin()+1; s_it!=lst.end(); s_it++)
-        	out		+= std::string(",")+(*s_it);
+        	out		+= xr_string(",")+(*s_it);
 	}
 	return out;
 }
+
 
 std::string& _TrimLeft( std::string& str )
 {
