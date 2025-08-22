@@ -360,9 +360,6 @@
     <ClInclude Include="Stats.h">
       <Filter>Interfaces\Render\Execution &amp; 3D</Filter>
     </ClInclude>
-    <ClInclude Include="xr_resource.h">
-      <Filter>Interfaces\Render\Execution &amp; 3D</Filter>
-    </ClInclude>
     <ClInclude Include="HW.h">
       <Filter>Interfaces\Render\Execution &amp; 3D\HW</Filter>
     </ClInclude>

@@ -10,8 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCPU_Pipe", "xr_3da\xrCPU_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrGame", "xr_3da\xrGame\xrGame.vcxproj", "{A15B9EF4-D198-45DE-8836-C736D09FF389}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrSound", "xr_3da\xrSound\xrSound.vcxproj", "{CCCA7859-EB86-493E-9B53-C4235F45B3C5}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCore", "xrCore\xrCore.vcxproj", "{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCDB", "xr_3da\xrCDB\xrCDB.vcxproj", "{A19B1DF2-82EC-4364-8BDF-85D13A1C89B5}"
@@ -29,6 +27,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrParticles", "xrParticles\xrParticles.vcxproj", "{94A1C366-3D19-48E6-8170-4ADC2E70DF97}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrNetServer", "xrNetServer\xrNetServer.vcxproj", "{435BAC9A-B225-457D-AB40-C9BD0CC8838C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrSound", "xrSound\xrSound.vcxproj", "{CCCA7859-EB86-493E-9B53-C4235F45B3C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +59,6 @@ Global
 		{A15B9EF4-D198-45DE-8836-C736D09FF389}.Release|Win32.ActiveCfg = Release|Win32
 		{A15B9EF4-D198-45DE-8836-C736D09FF389}.Template|Win32.ActiveCfg = Template|Win32
 		{A15B9EF4-D198-45DE-8836-C736D09FF389}.Template|Win32.Build.0 = Template|Win32
-		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Mixed|Win32.ActiveCfg = Mixed|Win32
-		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Release|Win32.ActiveCfg = Release|Win32
-		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Template|Win32.ActiveCfg = Release|Win32
 		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}.Debug|Win32.Build.0 = Debug|Win32
 		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}.Mixed|Win32.ActiveCfg = Mixed|Win32
@@ -131,9 +127,20 @@ Global
 		{435BAC9A-B225-457D-AB40-C9BD0CC8838C}.Release|Win32.Build.0 = Release|Win32
 		{435BAC9A-B225-457D-AB40-C9BD0CC8838C}.Template|Win32.ActiveCfg = Template|Win32
 		{435BAC9A-B225-457D-AB40-C9BD0CC8838C}.Template|Win32.Build.0 = Template|Win32
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Debug|Win32.Build.0 = Debug|Win32
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Mixed|Win32.ActiveCfg = Mixed|Win32
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Mixed|Win32.Build.0 = Mixed|Win32
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Release|Win32.ActiveCfg = Release|Win32
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Release|Win32.Build.0 = Release|Win32
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Template|Win32.ActiveCfg = Mixed|Win32
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Template|Win32.Build.0 = Mixed|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {532BD3B3-547F-4174-A84D-D51C31830911}
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}

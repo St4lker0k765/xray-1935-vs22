@@ -307,6 +307,9 @@
       <Filter>shared memory/string library</Filter>
     </ClInclude>
     <ClInclude Include="xrSyncronize.h" />
+    <ClInclude Include="xr_resource.h">
+      <Filter>Math\Extensions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCore.rc">

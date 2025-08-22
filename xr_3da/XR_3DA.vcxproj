@@ -340,7 +340,6 @@
     <ClInclude Include="GameFont.h" />
     <ClInclude Include="device.h" />
     <ClInclude Include="Stats.h" />
-    <ClInclude Include="xr_resource.h" />
     <ClInclude Include="HW.h" />
     <ClInclude Include="HWCaps.h" />
     <ClInclude Include="xr_effgamma.h" />

@@ -144,6 +144,7 @@
 #include "xrsharedmem.h"
 #include "xrstring.h"
 #include "rt_compressor.h"
+#include "xr_resource.h"
 
 // stl ext
 struct XRCORE_API xr_rtoken{
