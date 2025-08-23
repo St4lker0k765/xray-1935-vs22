@@ -8,7 +8,7 @@
 	#define XRNETSERVER_API __declspec(dllexport)
 #else
 	#define XRNETSERVER_API __declspec(dllimport)
-	#pragma comment(lib,	"x:\\xrNetServer"	)
+	#pragma comment(lib,	"xrNetServer"	)
 #endif
 
 XRNETSERVER_API extern Flags32	psNET_Flags;

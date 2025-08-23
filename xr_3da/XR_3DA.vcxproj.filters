@@ -148,7 +148,7 @@
     <Filter Include="Engine\Net">
       <UniqueIdentifier>{3f2a01eb-64e5-4225-a16e-688fe4375863}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripting">
+    <Filter Include="Engine\Core\Scripting">
       <UniqueIdentifier>{973cfbe2-4399-4656-9de5-0851812af8cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -487,13 +487,13 @@
       <Filter>Engine\Net</Filter>
     </ClInclude>
     <ClInclude Include="ai_script_lua_extension.h">
-      <Filter>Scripting</Filter>
+      <Filter>Engine\Core\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="ai_script_lua_space.h">
-      <Filter>Scripting</Filter>
+      <Filter>Engine\Core\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="ai_script_space.h">
-      <Filter>Scripting</Filter>
+      <Filter>Engine\Core\Scripting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -825,67 +825,13 @@
       <Filter>Engine\Imaging</Filter>
     </ClCompile>
     <ClCompile Include="_scripting.cpp">
-      <Filter>Scripting</Filter>
+      <Filter>Engine\Core\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="ai_script_lua_debug.cpp">
-      <Filter>Scripting</Filter>
+      <Filter>Engine\Core\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="ai_script_lua_extension.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="class.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="class_info.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="class_registry.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="class_rep.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="create_class.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="error.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="find_best_match.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="function.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="implicit_cast.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="link_compatibility.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="object.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="object_rep.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="open.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="pcall.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="ref.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="scope.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="stack_content_by_name.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="weak_ref.cpp">
-      <Filter>Scripting</Filter>
+      <Filter>Engine\Core\Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

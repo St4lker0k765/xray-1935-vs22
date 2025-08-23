@@ -97,6 +97,10 @@ void	CResourceManager::LS_Load			()
 	luaopen_table	(LSVM);
 	luaopen_string	(LSVM);
 	luaopen_math	(LSVM);
+#ifdef USE_JIT
+	luaopen_jit				(LSVM);
+	luaJIT_setmode			(LSVM,LUAJIT_MODE_ENGINE,LUAJIT_MODE_OFF);
+#endif
 
 	luabind::open					(LSVM);
 	luabind::set_error_callback		(LuaError);
@@ -170,6 +174,10 @@ void	CResourceManager::LS_Load			()
 		Script::bfLoadFileIntoNamespace	(LSVM,fn,namesp,true);
 	}
 	FS.file_list_close			(folder);
+
+#ifdef USE_JIT
+	luaJIT_setmode(LSVM, LUAJIT_MODE_ENGINE, LUAJIT_MODE_ON);
+#endif
 }
 
 void	CResourceManager::LS_Unload			()

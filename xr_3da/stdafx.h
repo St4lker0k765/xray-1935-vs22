@@ -54,7 +54,7 @@
 #pragma comment( lib, "xrCore.lib"	)
 #pragma comment( lib, "xrCDB.lib"	)
 #pragma comment( lib, "xrSound.lib"	)
-#pragma comment( lib, "xrLUA.lib"	)
+#pragma comment( lib, "xrLUA_JIT.lib"	)
 
 #pragma comment( lib, "winmm.lib"		)
 
@@ -62,13 +62,17 @@
 #pragma comment( lib, "dinput.lib"		)
 #pragma comment( lib, "dxguid.lib"		)
 
-//#ifndef DEBUG
-//#define LUABIND_NO_ERROR_CHECKING
-//#endif
-#define LUABIND_NO_EXCEPTIONS
+#ifndef DEBUG
+#	define LUABIND_NO_ERROR_CHECKING
+#endif
+
+#if	!defined(DEBUG) || defined(FORCE_NO_EXCEPTIONS)
+	// release: no error checking, no exceptions
+	#define LUABIND_NO_EXCEPTIONS
+	#define BOOST_THROW_EXCEPTION_HPP_INCLUDED
+	namespace boost {	ENGINE_API	void throw_exception(const std::exception &A);	};
+#endif
 #define LUABIND_DONT_COPY_STRINGS
-#define BOOST_THROW_EXCEPTION_HPP_INCLUDED
-namespace boost {	ENGINE_API	void __stdcall throw_exception(const std::exception &A);	};
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

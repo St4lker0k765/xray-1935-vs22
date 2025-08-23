@@ -1,10 +1,15 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36408.4 d17.14
+VisualStudioVersion = 17.14.36408.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BEF9277A-2DD1-49AE-814D-613E6E34BC9E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XR_3DA", "xr_3da\XR_3DA.vcxproj", "{2578C6D8-660D-48AE-9322-7422F8664F06}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F} = {9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}
+		{A19B1DF2-82EC-4364-8BDF-85D13A1C89B5} = {A19B1DF2-82EC-4364-8BDF-85D13A1C89B5}
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5} = {CCCA7859-EB86-493E-9B53-C4235F45B3C5}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCPU_Pipe", "xr_3da\xrCPU_Pipe\xrCPU_Pipe.vcxproj", "{CA0649DD-D089-423A-981C-46B57A884EB9}"
 EndProject
@@ -20,8 +25,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrRender_R2", "xr_3da\xrRen
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrXMLParser", "xrXMLParser\xrXMLParser.vcxproj", "{94A1C366-3D19-48E6-8170-4ADC2E70DF98}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrLUA", "xrLUA\xrLUA.vcxproj", "{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ode", "xrODE\contrib\msvc7\ode_default\default.vcxproj", "{1BF75FEB-87DD-486C-880B-227987D191C2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrParticles", "xrParticles\xrParticles.vcxproj", "{94A1C366-3D19-48E6-8170-4ADC2E70DF97}"
@@ -29,6 +32,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrNetServer", "xrNetServer\xrNetServer.vcxproj", "{435BAC9A-B225-457D-AB40-C9BD0CC8838C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrSound", "xrSound\xrSound.vcxproj", "{CCCA7859-EB86-493E-9B53-C4235F45B3C5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrLUA_JIT", "xrLUA_JIT\xrLUA_JIT.vcxproj", "{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,14 +100,6 @@ Global
 		{94A1C366-3D19-48E6-8170-4ADC2E70DF98}.Release|Win32.Build.0 = Release|Win32
 		{94A1C366-3D19-48E6-8170-4ADC2E70DF98}.Template|Win32.ActiveCfg = Template|Win32
 		{94A1C366-3D19-48E6-8170-4ADC2E70DF98}.Template|Win32.Build.0 = Template|Win32
-		{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}.Debug|Win32.Build.0 = Debug|Win32
-		{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}.Mixed|Win32.ActiveCfg = Mixed|Win32
-		{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}.Mixed|Win32.Build.0 = Mixed|Win32
-		{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}.Release|Win32.ActiveCfg = Release|Win32
-		{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}.Release|Win32.Build.0 = Release|Win32
-		{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}.Template|Win32.ActiveCfg = Template|Win32
-		{F496E4E3-22D5-4294-A0FB-A1EFDA7E2450}.Template|Win32.Build.0 = Template|Win32
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Debug|Win32.ActiveCfg = Debug|Win32
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Debug|Win32.Build.0 = Debug|Win32
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Mixed|Win32.ActiveCfg = Mixed|Win32
@@ -135,6 +132,14 @@ Global
 		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Release|Win32.Build.0 = Release|Win32
 		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Template|Win32.ActiveCfg = Mixed|Win32
 		{CCCA7859-EB86-493E-9B53-C4235F45B3C5}.Template|Win32.Build.0 = Mixed|Win32
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}.Debug|Win32.Build.0 = Debug|Win32
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}.Mixed|Win32.ActiveCfg = Mixed|Win32
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}.Mixed|Win32.Build.0 = Mixed|Win32
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}.Release|Win32.ActiveCfg = Release|Win32
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}.Release|Win32.Build.0 = Release|Win32
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}.Template|Win32.ActiveCfg = Mixed|Win32
+		{9ACE5473-6D68-4B96-AC42-B39EABA0FE1F}.Template|Win32.Build.0 = Mixed|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
