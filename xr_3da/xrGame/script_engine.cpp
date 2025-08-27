@@ -437,7 +437,10 @@ void CScriptEngine::load_common_scripts()
 			add_file	(_GetItem(caScriptString,i,I));
 			process		();
 			if (object("_G",strcat(I,"_initialize"),LUA_TFUNCTION))
-				lua_dostring(lua(),strcat(I,"()"));
+//				lua_dostring			(lua(),strcat(I,"()"));
+				luabind::functor<void>	f;
+				R_ASSERT				(functor(I,f));
+				f						();
 		}
 	}
 

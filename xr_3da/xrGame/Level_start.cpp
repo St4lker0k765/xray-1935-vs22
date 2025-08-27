@@ -91,7 +91,7 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 	if (strstr(m_caServerOptions.c_str(), "psw=") && !strstr(m_caClientOptions.c_str(), "psw="))
 	{
 		string64	PasswordStr = "";
-		char* PSW = strstr(m_caServerOptions.c_str(), "psw=") + 4;
+		const char* PSW = strstr(m_caServerOptions.c_str(), "psw=") + 4;
 		if (strchr(PSW, '/')) 
 			strncpy(PasswordStr, PSW, strchr(PSW, '/') - PSW);
 		else

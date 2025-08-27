@@ -117,7 +117,7 @@ void CPHCharacter::Enable()
 
 
 
-void __stdcall CarHitCallback(bool& /**do_colide/**/,dContact& /**c/**/)
+void CarHitCallback(bool& /**do_colide/**/,dContact& /**c/**/)
 {
 	/*
 	dxGeomUserData* usr_data_1=NULL;

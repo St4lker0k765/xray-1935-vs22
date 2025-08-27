@@ -9,6 +9,7 @@
 #include "../level.h"
 #include "../xrserver.h"
 #include "../xrServer_Objects_ALife.h"
+#include <cmath>
 
 //////////////////////////////////////////////////////////////////////////
 

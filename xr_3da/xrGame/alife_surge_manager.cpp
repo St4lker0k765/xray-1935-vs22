@@ -150,7 +150,8 @@ void CALifeSurgeManager::generate_anomalies()
 		for (u32 ii=0; ii<jj; ++ii) {
 			fProbability		= randF(1.f);
 			fSum				= 0;
-			for (u16 p=0; p<l_tpSpawnAnomalousZone->m_wItemCount; ++p) {
+			u16 p = 0;
+			for (; p<l_tpSpawnAnomalousZone->m_wItemCount; ++p) {
 				fSum			+= l_tpSpawnAnomalousZone->m_faWeights[p];
 				if (fSum > fProbability)
 					break;

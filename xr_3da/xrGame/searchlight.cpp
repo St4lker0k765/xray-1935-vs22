@@ -32,7 +32,7 @@ void CProjector::Load(LPCSTR section)
 }
 
 
-void __stdcall CProjector::BoneCallbackX(CBoneInstance *B)
+void CProjector::BoneCallbackX(CBoneInstance *B)
 {
 	CProjector	*P = static_cast<CProjector*>(B->Callback_Param);
 
@@ -44,7 +44,7 @@ void __stdcall CProjector::BoneCallbackX(CBoneInstance *B)
 	B->mTransform.mulB(M);
 }
 
-void __stdcall CProjector::BoneCallbackY(CBoneInstance *B)
+void CProjector::BoneCallbackY(CBoneInstance *B)
 {
 	CProjector	*P = static_cast<CProjector*>(B->Callback_Param);
 

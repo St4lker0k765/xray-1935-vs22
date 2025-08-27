@@ -291,10 +291,10 @@ public:
 	CMotionDef*				m_current_head;
 
 	// callback на анимации модели актера
-	static void	__stdcall	SpinCallback		(CBoneInstance*);
-	static void	__stdcall	ShoulderCallback	(CBoneInstance*);
-	static void	__stdcall	HeadCallback		(CBoneInstance*);
-	static void __stdcall	VehicleHeadCallback	(CBoneInstance*);
+	static void	SpinCallback		(CBoneInstance*);
+	static void	ShoulderCallback	(CBoneInstance*);
+	static void	HeadCallback		(CBoneInstance*);
+	static void VehicleHeadCallback	(CBoneInstance*);
 
 	virtual const SRotation	Orientation			()	const	{ return r_torso; };
 	SRotation				&Orientation		()			 { return r_torso; };

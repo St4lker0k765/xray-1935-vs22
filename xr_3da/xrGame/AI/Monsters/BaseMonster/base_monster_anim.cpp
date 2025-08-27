@@ -10,7 +10,7 @@
 #include "base_monster.h"
 #include "../ai_monster_utils.h"
 
-static void __stdcall vfPlayEndCallBack(CBlend* B)
+static void vfPlayEndCallBack(CBlend* B)
 {
 	CBaseMonster *pBaseMonster = (CBaseMonster*)B->CallbackParam;
 	pBaseMonster->MotionMan.OnAnimationEnd();

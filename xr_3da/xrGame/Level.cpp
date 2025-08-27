@@ -540,7 +540,7 @@ bool				CLevel::InterpolationDisabled	()
 	return g_cl_lvInterp < 0; 
 };
 
-void __stdcall		CLevel::PhisStepsCallback	( u32 Time0, u32 Time1 )
+void 	CLevel::PhisStepsCallback	( u32 Time0, u32 Time1 )
 {
 	if (GameID() == GAME_SINGLE)	return;
 

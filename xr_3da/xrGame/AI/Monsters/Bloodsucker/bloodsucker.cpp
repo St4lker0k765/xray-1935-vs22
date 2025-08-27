@@ -127,7 +127,7 @@ void CAI_Bloodsucker::LoadEffector(LPCSTR section)
 
 
 
-void __stdcall CAI_Bloodsucker::BoneCallback(CBoneInstance *B)
+void CAI_Bloodsucker::BoneCallback(CBoneInstance *B)
 {
 	CAI_Bloodsucker*	this_class = static_cast<CAI_Bloodsucker*> (B->Callback_Param);
 

@@ -91,7 +91,8 @@ void CALifeSpawnRegistry::load	(IReader &file_stream)
 	NET_Packet					tNetPacket;
 	IReader						*S = 0;
 	u16							ID;
-	for (int id=0; I != E; ++I, ++id) {
+	int id = 0;
+	for (; I != E; ++I, ++id) {
 		R_ASSERT2				(0!=(S = file_stream.open_chunk(id)),"Can't find entity chunk in the 'game.spawn'");
 		// Spawn
 		tNetPacket.B.count		= S->r_u16();

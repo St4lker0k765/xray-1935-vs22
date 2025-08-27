@@ -16,7 +16,7 @@
 #include "../../script_game_object.h"
 #include "../../script_space.h"
 
-void __stdcall ActionCallback(CKinematics *tpKinematics);
+void ActionCallback(CKinematics *tpKinematics);
 
 CScriptMonster::CScriptMonster()
 {
@@ -188,7 +188,7 @@ CScriptEntityAction *CScriptMonster::GetCurrentAction()
 		return(m_tpActionQueue.front());
 }
 
-void __stdcall ActionCallback(CKinematics *tpKinematics)
+void ActionCallback(CKinematics *tpKinematics)
 {
 	// sounds
 	CScriptMonster	*l_tpScriptMonster = smart_cast<CScriptMonster*>(static_cast<CObject*>(tpKinematics->Update_Callback_Param));

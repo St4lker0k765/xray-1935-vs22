@@ -111,7 +111,7 @@ LPCSTR caHeadNames			[] = {
 	0
 };
 
-void __stdcall CStalkerAnimations::HeadCallback(CBoneInstance *B)
+void CStalkerAnimations::HeadCallback(CBoneInstance *B)
 {
 	CAI_Stalker*			A = static_cast<CAI_Stalker*>(B->Callback_Param);
 	Fvector c				= B->mTransform.c;
@@ -137,7 +137,7 @@ void __stdcall CStalkerAnimations::HeadCallback(CBoneInstance *B)
 //	B->mTransform.c			= c;
 }
 
-void __stdcall CStalkerAnimations::ShoulderCallback(CBoneInstance *B)
+void CStalkerAnimations::ShoulderCallback(CBoneInstance *B)
 {
 	CAI_Stalker*			A = static_cast<CAI_Stalker*>(B->Callback_Param);
 	Fvector c				= B->mTransform.c;
@@ -160,7 +160,7 @@ void __stdcall CStalkerAnimations::ShoulderCallback(CBoneInstance *B)
 	B->mTransform.c			= c;
 }
 
-void __stdcall CStalkerAnimations::SpinCallback(CBoneInstance *B)
+void CStalkerAnimations::SpinCallback(CBoneInstance *B)
 {
 	CAI_Stalker*			A = static_cast<CAI_Stalker*>(B->Callback_Param);
 	Fvector c				= B->mTransform.c;

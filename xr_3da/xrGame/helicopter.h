@@ -167,8 +167,8 @@ protected:
 	u16								m_smoke_bone;
 
 	shared_str						m_death_bones_to_hide;
-	static void __stdcall	BoneMGunCallbackX		(CBoneInstance *B);
-	static void __stdcall	BoneMGunCallbackY		(CBoneInstance *B);
+	static void BoneMGunCallbackX		(CBoneInstance *B);
+	static void BoneMGunCallbackY		(CBoneInstance *B);
 
 	typedef xr_map<s16,float>::iterator bonesIt;
 

@@ -39,10 +39,10 @@ void CPatrolPathParams::script_register(lua_State *L)
 			.def(								constructor<LPCSTR,const PatrolPathManager::EPatrolStartType,const PatrolPathManager::EPatrolRouteType, bool, u32>())
 			.def("count",						&CPatrolPathParams::count)
 			.def("level_vertex_id",				&CPatrolPathParams::level_vertex_id)
-			.def("point",						(const Fvector &(CPatrolPathParams::*)(u32)				const)	(CPatrolPathParams::point))
+			.def("point",						(const Fvector &(CPatrolPathParams::*)(u32)				const)	(&CPatrolPathParams::point))
 			.def("name",						&CPatrolPathParams::name)
-			.def("index",						(u32			(CPatrolPathParams::*)(LPCSTR)			const)	(CPatrolPathParams::point))
-			.def("get_nearest",					(u32			(CPatrolPathParams::*)(const Fvector &) const)	(CPatrolPathParams::point))
+			.def("index",						(u32			(CPatrolPathParams::*)(LPCSTR)			const)	(&CPatrolPathParams::point))
+			.def("get_nearest",					(u32			(CPatrolPathParams::*)(const Fvector &) const)	(&CPatrolPathParams::point))
 			.def("flag",						&CPatrolPathParams::flag)
 	];
 }

@@ -85,7 +85,7 @@ void CInfoPortion::load_shared	(LPCSTR)
 	//после получения этой порции
 	int disable_num = uiXml.GetNodesNum(pNode, "disable");
 	info_data()->m_DisableInfo.clear();
-	for(i=0; i<disable_num; ++i)
+	for(int i=0; i<disable_num; ++i)
 	{
 		INFO_INDEX info_id = CInfoPortion::IdToIndex(uiXml.Read(pNode, "disable", NULL));
 		info_data()->m_DisableInfo.push_back(info_id);
@@ -98,7 +98,7 @@ void CInfoPortion::load_shared	(LPCSTR)
 	//индексы статей
 	info_data()->m_Articles.clear();
 	int articles_num = uiXml.GetNodesNum(pNode, "article");
-	for(i=0; i<articles_num; ++i)
+	for(int i=0; i<articles_num; ++i)
 	{
 		LPCSTR article_str_id = uiXml.Read(pNode, "article", i, NULL);
 		R_ASSERT(article_str_id);
@@ -107,7 +107,7 @@ void CInfoPortion::load_shared	(LPCSTR)
 	//индексы статей, которые уберутся из реестра
 	info_data()->m_ArticlesDisable.clear();
 	articles_num = uiXml.GetNodesNum(pNode, "article_disable");
-	for(i=0; i<articles_num; ++i)
+	for(int i=0; i<articles_num; ++i)
 	{
 		LPCSTR article_str_id = uiXml.Read(pNode, "article_disable", i, NULL);
 		R_ASSERT(article_str_id);
@@ -117,7 +117,7 @@ void CInfoPortion::load_shared	(LPCSTR)
 	//индексы статей, которые уберутся из реестра
 	info_data()->m_GameTasks.clear();
 	int task_num = uiXml.GetNodesNum(pNode, "task");
-	for(i=0; i<task_num; ++i)
+	for(int i=0; i<task_num; ++i)
 	{
 		LPCSTR task_str_id = uiXml.Read(pNode, "task", i, NULL);
 		R_ASSERT(task_str_id);
@@ -130,7 +130,7 @@ void CInfoPortion::load_shared	(LPCSTR)
 	info_data()->m_MapLocations.clear();
 	int location_num = uiXml.GetNodesNum(pNode, "location");
 
-	for(i=0; i<location_num; ++i)
+	for(int i=0; i<location_num; ++i)
 	{
 		XML_NODE* pMapNode = uiXml.NavigateToNode(pNode,"location",i);
 

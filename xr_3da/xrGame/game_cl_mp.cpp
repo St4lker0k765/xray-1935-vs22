@@ -244,7 +244,7 @@ void game_cl_mp::OnChatMessage			(NET_Packet* P)
 void game_cl_mp::shedule_Update(u32 dt)
 {
 	inherited::shedule_Update(dt);
-	static offFlag = false;
+	static bool offFlag = false;
 	if (!offFlag)
 	{
 		if (HUD().GetUI()->UIGame())

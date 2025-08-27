@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void __stdcall ContactShotMark(CDB::TRI* T,dContactGeom* c)
+void ContactShotMark(CDB::TRI* T,dContactGeom* c)
 {
 	dBodyID b=dGeomGetBody(c->g1);
 	dxGeomUserData* data;

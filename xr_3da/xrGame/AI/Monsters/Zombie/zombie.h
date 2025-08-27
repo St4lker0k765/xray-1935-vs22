@@ -26,7 +26,7 @@ public:
 
 	virtual void	shedule_Update		(u32 dt);
 	
-	static	void __stdcall	BoneCallback			(CBoneInstance *B);
+	static	void BoneCallback			(CBoneInstance *B);
 			void			vfAssignBones			();
 
 	CBoneInstance			*bone_spine;

@@ -56,7 +56,7 @@ bool  CPhraseScript::CheckInfo		(const CInventoryOwner* pOwner) const
 		if(!pOwner->HasInfo(CInfoPortion::IdToIndex(m_HasInfo[i])))
 			return false;
 
-	for(i=0; i<m_DontHasInfo.size(); i++)
+	for(u32 i=0; i<m_DontHasInfo.size(); i++)
 		if(pOwner->HasInfo(CInfoPortion::IdToIndex(m_DontHasInfo[i])))
 			return false;
 
@@ -71,7 +71,7 @@ void  CPhraseScript::TransferInfo	(const CInventoryOwner* pOwner) const
 	for(u32 i=0; i<m_GiveInfo.size(); i++)
 		pOwner->TransferInfo(CInfoPortion::IdToIndex(m_GiveInfo[i]), true);
 
-	for(i=0; i<m_DisableInfo.size(); i++)
+	for(u32 i=0; i<m_DisableInfo.size(); i++)
 		pOwner->TransferInfo(CInfoPortion::IdToIndex(m_DisableInfo[i]),false);
 }
 

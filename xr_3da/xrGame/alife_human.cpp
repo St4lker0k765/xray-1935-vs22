@@ -297,7 +297,8 @@ bool CSE_ALifeHumanAbstract::bfPerformAttack()
 
 void CSE_ALifeHumanAbstract::vfCollectAmmoBoxes()
 {
-	for (int i=0, n=children.size() ; i<n; ++i) {
+	int n = children.size();
+	for (int i=0; i<n; ++i) {
 		
 		if (alife().m_temp_marks[i])
 			continue;

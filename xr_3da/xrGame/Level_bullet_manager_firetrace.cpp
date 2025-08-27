@@ -25,7 +25,7 @@
 //	params;			// user defined abstract data
 //	Device.Statistic.TEST0.End();
 //return TRUE-продолжить трассировку / FALSE-закончить трассировку
-BOOL __stdcall CBulletManager::firetrace_callback(Collide::rq_result& result, LPVOID params)
+BOOL  CBulletManager::firetrace_callback(Collide::rq_result& result, LPVOID params)
 {
 	SBullet* bullet = (SBullet*)params;
 

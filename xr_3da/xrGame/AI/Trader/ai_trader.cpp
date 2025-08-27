@@ -124,13 +124,13 @@ void CAI_Trader::select_head_anim(u32 type)
 }
 
 // Animation Callbacks
-void __stdcall CAI_Trader::AnimGlobalCallback(CBlend* B)
+void CAI_Trader::AnimGlobalCallback(CBlend* B)
 {
 	CAI_Trader *trader = (CAI_Trader*)B->CallbackParam;
 	trader->m_tpGlobalDef = 0;
 }
 
-void __stdcall CAI_Trader::AnimHeadCallback(CBlend* B)
+void CAI_Trader::AnimHeadCallback(CBlend* B)
 {
 	CAI_Trader *trader = (CAI_Trader*)B->CallbackParam;
 	trader->m_tpHeadDef = 0;
@@ -176,7 +176,7 @@ bool CAI_Trader::bfAssignSound(CScriptEntityAction *tpEntityAction)
 
 //////////////////////////////////////////////////////////////////////////
 
-void __stdcall CAI_Trader::BoneCallback(CBoneInstance *B)
+void CAI_Trader::BoneCallback(CBoneInstance *B)
 {
 	CAI_Trader*	this_class = static_cast<CAI_Trader*>(B->Callback_Param);
 

@@ -79,8 +79,8 @@ public:
 	
 	virtual	void		UpdateCL		();
 
-	static void	__stdcall AnimGlobalCallback	(CBlend* B);
-	static void	__stdcall AnimHeadCallback		(CBlend* B);
+	static void	AnimGlobalCallback	(CBlend* B);
+	static void	AnimHeadCallback		(CBlend* B);
 
 	virtual void		g_fireParams			(const CHudItem* pHudItem, Fvector& P, Fvector& D);
 	virtual void		g_WeaponBones			(int &L, int &R1, int &R2);
@@ -103,7 +103,7 @@ public:
 	virtual void		reinit					();
 	virtual void		reload					(LPCSTR section);
 
-	static	void __stdcall	BoneCallback			(CBoneInstance *B);
+	static	void			BoneCallback			(CBoneInstance *B);
 			void			LookAtActor				(CBoneInstance *B);
 
 			void			set_callback			(const luabind::functor<void> &lua_function, bool bOnStart);

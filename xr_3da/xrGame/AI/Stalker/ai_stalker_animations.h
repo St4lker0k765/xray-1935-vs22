@@ -87,9 +87,9 @@ public:
 	
 	virtual	void				reinit							();
 	virtual	void				reload							(IRender_Visual *Visual, CInifile *ini, LPCSTR section);
-	static	void __stdcall		HeadCallback					(CBoneInstance *B);
-	static	void __stdcall		ShoulderCallback				(CBoneInstance *B);
-	static	void __stdcall		SpinCallback					(CBoneInstance *B);
+	static	void				HeadCallback					(CBoneInstance *B);
+	static	void				ShoulderCallback				(CBoneInstance *B);
+	static	void 				SpinCallback					(CBoneInstance *B);
 			void				vfAssignGlobalAnimation			(CMotionDef *&tpGlobalAnimation);
 			void				vfAssignHeadAnimation			(CMotionDef *&tpGlobalAnimation);
 			void				vfAssignTorsoAnimation			(CMotionDef *&tpGlobalAnimation);

@@ -118,7 +118,7 @@ public:
 protected:
 
 	//функция обработки хитов объектов
-	static BOOL __stdcall firetrace_callback(Collide::rq_result& result, LPVOID params);
+	static BOOL  firetrace_callback(Collide::rq_result& result, LPVOID params);
 	//попадание по динамическому объекту
 	void DynamicObjectHit	(SBullet* bullet, const Fvector& end_point, 
 							Collide::rq_result& R, 	u16 target_material);

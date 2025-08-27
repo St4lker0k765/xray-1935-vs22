@@ -67,7 +67,7 @@ public:
 	void						ReculcInterpolationSteps();
 	u32							GetNumCrSteps			() const	{return m_dwNumSteps; };
 	void						SetNumCrSteps			( u32 NumSteps );
-	static void __stdcall		PhisStepsCallback		( u32 Time0, u32 Time1 );
+	static void 		PhisStepsCallback		( u32 Time0, u32 Time1 );
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 private:
 	BOOL						m_bNeed_CrPr;

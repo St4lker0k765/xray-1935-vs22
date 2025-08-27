@@ -244,7 +244,8 @@ void	game_sv_Deathmatch::SM_SwitchOnNextActivePlayer()
 	u32		cnt		= get_players_count	();
 	u32		PPlayersCount = 0;
 
-	for		(u32 it=0; it<cnt; ++it)	
+	u32 it = 0;
+	for		(; it<cnt; ++it)	
 	{
 		xrClientData *l_pC = (xrClientData*)	m_server->client_Get	(it);
 		game_PlayerState* ps	= l_pC->ps;
@@ -444,7 +445,7 @@ void	game_sv_Deathmatch::assign_RP				(CSE_Abstract* E)
 
 	u32 NumRP = rp.size();
 	Fvector DistVect;
-	for (it=0; it < NumRP; it++)
+	for (u32 it=0; it < NumRP; it++)
 	{
 		RPoint&				r	= rp[it];
 		pRPDist.push_back(RPointData(it, 1000000.0f));

@@ -140,7 +140,7 @@ void CStepManager::update()
 	if (m_step_info.cur_cycle < step.cycles) m_step_info.cur_cycle = 1 + u8(float(cur_time - m_time_anim_started) / (1000.f * cycle_anim_time));
 
 	// позиционировать играемые звуки
-	for (i=0; i<m_legs_count; i++) {
+	for (u32 i=0; i<m_legs_count; i++) {
 		if (m_step_info.activity[i].handled && m_step_info.activity[i].sound.feedback) {
 			Fvector sound_pos = m_object->Position();
 			sound_pos.y += 0.5;

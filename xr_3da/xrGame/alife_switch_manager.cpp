@@ -384,7 +384,8 @@ void CALifeSwitchManager::switch_object	(CSE_ALifeDynamicObject	*I)
 				// therefore check all the group members if they are ready to switch offline
 
 				// iterating on group members
-				for (u32 i=0, N = (u32)tpALifeGroupAbstract->m_tpMembers.size(); i<N; ++i) {
+				u32 i = 0, N = (u32)tpALifeGroupAbstract->m_tpMembers.size();
+				for (; i<N; ++i) {
 					// casting group member to the abstract monster to get access to the Health property
 					CSE_ALifeMonsterAbstract	*tpGroupMember = smart_cast<CSE_ALifeMonsterAbstract*>(objects().object(tpALifeGroupAbstract->m_tpMembers[i]));
 					if (tpGroupMember)

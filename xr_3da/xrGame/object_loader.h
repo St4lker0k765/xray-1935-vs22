@@ -6,8 +6,7 @@
 //	Description : Object loader
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef XRAY_OBJECT_LOADER
-#define XRAY_OBJECT_LOADER
+#pragma once
 
 template <class M, typename P>
 struct CLoader {
@@ -29,30 +28,17 @@ struct CLoader {
 	};
 
 	template <typename T>
-	struct CHelper2 {
-		template <bool a>
-		IC	static void load_data(T &data, M &stream, const P &p)
-		{
-			CHelper1<T>::load_data<object_type_traits::is_base_and_derived<IPureLîadableObject,T>::value>(data,stream,p);
-		}
-
-		template <>
-		IC	static void load_data<true>(T &data, M &stream, const P &p)
-		{
-			data.UPDATE_Read	(stream);
-		}
-	};
-
-	template <typename T>
 	struct CHelper {
 
 		template <bool pointer>
 		IC	static void load_data(T &data, M &stream, const P &p)
 		{
-			CHelper2<T>::load_data<
-				object_type_traits::is_base_and_derived<IPureServerObject,T>::value &&
-				(object_type_traits::is_base_and_derived<NET_Packet,M>::value || object_type_traits::is_same<NET_Packet,M>::value)
-			>	(data,stream,p);
+			CHelper1<T>::load_data<
+				object_type_traits::is_base_and_derived<
+					IPureLîadableObject,
+					T
+				>::value
+			>(data,stream,p);
 		}
 
 		template <>
@@ -63,16 +49,40 @@ struct CLoader {
 	};
 
 	struct CHelper3 {
-		template <template <typename _1> class T1, typename T2>
-		IC	static void add(T1<T2> &data, typename T1<T2>::value_type &value)
-		{
-			data.push_back	(value);
-		}
+		template <typename T>
+		struct has_value_compare {
+		template <typename _P> static object_type_traits::detail::yes	select(object_type_traits::detail::other<typename _P::value_compare>*);
+			template <typename _P> static object_type_traits::detail::no		select(...);
+			enum { value = sizeof(object_type_traits::detail::yes) == sizeof(select<T>(0)) };
+		};
+
+		template <typename T>
+		struct is_tree_structure {
+			enum { 
+				value = 
+					has_value_compare<T>::value
+			};
+		};
 
 		template <typename T1, typename T2>
-		IC	static void add(T1 &data, typename T2 &value)
+		struct add_helper {
+			template <bool>
+			IC	static void add(T1 &data, T2 &value)
+			{
+				data.push_back	(value);
+			}
+
+			template <>
+			IC	static void add<true>(T1 &data, T2 &value)
+			{
+				data.insert		(value);
+			}
+		};
+
+		template <typename T1, typename T2>
+		IC	static void add(T1 &data, T2 &value)
 		{
-			data.insert		(value);
+			add_helper<T1,T2>::add<is_tree_structure<T1>::value>(data,value);
 		}
 
 		template <typename T>
@@ -101,7 +111,7 @@ struct CLoader {
 		template <>
 		IC	static void load_data<true>(T &data, M &stream, const P &p)
 		{
-			CHelper3::load_data	(data,stream,p);
+			CHelper3::load_data			(data,stream,p);
 		}
 	};
 
@@ -112,15 +122,21 @@ struct CLoader {
 
 	IC	static void load_data(LPSTR &data, M &stream, const P &p)
 	{
-		string256						S;
+		shared_str						S;
 		stream.r_stringZ				(S);
-		VERIFY							(xr_strlen(S) < 255);
-		data							= xr_strdup(S);
+		data							= xr_strdup(*S);
 	}
 
 	IC	static void load_data(shared_str &data, M &stream, const P &p)
 	{
 		stream.r_stringZ				(data);
+	}
+
+	IC	static void load_data(xr_string &data, M &stream, const P &p)
+	{
+		shared_str						S;
+		stream.r_stringZ				(S);
+		data							= *S;
 	}
 
 	template <typename T1, typename T2>
@@ -271,5 +287,3 @@ IC	void load_data(const T &data, M &stream)
 {
 	load_data				(data,stream,object_loader::detail::CEmptyPredicate());
 }
-
-#endif // XRAY_OBJECT_LOADER

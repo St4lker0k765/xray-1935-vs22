@@ -387,7 +387,7 @@ void CUIInventoryWnd::InitInventory()
 	ruck_list.sort(GreaterRoomInRuck);
 
 	//аўъчръ
-	for(it =  ruck_list.begin(); ruck_list.end() != it; ++it) 
+	for(PPIItem it =  ruck_list.begin(); ruck_list.end() != it; ++it) 
 	{
 		if((*it)) 
 		{

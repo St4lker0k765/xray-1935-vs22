@@ -20,7 +20,7 @@ struct	ENGINE_API CKey;
 class	ENGINE_API CInifile;
 
 // callback
-typedef void (__stdcall * PlayCallback)		(CBlend*		P);
+typedef void (* PlayCallback)		(CBlend*		P);
 
 //*** Key frame definition ************************************************************************
 #pragma pack(push,2)

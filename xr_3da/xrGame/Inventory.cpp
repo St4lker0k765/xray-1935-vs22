@@ -632,7 +632,7 @@ void CInventory::Update()
 	}
 
 	//проверить слоты
-	for(i=0; i<(int)m_slots.size(); ++i)	{
+	for(int i=0; i<(int)m_slots.size(); ++i)	{
 		PIItem pIItem = m_slots[i].m_pIItem;
 
 		if(pIItem && pIItem->m_drop)	{

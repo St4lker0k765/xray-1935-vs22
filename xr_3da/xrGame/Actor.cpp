@@ -175,8 +175,8 @@ CActor::~CActor()
 	// sounds 2D
 	m_HeavyBreathSnd.destroy();
 	// sounds 3D
-	for (i=0; i<SND_HIT_COUNT; ++i) ::Sound->destroy(sndHit[i]);
-	for (i=0; i<SND_DIE_COUNT; ++i) ::Sound->destroy(sndDie[i]);
+	for (int i=0; i<SND_HIT_COUNT; ++i) ::Sound->destroy(sndHit[i]);
+	for (int i=0; i<SND_DIE_COUNT; ++i) ::Sound->destroy(sndDie[i]);
 
 	if(m_pPhysicsShell) {
 		m_pPhysicsShell->Deactivate();
@@ -1231,7 +1231,7 @@ void CActor::spawn_supplies			()
 }
 
 float max_depth=0.f;
-void __stdcall TestDepthCallback (bool& do_colide,dContact& c,SGameMtl* material_1,SGameMtl* material_2)
+void TestDepthCallback (bool& do_colide,dContact& c,SGameMtl* material_1,SGameMtl* material_2)
 {
 	float& depth=c.geom.depth;
 	if(depth>max_depth)

@@ -57,7 +57,7 @@ void CAttachmentOwner::renderable_Render		()
 		(*I)->renderable_Render();
 }
 
-void __stdcall AttachmentCallback(CKinematics *tpKinematics)
+void AttachmentCallback(CKinematics *tpKinematics)
 {
 	CAttachmentOwner		*attachment_owner = smart_cast<CAttachmentOwner*>(static_cast<CObject*>(tpKinematics->Update_Callback_Param));
 	VERIFY					(attachment_owner);
