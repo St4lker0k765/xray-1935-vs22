@@ -106,60 +106,59 @@ void		CWallmarksEngine::wm_render			(wallmark*	W, FVF::LIT* &V)
 }
 
 //--------------------------------------------------------------------------------
-void CWallmarksEngine::RecurseTri(u32 t, Fmatrix &mView, CWallmarksEngine::wallmark	&W)
+void CWallmarksEngine::RecurseTri(u32 t, Fmatrix& mView, CWallmarksEngine::wallmark& W)
 {
-	CDB::TRI*	T			= sml_collector.getT()+t;
+	CDB::TRI* T = sml_collector.getT() + t;
 	if (T->dummy)			return;
-	T->dummy				= 0xffffffff;
-	
+	T->dummy = 0xffffffff;
+
 	// Some vars
-	u32*		v_ids		= T->verts;
-	Fvector*	v_data		= sml_collector.getV();
-	sml_poly_src.clear		();
-	sml_poly_src.push_back	(v_data[v_ids[0]]);
-	sml_poly_src.push_back	(v_data[v_ids[1]]);
-	sml_poly_src.push_back	(v_data[v_ids[2]]);
-	sml_poly_dest.clear		();
-	
-	sPoly* P = sml_clipper.ClipPoly	(sml_poly_src, sml_poly_dest);
-	
+	u32* v_ids = T->verts;
+	Fvector* v_data = sml_collector.getV();
+	sml_poly_src.clear();
+	sml_poly_src.push_back(v_data[v_ids[0]]);
+	sml_poly_src.push_back(v_data[v_ids[1]]);
+	sml_poly_src.push_back(v_data[v_ids[2]]);
+	sml_poly_dest.clear();
+
+	sPoly* P = sml_clipper.ClipPoly(sml_poly_src, sml_poly_dest);
+
 	//. todo
 	// uv_gen = mView * []
 	// UV = pos*uv_gen
 
 	if (P) {
 		// Create vertices and triangulate poly (tri-fan style triangulation)
-		FVF::LIT			V0,V1,V2;
+		FVF::LIT			V0, V1, V2;
 		Fvector				UV;
 
 		mView.transform_tiny(UV, (*P)[0]);
-		V0.set				((*P)[0],0,(1+UV.x)*.5f,(1-UV.y)*.5f);
+		V0.set((*P)[0], 0, (1 + UV.x) * .5f, (1 - UV.y) * .5f);
 		mView.transform_tiny(UV, (*P)[1]);
-		V1.set				((*P)[1],0,(1+UV.x)*.5f,(1-UV.y)*.5f);
+		V1.set((*P)[1], 0, (1 + UV.x) * .5f, (1 - UV.y) * .5f);
 
-		for (u32 i=2; i<P->size(); i++)
+		for (u32 i = 2; i < P->size(); i++)
 		{
 			mView.transform_tiny(UV, (*P)[i]);
-			V2.set				((*P)[i],0,(1+UV.x)*.5f,(1-UV.y)*.5f);
-			W.verts.push_back	(V0);
-			W.verts.push_back	(V1);
-			W.verts.push_back	(V2);
-			V1					= V2;
+			V2.set((*P)[i], 0, (1 + UV.x) * .5f, (1 - UV.y) * .5f);
+			W.verts.push_back(V0);
+			W.verts.push_back(V1);
+			W.verts.push_back(V2);
+			V1 = V2;
 		}
-		
-		// recurse
-		for (i=0; i<3; i++)
+
+		for (u32 i = 0; i < 3; i++)
 		{
-			u32 adj					= sml_adjacency[3*t+i];
-			if (0xffffffff==adj)	continue;
-			CDB::TRI*	SML			= sml_collector.getT() + adj;
-			v_ids					= SML->verts;
+			u32 adj = sml_adjacency[3 * t + i];
+			if (0xffffffff == adj) continue;
+			CDB::TRI* SML = sml_collector.getT() + adj;
+			v_ids = SML->verts;
 
 			Fvector test_normal;
-			test_normal.mknormal	(v_data[v_ids[0]],v_data[v_ids[1]],v_data[v_ids[2]]);
-			float cosa				= test_normal.dotproduct(sml_normal);
-			if (cosa<EPS)			continue;
-			RecurseTri				(adj,mView,W);
+			test_normal.mknormal(v_data[v_ids[0]], v_data[v_ids[1]], v_data[v_ids[2]]);
+			float cosa = test_normal.dotproduct(sml_normal);
+			if (cosa < EPS) continue;
+			RecurseTri(adj, mView, W);
 		}
 	}
 }

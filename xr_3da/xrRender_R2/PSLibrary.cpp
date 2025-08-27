@@ -35,20 +35,21 @@ void CPSLibrary::OnCreate()
  
 void CPSLibrary::OnDestroy()
 {
-	for (PS::PSIt s_it = m_PSs.begin(); s_it!=m_PSs.end(); s_it++)
-		s_it->m_CachedShader.destroy	();
-	for (PS::PEDIt e_it = m_PEDs.begin(); e_it!=m_PEDs.end(); e_it++)
-    	(*e_it)->DestroyShader();
+    for (PS::PSIt s_it = m_PSs.begin(); s_it != m_PSs.end(); ++s_it)
+        s_it->m_CachedShader.destroy();
 
-    m_PSs.clear		();
+    for (PS::PEDIt e_it = m_PEDs.begin(); e_it != m_PEDs.end(); ++e_it)
+        (*e_it)->DestroyShader();
 
-	for (e_it = m_PEDs.begin(); e_it!=m_PEDs.end(); e_it++)
-		xr_delete	(*e_it);
-	m_PEDs.clear	();
+    m_PSs.clear();
 
-	for (PS::PGDIt g_it = m_PGDs.begin(); g_it!=m_PGDs.end(); g_it++)
-		xr_delete	(*g_it);
-	m_PGDs.clear	();
+    for (PS::PEDIt e_it = m_PEDs.begin(); e_it != m_PEDs.end(); ++e_it)
+        xr_delete(*e_it);
+    m_PEDs.clear();
+
+    for (PS::PGDIt g_it = m_PGDs.begin(); g_it != m_PGDs.end(); ++g_it)
+        xr_delete(*g_it);
+    m_PGDs.clear();
 }
 //----------------------------------------------------
 
@@ -123,25 +124,38 @@ void CPSLibrary::RenamePGD(PS::CPGDef* src, LPCSTR new_name)
 	src->SetName(new_name);
 }
 
+#include <algorithm>
+
 void CPSLibrary::Remove(const char* nm)
 {
-    PS::SDef* sh = FindPS(nm);
-    if (sh){ 
-    	sh->m_CachedShader.destroy();
-    	m_PSs.erase(sh);
-    }else{
-    	PS::PEDIt it = FindPEDIt(nm);
-        if (it!=m_PEDs.end()){
-	    	(*it)->DestroyShader();
-        	xr_delete		(*it);
-	       	m_PEDs.erase	(it);
-        }else{
-            PS::PGDIt it = FindPGDIt(nm);
-            if (it!=m_PGDs.end()){
-    	    	xr_delete	(*it);
-		       	m_PGDs.erase(it);
-            }
-        }
+    if (PS::SDef* sh = FindPS(nm))
+    {
+        sh->m_CachedShader.destroy();
+
+        PS::PSIt it = std::find_if(m_PSs.begin(), m_PSs.end(),
+            [sh](PS::SDef& v) { return &v == sh; });
+
+        if (it != m_PSs.end())
+            m_PSs.erase(it);
+
+        return;
+    }
+
+    PS::PEDIt itPED = FindPEDIt(nm);
+    if (itPED != m_PEDs.end())
+    {
+        (*itPED)->DestroyShader();
+        xr_delete(*itPED);
+        m_PEDs.erase(itPED);
+        return;
+    }
+
+    PS::PGDIt itPGD = FindPGDIt(nm);
+    if (itPGD != m_PGDs.end())
+    {
+        xr_delete(*itPGD);
+        m_PGDs.erase(itPGD);
+        return;
     }
 }
 //----------------------------------------------------

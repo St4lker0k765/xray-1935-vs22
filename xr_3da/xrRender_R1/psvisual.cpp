@@ -31,74 +31,103 @@ void CPSVisual::Copy(IRender_Visual* pFrom)
 // 
 void CPSVisual::Update(u32 dt)
 {
-	float fTime		= Device.fTimeGlobal;
-	float dT		= float(dt)/1000.f;
-	
+	float fTime = Device.fTimeGlobal;
+	float dT = float(dt) / 1000.f;
+
 	// calculate number of particles to destroy
-	int iCount_Destroy	= 0;
-	for (int i=0; i<int(m_Particles.size()); i++)
-		if (fTime>m_Particles[i].m_Time.end)	iCount_Destroy++;
-		
-	// calculate how many particles we should create from ParticlesPerSec and time elapsed
-	int iCount_Create	= m_Emitter->CalculateBirth(m_Particles.size() - iCount_Destroy, fTime, dT);
-		
-	// create/destroy/simulate particles that we own
-	float TM	 		= fTime-dT;
-	float dT_delta 		= dT/(iCount_Create?iCount_Create:1);
-	float p_size		= 0;
-	Fvector Pos; float size;
-	vis.box.invalidate	();
-	for (i=0; i<int(m_Particles.size()); i++)
+	int iCount_Destroy = 0;
+	for (size_t i = 0; i < m_Particles.size(); ++i)
 	{
-		if (fTime>m_Particles[i].m_Time.end) {
-			// Need to destroy particle
-			if (iCount_Create)	{
+		if (fTime > m_Particles[i].m_Time.end)
+			++iCount_Destroy;
+	}
+
+	// calculate how many particles we should create from ParticlesPerSec and time elapsed
+	int iCount_Create = m_Emitter->CalculateBirth(
+		static_cast<int>(m_Particles.size()) - iCount_Destroy,
+		fTime,
+		dT
+	);
+
+	// create/destroy/simulate particles that we own
+	float TM = fTime - dT;
+	float dT_delta = dT / (iCount_Create ? iCount_Create : 1);
+	float p_size = 0.f;
+
+	Fvector Pos;
+	float   size = 0.f;
+
+	vis.box.invalidate();
+
+	for (size_t i = 0; i < m_Particles.size();)
+	{
+		if (fTime > m_Particles[i].m_Time.end)
+		{
+			if (iCount_Create)
+			{
 				// Replace
 				m_Emitter->GenerateParticle(m_Particles[i], m_Definition, TM);
-				TM				+= dT_delta;
-				iCount_Create	-= 1;
-			} else {
+				TM += dT_delta;
+				--iCount_Create;
+			}
+			else
+			{
 				// Erase
-				m_Particles.erase	(m_Particles.begin()+i);
-				i--;
+				m_Particles.erase(m_Particles.begin() + i);
 				continue;
 			}
 		}
-		
+
 		// Simulate this particle
-		SParticle& P	= m_Particles[i];
-		float T 		= fTime-P.m_Time.start;
-		float k 		= T/(P.m_Time.end-P.m_Time.start);
-		
-		PS::SimulatePosition(Pos, &P,T,k);		vis.box.modify		(Pos);
-		PS::SimulateSize	(size,&P,k,1-k);	if (size>p_size)	p_size = size;
+		SParticle& P = m_Particles[i];
+		float T = fTime - P.m_Time.start;
+		float k = T / (P.m_Time.end - P.m_Time.start);
+
+		PS::SimulatePosition(Pos, &P, T, k);
+		vis.box.modify(Pos);
+
+		PS::SimulateSize(size, &P, k, 1 - k);
+		if (size > p_size)
+			p_size = size;
+
+		++i;
 	}
-	
+
 	// if we need to create somewhat more particles...
-	while (iCount_Create) {
-		// Create
-		m_Particles.push_back		(SParticle());
-		SParticle& P				=	m_Particles.back();
-		m_Emitter->GenerateParticle	(P, m_Definition, TM);
-		TM							+=	dT_delta;
-		iCount_Create				-=	1;
+	while (iCount_Create > 0)
+	{
+		m_Particles.emplace_back();
+		SParticle& P = m_Particles.back();
+
+		m_Emitter->GenerateParticle(P, m_Definition, TM);
+		TM += dT_delta;
+		--iCount_Create;
 
 		// Simulate
-		float T 					=	fTime-P.m_Time.start;
-		float k 					=	T/(P.m_Time.end-P.m_Time.start);
-		PS::SimulatePosition		(Pos, &P,T,k);		vis.box.modify		(Pos);
-		PS::SimulateSize			(size,&P,k,1-k);	if (size>p_size)	p_size = size;
+		float T = fTime - P.m_Time.start;
+		float k = T / (P.m_Time.end - P.m_Time.start);
+
+		PS::SimulatePosition(Pos, &P, T, k);
+		vis.box.modify(Pos);
+
+		PS::SimulateSize(size, &P, k, 1 - k);
+		if (size > p_size)
+			p_size = size;
 	}
-	
-	if (m_Particles.empty())	{
-		vis.box.set			(m_Emitter->m_Position, m_Emitter->m_Position);
-		vis.box.grow		(0.1f);
-		vis.box.getsphere	(vis.sphere.P,vis.sphere.R);
-	} else {
-		vis.box.grow		(p_size);
-		vis.box.getsphere	(vis.sphere.P,vis.sphere.R);
+
+	if (m_Particles.empty())
+	{
+		vis.box.set(m_Emitter->m_Position, m_Emitter->m_Position);
+		vis.box.grow(0.1f);
+		vis.box.getsphere(vis.sphere.P, vis.sphere.R);
+	}
+	else
+	{
+		vis.box.grow(p_size);
+		vis.box.getsphere(vis.sphere.P, vis.sphere.R);
 	}
 }
+
 
 //----------------------------------------------------
 IC void FillSprite	(FVF::TL*& pv, const Fmatrix& M, const Fvector& pos, const Fvector2& lt, const Fvector2& rb, float radius, u32 clr, float angle, float scale, float w_2, float h_2)
