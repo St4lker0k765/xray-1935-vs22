@@ -184,7 +184,7 @@ typedef BOOL (WINAPI *MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hF
 										 );
 
 
-LONG UnhandledFilter	( struct _EXCEPTION_POINTERS *pExceptionInfo )
+LONG WINAPI UnhandledFilter	( struct _EXCEPTION_POINTERS *pExceptionInfo )
 {
 	LONG retval		= EXCEPTION_CONTINUE_SEARCH;
 	bException		= TRUE;
