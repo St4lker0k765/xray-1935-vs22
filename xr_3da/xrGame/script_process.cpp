@@ -60,7 +60,7 @@ void CScriptProcess::run_strings()
 {
 	for ( ; !m_strings_to_run.empty(); ) {
 		LPSTR		I = m_strings_to_run.back();
-		int			err_code = lua_dostring(ai().script_engine().lua(),I);
+		int			err_code = luaL_dostring(ai().script_engine().lua(),I);
 
 		if (err_code) {
 			if (!ai().script_engine().print_output(ai().script_engine().lua(),"console_string",err_code))

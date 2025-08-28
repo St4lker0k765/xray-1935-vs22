@@ -13,6 +13,8 @@
 #include "script_export_space.h"
 #include "script_callback.h"
 
+#include "GameTaskDefs.h"
+
 enum EPdaMsg;
 enum ESoundTypes;
 enum ETaskState;

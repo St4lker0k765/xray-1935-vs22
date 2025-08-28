@@ -862,9 +862,6 @@
     <Filter Include="AI\AScript">
       <UniqueIdentifier>{755cf1b8-ba3c-4c75-a0f1-ec3fed53f5d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\luabind">
-      <UniqueIdentifier>{d77193ae-2bc6-46d3-ae82-d76dfba6150b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\AScript\ScriptClasses">
       <UniqueIdentifier>{9a072e64-0891-4c6e-8154-6a36388ea5ea}</UniqueIdentifier>
     </Filter>
@@ -2573,63 +2570,6 @@
     </ClCompile>
     <ClCompile Include="patrol_point.cpp">
       <Filter>AI\ANavigation\PatrolPaths\PatrolPoint</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\class.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\class_info.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\class_registry.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\class_rep.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\create_class.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\error.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\find_best_match.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\function.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\implicit_cast.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\link_compatibility.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\object.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\object_rep.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\open.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\pcall.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\ref.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\scope.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\stack_content_by_name.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\weak_ref.cpp">
-      <Filter>AI\AScript\luabind</Filter>
-    </ClCompile>
-    <ClCompile Include="luabind\wrapper_base.cpp">
-      <Filter>AI\AScript\luabind</Filter>
     </ClCompile>
     <ClCompile Include="script_abstract_action.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_abstract_action</Filter>

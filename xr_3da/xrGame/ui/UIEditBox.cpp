@@ -133,7 +133,7 @@ bool CUIEditBox::KeyPressed(int dik)
 		if(m_iCursorPos > 0)
 		{
 			--m_iCursorPos;
-			m_sEdit.erase(&m_sEdit[m_iCursorPos]);
+			m_sEdit.erase(m_sEdit.begin() + m_iCursorPos);
 		}
 		str_updated = true; 
 		break;
@@ -141,7 +141,7 @@ bool CUIEditBox::KeyPressed(int dik)
 	case DIKEYBOARD_DELETE:
 		if(m_iCursorPos < m_sEdit.size()-1)
 		{
-			m_sEdit.erase(&m_sEdit[m_iCursorPos]);
+			m_sEdit.erase(m_sEdit.begin() + m_iCursorPos);
 		}
 		str_updated = true; 
 		break;
@@ -200,7 +200,7 @@ void CUIEditBox::AddChar(char c)
 	if(text_length>GetWidth()) 
 		return;
 	
-	m_sEdit.insert(&m_sEdit[m_iCursorPos], c);
+	m_sEdit.insert(m_sEdit.begin() + m_iCursorPos, c);
 	++m_iCursorPos;
 
 	/*if(!m_sEdit.empty()) m_sEdit.pop_back();

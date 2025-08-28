@@ -69,7 +69,7 @@ bool CScriptThread::Update()
 		m_bActive		= false;
 	}
 	else
-		if (!(lua()->ci->state & CI_YIELD)) {
+		if (l_iErrorCode && (l_iErrorCode != LUA_YIELD)) {
 			m_bActive	= false;
 			ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeInfo,"Script %s is finished!",m_script_name);
 		}

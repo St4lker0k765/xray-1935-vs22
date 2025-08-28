@@ -294,57 +294,57 @@ void CScriptGameObject::SetCharacterCommunity	(LPCSTR comm)
 
 ETaskState CScriptGameObject::GetGameTaskState	(LPCSTR task_id, int objective_num)
 {
-	CActor* pActor = smart_cast<CActor*>(m_tpGameObject);
-	VERIFY(pActor);
+    CActor* pActor = smart_cast<CActor*>(m_tpGameObject);
+    VERIFY(pActor);
 
-	TASK_INDEX task_index = CGameTask::IdToIndex(task_id);
-	R_ASSERT3(task_index != NO_TASK, "wrong task id", task_id);
-	
-	const GAME_TASK_VECTOR* tasks =  pActor->game_task_registry.objects_ptr();
-	if(!tasks) 
-		return eTaskStateDummy;
+    TASK_INDEX task_index = CGameTask::IdToIndex(task_id);
+    R_ASSERT3(task_index != NO_TASK, "wrong task id", task_id);
 
-	for(GAME_TASK_VECTOR::const_iterator it = tasks->begin();
-			tasks->end() != it; it++)
-	{
-		if((*it).index == task_index) 
-			break;
-	}
-	
-	if(tasks->end() == it) 
-		return eTaskStateDummy;
+    const GAME_TASK_VECTOR* tasks = pActor->game_task_registry.objects_ptr();
+    if (!tasks)
+        return eTaskStateDummy;
 
-	R_ASSERT3((std::size_t)objective_num < (*it).states.size(), "wrong objective num", task_id);
-	return (*it).states[objective_num];
+    GAME_TASK_VECTOR::const_iterator it = tasks->begin();
+    for (; it != tasks->end(); ++it)
+    {
+        if ((*it).index == task_index)
+            break;
+    }
+
+    if (it == tasks->end())
+        return eTaskStateDummy;
+
+    R_ASSERT3(static_cast<std::size_t>(objective_num) < (*it).states.size(), "wrong objective num", task_id);
+    return (*it).states[objective_num];
 }
 
 void CScriptGameObject::SetGameTaskState	(ETaskState state, LPCSTR task_id, int objective_num)
 {
-	CActor* pActor = smart_cast<CActor*>(m_tpGameObject);
-	VERIFY(pActor);
+    CActor* pActor = smart_cast<CActor*>(m_tpGameObject);
+    VERIFY(pActor);
 
-	TASK_INDEX task_index = CGameTask::IdToIndex(task_id);
-	R_ASSERT3(task_index != NO_TASK, "wrong task id", task_id);
-	
-	GAME_TASK_VECTOR& tasks =  pActor->game_task_registry.objects();
+    TASK_INDEX task_index = CGameTask::IdToIndex(task_id);
+    R_ASSERT3(task_index != NO_TASK, "wrong task id", task_id);
 
-	for(GAME_TASK_VECTOR::iterator it = tasks.begin();
-			tasks.end() != it; it++)
-	{
-		if((*it).index == task_index) 
-			break;
-	}
+    GAME_TASK_VECTOR& tasks = pActor->game_task_registry.objects();
 
-	R_ASSERT3(tasks.end() != it, "actor does not has task", task_id);
-	R_ASSERT3((std::size_t)objective_num < (*it).states.size(), "wrong objective num", task_id);
-	(*it).states[objective_num] = state;
+    GAME_TASK_VECTOR::iterator it = tasks.begin();
+    for (; it != tasks.end(); ++it)
+    {
+        if ((*it).index == task_index)
+            break;
+    }
 
-	//если мы устанавливаем финальное состояние для основного задания, то
-	//запомнить время выполнения
-	if(0 == objective_num && eTaskStateCompleted == state || eTaskStateFail == state)
-	{
-		(*it).finish_time = Level().GetGameTime();
-	}
+    R_ASSERT3(it != tasks.end(), "actor does not have task", task_id);
+    R_ASSERT3(static_cast<std::size_t>(objective_num) < (*it).states.size(), "wrong objective num", task_id);
+
+    (*it).states[objective_num] = state;
+
+    // если мы устанавливаем финальное состояние для основного задания, то запомнить время выполнения
+    if (objective_num == 0 && (state == eTaskStateCompleted || state == eTaskStateFail))
+    {
+        (*it).finish_time = Level().GetGameTime();
+    }
 }
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

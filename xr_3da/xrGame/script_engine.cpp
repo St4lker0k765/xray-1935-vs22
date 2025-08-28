@@ -418,34 +418,42 @@ void CScriptEngine::add_file			(LPCSTR file_name)
 void CScriptEngine::load_common_scripts()
 {
 #ifdef DBG_DISABLE_SCRIPTS
-	return;
+    return;
 #endif
-	string256		S;
-	FS.update_path	(S,"$game_data$","script.ltx");
-	CInifile		*l_tpIniFile = xr_new<CInifile>(S);
-	R_ASSERT		(l_tpIniFile);
-	if (!l_tpIniFile->section_exist("common")) {
-		xr_delete			(l_tpIniFile);
-		return;
-	}
 
-	if (l_tpIniFile->line_exist("common","script")) {
-		LPCSTR			caScriptString = l_tpIniFile->r_string("common","script");
-		u32				n = _GetItemCount(caScriptString);
-		string256		I;
-		for (u32 i=0; i<n; ++i) {
-			add_file	(_GetItem(caScriptString,i,I));
-			process		();
-			if (object("_G",strcat(I,"_initialize"),LUA_TFUNCTION))
-//				lua_dostring			(lua(),strcat(I,"()"));
-				luabind::functor<void>	f;
-				R_ASSERT				(functor(I,f));
-				f						();
-		}
-	}
+    char S[256];
+    FS.update_path(S, "$game_data$", "script.ltx");
+    CInifile* l_tpIniFile = xr_new<CInifile>(S);
+    R_ASSERT(l_tpIniFile);
 
-	xr_delete			(l_tpIniFile);
+    if (!l_tpIniFile->section_exist("common")) {
+        xr_delete(l_tpIniFile);
+        return;
+    }
+
+    if (l_tpIniFile->line_exist("common", "script")) {
+        const char* caScriptString = l_tpIniFile->r_string("common", "script");
+        u32 n = _GetItemCount(caScriptString);
+        for (u32 i = 0; i < n; ++i) {
+            char item[256];
+            _GetItem(caScriptString, i, item);
+            
+            add_file(item);
+            process();
+
+            // Формируем имя функции и вызываем
+            std::string fun_name = std::string(item) + "_initialize";
+            if (object("_G", fun_name.c_str(), LUA_TFUNCTION)) {
+                luabind::functor<void> f;
+                R_ASSERT(functor(fun_name.c_str(), f));
+                f();
+            }
+        }
+    }
+
+    xr_delete(l_tpIniFile);
 }
+
 
 void CScriptEngine::process	()
 {

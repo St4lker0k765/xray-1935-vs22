@@ -54,7 +54,7 @@ void CUIStaticItem::Init(LPCSTR tex, LPCSTR sh, int left, int top, u32 align)
 void CUIStaticItem::Render		(const ref_shader& sh)
 {
 	// установить обязательно перед вызовом CustomItem::Render() !!!
-	RCache.set_Shader			(sh?sh:(ref_shader&)hShader);
+	RCache.set_Shader			(sh ? (ref_shader)sh :hShader);
 	// convert&set pos
 	Ivector2		bp;
 	HUD().ClientToScreenScaled	(bp,iPos.x,iPos.y,uAlign);
@@ -137,7 +137,7 @@ void CUIStaticItem::Render		(const ref_shader& sh)
 void CUIStaticItem::Render(float angle, const ref_shader& sh)
 {
 	// установить обязательно перед вызовом CustomItem::Render() !!!
-	RCache.set_Shader			(sh?sh:(ref_shader&)hShader);
+	RCache.set_Shader			(sh ? (ref_shader)sh :hShader);
 	// convert&set pos
 	Ivector2		bp;
 	HUD().ClientToScreenScaled	(bp,iPos.x,iPos.y,uAlign);
@@ -162,7 +162,7 @@ void CUIStaticItem::Render(float x1, float y1, float x2, float y2,
 						   float x3, float y3, float x4, float y4, const ref_shader& sh)
 {
 	// установить обязательно перед вызовом CustomItem::Render() !!!
-	RCache.set_Shader		(sh?sh:(ref_shader&)hShader);
+	RCache.set_Shader			(sh ? (ref_shader)sh :hShader);
 	// convert&set pos
 	Ivector2		bp;
 	HUD().ClientToScreenScaled	(bp,iPos.x,iPos.y,uAlign);
