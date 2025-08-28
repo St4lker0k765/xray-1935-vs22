@@ -261,9 +261,9 @@ IC bool sort_env_pred		(const CEnvDescriptor* x, const CEnvDescriptor* y)
 void CEnvironment::load		()
 {
 	tonemap					= Device.Resources->_CreateTexture("$user$tonemap");	//. hack
-    if (!eff_Rain)    		eff_Rain 		= xr_new<CEffect_Rain>();
-    if (!eff_LensFlare)		eff_LensFlare 	= xr_new<CLensFlare>();
-    if (!eff_Thunderbolt)	eff_Thunderbolt	= xr_new<CEffect_Thunderbolt>();
+    //if (!eff_Rain)    		eff_Rain 		= new CEffect_Rain();
+    if (!eff_LensFlare)		eff_LensFlare 	= new CLensFlare();
+	if (!eff_Thunderbolt)	eff_Thunderbolt = new CEffect_Thunderbolt();
 	if (Weathers.empty()){
     	LPCSTR first_weather=0;
     	int weather_count	= pSettings->line_count("weathers");

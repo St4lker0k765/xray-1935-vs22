@@ -53,13 +53,13 @@ CScriptGameObject *get_object_by_id(u32 id)
 
 LPCSTR get_weather	()
 {
-	return			(*g_pGamePersistent->Environment.GetWeather());
+	return			(*g_pGamePersistent->Environment().GetWeather());
 }
 
 void set_weather	(LPCSTR weather_name)
 {
-	VERIFY3			(g_pGamePersistent->Environment.Weathers.find(weather_name) != g_pGamePersistent->Environment.Weathers.end(),"There is no weather with the specified name ",weather_name);
-	return			(g_pGamePersistent->Environment.SetWeather(weather_name));
+	VERIFY3			(g_pGamePersistent->Environment().Weathers.find(weather_name) != g_pGamePersistent->Environment().Weathers.end(),"There is no weather with the specified name ",weather_name);
+	return			(g_pGamePersistent->Environment().SetWeather(weather_name));
 }
 
 void set_time_factor(float time_factor)
@@ -84,7 +84,7 @@ float cover_in_direction(u32 level_vertex_id, const Fvector &direction)
 
 float rain_factor()
 {
-	return			(g_pGamePersistent->Environment.CurrentEnv.rain_density);
+	return			(g_pGamePersistent->Environment().CurrentEnv.rain_density);
 }
 
 u32	vertex_in_direction(u32 level_vertex_id, Fvector direction, float max_distance)

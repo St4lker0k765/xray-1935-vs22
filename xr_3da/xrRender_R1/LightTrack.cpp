@@ -151,7 +151,7 @@ void	CLightTrack::ltrack	(IRenderable* O)
 
 	// Process ambient lighting and approximate average lighting
 	// Process our lights to find average luminiscense
-	CEnvDescriptor&	desc		= g_pGamePersistent->Environment.CurrentEnv;
+	CEnvDescriptor&	desc		= g_pGamePersistent->Environment().CurrentEnv;
 	ambient		= l_i*ambient + l_f*O->renderable_Ambient();
 	clamp		(ambient,0.f,255.f);
 	Fvector		accum	= { ambient,ambient,ambient	};

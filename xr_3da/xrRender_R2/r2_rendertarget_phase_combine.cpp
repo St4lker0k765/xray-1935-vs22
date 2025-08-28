@@ -25,7 +25,7 @@ void	CRenderTarget::phase_combine	()
 
 		// Compute params
 		Fmatrix		m_v2w;			m_v2w.invert				(Device.mView		);
-		CEnvDescriptor&		envdesc	= g_pGamePersistent->Environment.CurrentEnv;
+		CEnvDescriptor&		envdesc	= g_pGamePersistent->Environment().CurrentEnv;
 		Fvector4	envclr			= { envdesc.sky_color.x, envdesc.sky_color.y, envdesc.sky_color.z, envdesc.sky_factor };
 
 		// Fill VB
@@ -60,7 +60,7 @@ void	CRenderTarget::phase_combine	()
 	// Draw skybox
 	{
 		// RCache.set_Stencil		(TRUE,D3DCMP_EQUAL,0x00,0xff,0x00);
-		g_pGamePersistent->Environment.RenderFirst	();
+		g_pGamePersistent->Environment().RenderFirst	();
 	}
 
 	// Perform blooming filter and distortion if needed

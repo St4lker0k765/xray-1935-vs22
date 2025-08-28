@@ -9,7 +9,20 @@
 //refs
 class ENGINE_API IRender_DetailModel;
 
-
+struct ENGINE_API SRainParams
+{
+public:
+	int		max_desired_items;
+	float	source_radius, source_height;
+	float	drop_length;
+	float	drop_width, drop_angle, drop_max_angle;
+	float	drop_max_wind_vel, drop_speed_min, drop_speed_max;
+	int		max_particles, particles_cache;
+	float	particles_time;
+	u32		dwReferences;
+public:
+	SRainParams();
+};
 //
 class ENGINE_API CEffect_Rain
 {
@@ -77,10 +90,12 @@ private:
 	BOOL							RayPick			(const Fvector& s, const Fvector& d, float& range);
 	void							UpdateItem		(Item& dest, float height, BOOL bHit);
 public:
+									CEffect_Rain	();
+									~CEffect_Rain	();
+
 	void							Render			();
 
-	CEffect_Rain					();
-	~CEffect_Rain					();
+
 };
 
 #endif //RainH

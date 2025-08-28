@@ -146,7 +146,7 @@ void			CLight_DB::Update			()
 	// set sun params
 	if (sun_original && sun_adapted)
 	{
-		CEnvDescriptor&	E			= g_pGamePersistent->Environment.CurrentEnv;
+		CEnvDescriptor&	E			= g_pGamePersistent->Environment().CurrentEnv;
 		Fvector						OD,OP,AD,AP;
 		OD.set						(E.sun_dir).normalize	();
 		OP.mad						(Device.vCameraPosition,OD,-500.f);

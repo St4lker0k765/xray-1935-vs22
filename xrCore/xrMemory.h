@@ -65,25 +65,24 @@ extern XRCORE_API	xrMemory	Memory;
 #endif
 
 // generic "C"-like allocations/deallocations
-template <class T>
-IC T*		xr_alloc	(u32 count)				{	return  (T*)Memory.mem_alloc(count*sizeof(T));	}
+	template <class T>
+	IC T*		xr_alloc	(u32 count)				{	return  (T*)Memory.mem_alloc(count*sizeof(T));	}
+	template <class T>
+	IC void		xr_free		(T* &P)					{	if (P) { Memory.mem_free((void*)P); P=NULL;	};	}
+	IC void*	xr_malloc	(size_t size)			{	return	Memory.mem_alloc(size);					}
+	IC void*	xr_realloc	(void* P, size_t size)	{	return Memory.mem_realloc(P,size);				}
 
-template <class T>
-IC void		xr_free		(T* &P)					{	if (P) { Memory.mem_free((void*)P); P=NULL;	};	}
+IC void*	xr_memcpy	(void* dst, const void *src, u32 size) { Memory.mem_copy(dst, src, size); return dst; }	
 
-IC void*	xr_malloc	(size_t size)			{	return	Memory.mem_alloc(size);					}
+XRCORE_API	char* 	xr_strdup	(const char* string);
 
-IC void*	xr_realloc	(void* P, size_t size)	{	return Memory.mem_realloc(P,size);				}
+#	if !(defined(__BORLANDC__) || defined(NO_XRNEW))
+	IC void*	operator new		(size_t size)		{	return Memory.mem_alloc(size?size:1);				}
+	IC void		operator delete		(void *p)			{	xr_free(p);											}
+	IC void*	operator new[]		(size_t size)		{	return Memory.mem_alloc(size?size:1);				}
+	IC void		operator delete[]	(void* p)			{	xr_free(p);											}
+#	endif
 
-XRCORE_API char* __stdcall	xr_strdup	(const char* string);
-
-// Global new/delete override
-#if !(defined(__BORLANDC__) || defined(NO_XRNEW))
-	IC void*	__cdecl operator new		(size_t size)		{	return xr_malloc(size?size:1);			}
-	IC void		__cdecl operator delete		(void *p)			{	xr_free(p);								}
-	IC void*	__cdecl operator new[]		(size_t size)		{	return xr_malloc(size?size:1);			}
-	IC void		__cdecl	operator delete[]	(void* p)			{	xr_free(p);								}
-#endif
 
 // POOL-ing
 const		u32			mem_pools_count			=	65;

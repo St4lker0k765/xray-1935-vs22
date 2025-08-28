@@ -426,7 +426,7 @@ void CRender::render_sun				()
 	// calculate view-frustum bounds in world space
 	Fmatrix	ex_project, ex_full, ex_full_inverse;
 	{
-		ex_project.build_projection	(deg2rad(Device.fFOV*Device.fASPECT),Device.fASPECT,ps_r2_sun_near,g_pGamePersistent->Environment.CurrentEnv.far_plane); 
+		ex_project.build_projection	(deg2rad(Device.fFOV*Device.fASPECT),Device.fASPECT,ps_r2_sun_near,g_pGamePersistent->Environment().CurrentEnv.far_plane);
 		ex_full.mul					(ex_project,Device.mView);
 		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
 	}

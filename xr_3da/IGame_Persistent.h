@@ -22,7 +22,9 @@ public:
 #ifndef _EDITOR
 	IGame_ObjectPool				ObjectPool;
 #endif
-	CEnvironment					Environment;
+	CEnvironment*					pEnvironment;
+	CEnvironment& Environment() { return *pEnvironment; };
+
 	BOOL							bDedicatedServer	;
 
 	virtual	void					OnAppCycleStart		();

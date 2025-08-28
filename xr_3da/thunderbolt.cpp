@@ -118,8 +118,8 @@ IC bool sound_pred(const CEffect_Thunderbolt::SoundDesc& x, float val)
 	return x.time<val;
 };
 */
-#define FAR_DIST g_pGamePersistent->Environment.CurrentEnv.far_plane
-#define SUN_DIR  g_pGamePersistent->Environment.CurrentEnv.sun_dir
+#define FAR_DIST g_pGamePersistent->Environment().CurrentEnv.far_plane
+#define SUN_DIR  g_pGamePersistent->Environment().CurrentEnv.sun_dir
 void CEffect_Thunderbolt::Bolt(float period, float lt)
 {
 	state 		            = stWorking;
@@ -195,8 +195,8 @@ void CEffect_Thunderbolt::OnFrame(BOOL enabled, float period, float duration)
         lightning_phase	= 1.5f*(current_time/life_time);
         clamp			(lightning_phase,0.f,1.f);
 
-        g_pGamePersistent->Environment.CurrentEnv.sky_color.add(lightning_phase*p_sky_color);
-        g_pGamePersistent->Environment.CurrentEnv.sun_color.add(lightning_phase*p_sun_color);
+        g_pGamePersistent->Environment().CurrentEnv.sky_color.add(lightning_phase*p_sky_color);
+        g_pGamePersistent->Environment().CurrentEnv.sun_color.add(lightning_phase*p_sun_color);
     }
 }
 

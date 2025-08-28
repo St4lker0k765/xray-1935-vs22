@@ -414,7 +414,7 @@ void	CRender::Render		()
 	r_dsgraph_render_hud						();				// hud
 	r_dsgraph_render_graph						(0);			// normal level
 	Details->Render								();				// grass / details
-	g_pGamePersistent->Environment.RenderFirst	();				// sky / sun
+	g_pGamePersistent->Environment().RenderFirst	();				// sky / sun
 	r_pmask										(true,false);	// disable priority "1"
 	L_Dynamic->render							();				// addititional light sources
 	Wallmarks->Render							();				// wallmarks has priority as normal geometry
@@ -425,7 +425,7 @@ void	CRender::Render		()
 	r_dsgraph_render_graph						(1);			// normal level, secondary priority
 	r_dsgraph_render_sorted						();				// strict-sorted geoms
 	L_Glows->Render								();				// glows
-	g_pGamePersistent->Environment.RenderLast	();				// rain/lens-flares/thunder-bolts
+	g_pGamePersistent->Environment().RenderLast	();				// rain/lens-flares/thunder-bolts
 
 	// Postprocess, if necessary
 	Target->End						();
