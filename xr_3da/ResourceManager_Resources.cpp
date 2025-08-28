@@ -167,18 +167,32 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		LPD3DXBUFFER				pErrorBuf	= NULL;
 		LPD3DXSHADER_CONSTANTTABLE	pConstants	= NULL;
 		HRESULT						_hr			= S_OK;
-		string256					cname;
-		FS.update_path				(cname,	"$game_shaders$", strconcat(cname,::Render->getShaderPath(),_name,".vs"));
-		LPCSTR						target		= NULL;
+		string_path					cname;
+		strconcat					(cname,::Render->getShaderPath(),_name,".vs");
+		FS.update_path				(cname,	"$game_shaders$", cname);
 
+		IReader*					fs			= FS.r_open(cname);
+		R_ASSERT3					(fs, "shader file doesnt exist", cname);
+
+		// Select target
+		LPCSTR						c_target	= "vs_2_0";
+		LPCSTR						c_entry		= "main";
 		/*if (HW.Caps.geometry.dwVersion>=CAP_VERSION(3,0))			target="vs_3_0";
-		else*/ if (HW.Caps.geometry_major>=2)						target="vs_2_0";
-		else 														target="vs_1_1";
+		else*/ if (HW.Caps.geometry_major>=2)						c_target="vs_2_0";
+		else 														c_target="vs_1_1";
+
+		LPSTR pfs					= xr_alloc<char>(fs->length() + 1);
+		strncpy						(pfs, (LPCSTR)fs->pointer(), fs->length());
+		pfs							[fs->length()] = 0;
+
+		if (strstr(pfs, "main_vs_1_1"))			{ c_target = "vs_1_1"; c_entry = "main_vs_1_1";	}
+		if (strstr(pfs, "main_vs_2_0"))			{ c_target = "vs_2_0"; c_entry = "main_vs_2_0";	}
+		
+		xr_free(pfs);
 
 		// vertex
-		IReader*					fs			= FS.r_open(cname);
 		R_ASSERT2					(fs,cname);
-		_hr = ::Render->shader_compile(name,LPCSTR(fs->pointer()),fs->length(), NULL, &Includer, "main", target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_PREFER_FLOW_CONTROL, &pShaderBuf, &pErrorBuf, NULL);
+		_hr = ::Render->shader_compile(name,LPCSTR(fs->pointer()),fs->length(), NULL, &Includer, c_entry, c_target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR /*| D3DXSHADER_PREFER_FLOW_CONTROL*/, &pShaderBuf, &pErrorBuf, NULL);
 //		_hr = D3DXCompileShader		(LPCSTR(fs->pointer()),fs->length(), NULL, &Includer, "main", target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR, &pShaderBuf, &pErrorBuf, NULL);
 		FS.r_close					(fs);
 
@@ -259,6 +273,7 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 		if (strstr(data,"main_ps_1_2"))			{ c_target = "ps_1_2"; c_entry = "main_ps_1_2";	}
 		if (strstr(data,"main_ps_1_3"))			{ c_target = "ps_1_3"; c_entry = "main_ps_1_3";	}
 		if (strstr(data,"main_ps_1_4"))			{ c_target = "ps_1_4"; c_entry = "main_ps_1_4";	}
+		if (strstr(data,"main_ps_2_0"))			{ c_target = "ps_2_0"; c_entry = "main_ps_2_0";	}
 
 		// Compile
 		LPD3DXBUFFER				pShaderBuf	= NULL;
@@ -286,10 +301,17 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 			}
 			else	_hr = E_FAIL;
 		}
+		else
+		{
+			Msg("error is %s", (LPCSTR)pErrorBuf->GetBufferPointer());
+		}
+		
 		_RELEASE		(pShaderBuf);
 		_RELEASE		(pErrorBuf);
 		pConstants		= NULL;
-		R_CHK			(_hr);
+		if (FAILED(_hr))
+			Msg("Can't compile shader %s", name);
+
 		return			_ps;
 	}
 }
