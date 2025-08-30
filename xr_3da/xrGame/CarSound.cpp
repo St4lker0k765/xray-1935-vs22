@@ -18,7 +18,7 @@ void CCar::SCarSound::Init()
 	if (ini->section_exist("car_sound") && ini->line_exist("car_sound","snd_volume"))
 	{
 		volume  			= ini->r_float("car_sound","snd_volume");
-		snd_engine.create	(TRUE,ini->r_string("car_sound","snd_name"));//
+		snd_engine.create	(ini->r_string("car_sound","snd_name"), st_Effect, sg_SourceType);//
 	} else {
 		Msg					("! Car doesn't contain sound params");
 	}
@@ -32,7 +32,7 @@ void CCar::SCarSound::Update()
 	float		scale							= 0.2f+pcar->m_current_rpm/pcar->m_torque_rpm; clamp(scale,0.2f,2.0f);
 
 #pragma todo("Dima to Kostya : С тебя - пиво (Черниговское белое 0.5л)!")
-	if (snd_engine.feedback)
+	if (snd_engine._feedback())
 		snd_engine.set_position		(pcar->Position());
 
 	switch (eCarSound)

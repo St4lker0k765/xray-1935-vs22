@@ -81,14 +81,14 @@ u32 CSoundPlayer::load				(xr_vector<ref_sound*> &sounds, LPCSTR prefix, u32 max
 		_GetItem				(prefix,j,S);
 		if (FS.exist(fn,"$game_sounds$",S,".ogg")){
 			sounds.push_back	(xr_new<ref_sound>());
-			::Sound->create		(*sounds.back(),TRUE,prefix,type);
+			::Sound->create		(*sounds.back(),prefix, st_Effect, type);
 		}
 		for (u32 i=0; i<max_count; ++i){
 			string256			name;
 			sprintf				(name,"%s%d",S,i);
 			if (FS.exist(fn,"$game_sounds$",name,".ogg")){
 				sounds.push_back(xr_new<ref_sound>());
-				::Sound->create	(*sounds.back(),TRUE,name,type);
+				::Sound->create	(*sounds.back(),name, st_Effect, type);
 			}
 		}
 	}
@@ -137,8 +137,8 @@ void CSoundPlayer::update_playing_sounds()
 	xr_vector<CSoundSingle>::iterator	I = m_playing_sounds.begin();
 	xr_vector<CSoundSingle>::iterator	E = m_playing_sounds.end();
 	for ( ; I != E; ++I) {
-		if ((*I).m_sound->feedback)
-			(*I).m_sound->feedback->set_position(compute_sound_point(*I));
+		if ((*I).m_sound->_feedback())
+			(*I).m_sound->_feedback()->set_position(compute_sound_point(*I));
 		else
 			if (!(*I).started() && (Level().timeServer() >= (*I).m_start_time))
 				(*I).play_at_pos			(m_object,compute_sound_point(*I));
@@ -178,7 +178,7 @@ void CSoundPlayer::play				(u32 internal_type, u32 max_start_time, u32 min_start
 	if (max_stop_time)
 		random_time				= random(max_stop_time - min_stop_time) + min_stop_time;
 
-	sound_single.m_stop_time	= sound_single.m_start_time + sound_single.m_sound->handle->length_ms() + random_time;
+	sound_single.m_stop_time	= sound_single.m_start_time + sound_single.m_sound->_handle()->length_ms() + random_time;
 	m_playing_sounds.push_back	(sound_single);
 	
 	if (Level().timeServer() >= m_playing_sounds.back().m_start_time)

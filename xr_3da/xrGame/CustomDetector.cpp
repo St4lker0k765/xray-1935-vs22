@@ -41,8 +41,8 @@ void CCustomDetector::Load(LPCSTR section)
 	m_fRadius			= pSettings->r_float(section,"radius");
 	m_fBuzzerRadius		= pSettings->r_float(section,"buzzer_radius");
 
-	m_noise.create		(TRUE,pSettings->r_string(section,"noise"));
-	m_buzzer.create		(TRUE,pSettings->r_string(section,"buzzer"));
+	m_noise.create		(pSettings->r_string(section,"noise"), st_Effect, sg_SourceType);
+	m_buzzer.create		(pSettings->r_string(section,"buzzer"), st_Effect, sg_SourceType);
 
 	u32 i = 1;
 	string256 temp;
@@ -64,7 +64,7 @@ void CCustomDetector::Load(LPCSTR section)
 			zone_type.max_freq		= pSettings->r_float(section,temp);
 			R_ASSERT				(zone_type.min_freq<zone_type.max_freq);
 			sprintf					(temp, "zone_sound_%d", i);
-			zone_type.detect_snd.create(TRUE,pSettings->r_string(section,temp));
+			zone_type.detect_snd.create(pSettings->r_string(section,temp), st_Effect, sg_SourceType);
 
 			++i;
 		}

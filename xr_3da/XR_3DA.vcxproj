@@ -278,7 +278,6 @@
     <ClInclude Include="x_ray.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="psystem.h" />
-    <ClInclude Include="Sound.h" />
     <ClInclude Include="IInputReceiver.h" />
     <ClInclude Include="xr_input.h" />
     <ClInclude Include="ISheduled.h" />

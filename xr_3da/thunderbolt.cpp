@@ -39,7 +39,7 @@ CThunderboltDesc::CThunderboltDesc(CInifile* pIni, LPCSTR sect)
 
     // sound
 	m_name				= pSettings->r_string(sect,"sound");
-    if (m_name&&m_name[0]) snd.create(TRUE,m_name,0);
+    if (m_name && m_name[0]) snd.create(m_name, st_Effect, sg_Undefined);
 }
 
 CThunderboltDesc::~CThunderboltDesc()
@@ -158,13 +158,7 @@ void CEffect_Thunderbolt::Bolt(float period, float lt)
 	    next_lightning_time = Device.fTimeGlobal+lt+EPS_L;
     }else{
 	    next_lightning_time = Device.fTimeGlobal+period+Random.randF(-period*0.3f,period*0.3f);
-/*  
-		float val			= Device.fTimeGlobal+dist/300.f;
-	    SoundDeqIt it		= std::lower_bound(sound_times.begin(),sound_times.end(),val,sound_pred);
-    	sound_times.insert	(it,SoundDesc(val,pos));
-*/
-		current->snd.play_at_pos_unlimited(0,pos,FALSE,dist/300.f);
-		current->snd.set_range	(dist/2,dist*2.f);
+		current->snd.play_no_feedback		(0,0,dist/300.f,&pos,0,0,&Fvector2().set(dist/2,dist*2.f));
     }
 }
 
@@ -176,18 +170,6 @@ void CEffect_Thunderbolt::OnFrame(BOOL enabled, float period, float duration)
     }else if (bEnabled&&(Device.fTimeGlobal>next_lightning_time)){ 
     	if (state==stIdle)	Bolt(period,duration);
     }
-/*
-    if (!sound_times.empty()){
-    	SoundDesc& next_tm 	= sound_times.front();
-        if (Device.fTimeGlobal>next_tm.time){
-            // play sound
-            float dist = next_tm.pos.distance_to(Device.vCameraPosition);
-			current->snd.play_at_pos_unlimited(0,next_tm.pos,FALSE);
-			current->snd.set_range	(dist/2,dist*2.f);
-            sound_times.pop_front	();
-        }
-    }
-*/
 	if (state==stWorking){
     	if (current_time>life_time) state = stIdle;
     	current_time	+= Device.fTimeDelta;

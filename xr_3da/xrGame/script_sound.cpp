@@ -19,7 +19,7 @@ CScriptSound::CScriptSound				(LPCSTR caSoundName, ESoundTypes sound_type)
 	string256				l_caFileName;
 	
 	if (FS.exist(l_caFileName,"$game_sounds$",caSoundName,".ogg"))
-		m_sound.create		(TRUE,caSoundName,sound_type);
+		m_sound.create		(caSoundName, st_Effect, sound_type);
 	else
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"File not found \"%s\"!",l_caFileName);
 }
@@ -51,7 +51,7 @@ void CScriptSound::PlayUnlimited	(CScriptGameObject *object, float delay, int fl
 {
 	VERIFY				(m_sound.handle);
 	VERIFY				((flags & sm_Looped) != sm_Looped);
-	m_sound.play_unlimited(object->object(),flags,delay);
+	m_sound.play(object->object(),flags,delay);
 }
 
 void CScriptSound::PlayAtPos		(CScriptGameObject *object, const Fvector &position, float delay, int flags)
@@ -64,5 +64,5 @@ void CScriptSound::PlayAtPosUnlimited(CScriptGameObject *object, const Fvector &
 {
 	VERIFY				(m_sound.handle);
 	VERIFY				((flags & sm_Looped) != sm_Looped);
-	m_sound.play_at_pos_unlimited(object->object(), position,flags,delay);
+	m_sound.play_at_pos(object->object(), position,flags,delay);
 }

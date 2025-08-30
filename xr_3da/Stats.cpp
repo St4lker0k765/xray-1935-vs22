@@ -109,7 +109,7 @@ void CStats::Show()
 		b_ps						= .99f*b_ps + .01f*(clBOX.count/clBOX.result);
 
 		CSound_stats				snd;
-		::Sound->statistic			(snd);
+		::Sound->statistic			(&snd, 0);
 		
 		CGameFont&	F = *((CGameFont*)pFont);
 		float			f_base_size	= F.GetSize();

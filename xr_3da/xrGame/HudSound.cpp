@@ -29,7 +29,7 @@ void  HUD_SOUND::LoadSound(LPCSTR section, LPCSTR line,
 	R_ASSERT(count);
 
 	_GetItem(str, 0, buf_str);
-	snd.create(_3D, buf_str, type);
+	snd.create(buf_str, st_Effect, type);
 
 
 	if(volume != NULL)

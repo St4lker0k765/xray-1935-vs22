@@ -30,14 +30,14 @@ void CAI_Crow::SSound::Load(LPCSTR prefix)
 	string256	fn;
 	if (FS.exist(fn,"$game_sounds$",prefix,".ogg")){
 		m_Sounds.push_back	(ref_sound());
-		::Sound->create		(m_Sounds.back(),TRUE,prefix);
+		::Sound->create		(m_Sounds.back(),prefix, st_Effect, sg_SourceType);
 	}
 	for (int i=0; (i<MAX_SND_COUNT)&&(m_Sounds.size()<MAX_SND_COUNT); ++i){
 		string64		name;
 		sprintf			(name,"%s_%d",prefix,i);
 		if (FS.exist(fn,"$game_sounds$",name,".ogg")){
 			m_Sounds.push_back(ref_sound());
-			::Sound->create(m_Sounds.back(),TRUE,name);
+			::Sound->create(m_Sounds.back(),name, st_Effect, sg_SourceType);
 		}
 	}
 	R_ASSERT(m_Sounds.size());
@@ -46,7 +46,7 @@ void CAI_Crow::SSound::Load(LPCSTR prefix)
 void CAI_Crow::SSound::SetPosition(const Fvector& pos)
 {
 	for (int i=0; i<(int)m_Sounds.size(); ++i)
-		if (m_Sounds[i].feedback)
+		if (m_Sounds[i]._feedback())
 			m_Sounds[i].set_position(pos);
 }
 

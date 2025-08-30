@@ -28,7 +28,7 @@ struct _SoundProcessor	: public pureFrame
 	{
 		//Msg							("------------- sound: %d [%3.2f,%3.2f,%3.2f]",u32(Device.dwFrame),VPUSH(Device.vCameraPosition));
 		Device.Statistic.Sound.Begin();
-		::Sound->update				(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop,Device.fTimeDelta);
+		::Sound->update				(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop);
 		Device.Statistic.Sound.End	();
 	}
 }	SoundProcessor;
@@ -435,7 +435,7 @@ void CApplication::LoadBegin	()
 {
 	ll_dwReference++;
 	if (1==ll_dwReference) {
-		::Sound->set_volume (0.f);
+		::Sound->set_master_volume (0.f);
 		ll_hGeom.create		(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
 		ll_hLogo1.create	("font","ui\\ui_logo");
 		ll_hLogo2.create	("font","ui\\ui_logo_nv");
@@ -448,7 +448,7 @@ void CApplication::LoadEnd		()
 {
 	ll_dwReference--;
 	if (0==ll_dwReference)		{
-		::Sound->set_volume		(1.f);
+		::Sound->set_master_volume(1.f);
 	}
 }
 

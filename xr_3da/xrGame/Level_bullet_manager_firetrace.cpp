@@ -143,7 +143,7 @@ NULL:&mtl_pair->CollideSounds[::Random.randI(0,mtl_pair->CollideSounds.size())];
 	if(pSound)
 	{
 		CObject* O = Level().Objects.net_Find(bullet->parent_id );
-		pSound->play_at_pos_unlimited(O, vEnd, false);
+		pSound->play_at_pos(O, vEnd, 0);
 	}
 
 	LPCSTR ps_name = (!mtl_pair || mtl_pair->CollideParticles.empty())?

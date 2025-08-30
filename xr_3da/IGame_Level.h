@@ -70,7 +70,7 @@ public:
 	CObject*					CurrentViewEntity		( void ) const							{ return pCurrentViewEntity;			}
 	void						SetEntity				( CObject* O  )							{ pCurrentEntity=pCurrentViewEntity=O;	}
 	void						SetViewEntity			( CObject* O  )							{ pCurrentViewEntity=O;					}
-	void						SoundEvent				( ref_sound* S, float range );
+	void						SoundEvent				( ref_sound_data_ptr S, float range );
 
 	// Loader interface
 	ref_shader					LL_CreateShader			(int S, int T, int M, int C);

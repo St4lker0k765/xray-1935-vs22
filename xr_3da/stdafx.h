@@ -48,7 +48,7 @@
 // ..
 #include "xrXRC.h"
 
-#include "sound.h"
+#include "../xrSound/sound.h"
 
 // TODO: reference additional headers your program requires here
 #pragma comment( lib, "xrCore.lib"	)

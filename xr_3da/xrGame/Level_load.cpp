@@ -63,7 +63,7 @@ BOOL CLevel::Load_GameSpecific_After()
 			ref_sound* S			= static_Sounds.back();
 
 			OBJ->r_stringZ		(wav_name);
-			S->create			(TRUE,wav_name);
+			S->create			(wav_name, st_Effect, sg_SourceType);
 			OBJ->r_fvector3		(params.position);
 			params.volume		= OBJ->r_float();
 			params.freq			= OBJ->r_float();
@@ -89,7 +89,7 @@ BOOL CLevel::Load_GameSpecific_After()
 		Sounds_Random.reserve	(S.size());
 		for (CInifile::SectIt I=S.begin(); S.end()!=I; ++I) {
 			Sounds_Random.push_back	(ref_sound());
-			Sound->create			(Sounds_Random.back(),TRUE,*I->first);
+			Sound->create			(Sounds_Random.back(),*I->first, st_Effect, sg_SourceType);
 		}
 		Sounds_dwNextTime		= Device.TimerAsync	()	+ 50000;
 	}

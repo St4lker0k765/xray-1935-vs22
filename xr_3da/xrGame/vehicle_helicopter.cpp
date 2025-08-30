@@ -63,7 +63,7 @@ BOOL CVehicleHelicopter::net_Spawn			(LPVOID DC)
 //	m_animator->Load	(heli->get_motion());
 //	m_animator->Play	(true);
 
-	m_engine_sound.create(TRUE,*heli->engine_sound);
+	m_engine_sound.create(*heli->engine_sound, st_Effect, sg_SourceType);
 	m_engine_sound.play_at_pos(0,XFORM().c,sm_Looped);
 
 	setVisible			(true);

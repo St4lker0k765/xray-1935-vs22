@@ -304,8 +304,8 @@ void CEnvironment::load		()
 			strconcat	(_l,_n,"_l");
 			strconcat	(_r,_n,"_r");
 			music*		m = xr_new<music>	();
-			m->left.create		(true,_l,0);
-			m->right.create		(true,_r,0);
+			m->left.create		(_l, st_Music, sg_SourceType);
+			m->right.create		(_r, st_Music, sg_SourceType);
 			playlist.push_back	(m);
 		}
 	}

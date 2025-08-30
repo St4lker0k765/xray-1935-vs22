@@ -58,11 +58,11 @@ void CWeaponBinoculars::Load	(LPCSTR section)
 	setVisible			(FALSE);
 
 	// Sounds
-	sndShow.create(TRUE, pSettings->r_string(section,	"snd_draw"), m_eSoundShow);
-	sndHide.create(TRUE, pSettings->r_string(section,	"snd_holster"), m_eSoundHide);
-	sndGyro.create(TRUE, pSettings->r_string(section,	"snd_gyro"), st_SourceType);
-	sndZoomIn.create(TRUE, pSettings->r_string(section,	"snd_zoomin"), st_SourceType);
-	sndZoomOut.create(TRUE, pSettings->r_string(section,"snd_zoomout"), st_SourceType);
+	sndShow.create(pSettings->r_string(section,	"snd_draw"), st_Effect, m_eSoundShow);
+	sndHide.create(pSettings->r_string(section,	"snd_holster"), st_Effect, m_eSoundHide);
+	sndGyro.create(pSettings->r_string(section,	"snd_gyro"), st_Effect, sg_SourceType);
+	sndZoomIn.create(pSettings->r_string(section,	"snd_zoomin"), st_Effect, sg_SourceType);
+	sndZoomOut.create(pSettings->r_string(section,"snd_zoomout"), st_Effect, sg_SourceType);
 	
 	// HUD :: Anims
 	R_ASSERT			(m_pHUD);
@@ -194,7 +194,7 @@ void CWeaponBinoculars::OnAnimationEnd()
 void CWeaponBinoculars::state_Zooming	(float dt)
 {
 	fGyroSpeed += dt;
-	if (sndGyro.feedback){
+	if (sndGyro._feedback()){
 		sndGyro.set_position(vLastFP);
 		float k = _sqrt(fGyroSpeed);
 		clamp(k,0.f,1.f); k = 0.6f*k+0.4f;

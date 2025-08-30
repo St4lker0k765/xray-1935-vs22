@@ -10,8 +10,8 @@
 
 IC	u32	CScriptSound::Length				()
 {
-	VERIFY					(m_sound.handle);
-	return					(m_sound.handle->length_ms());
+	VERIFY					(m_sound._handle());
+	return					(m_sound._handle()->length_ms());
 }
 
 IC	void CScriptSound::Play					(CScriptGameObject *object)
@@ -94,7 +94,7 @@ IC	const float	CScriptSound::GetVolume		() const
 IC	bool CScriptSound::IsPlaying			() const
 {
 	VERIFY				(m_sound.handle);
-	return				(!!m_sound.feedback);
+	return				(!!m_sound._feedback());
 }
 
 IC	void CScriptSound::Stop					()

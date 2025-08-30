@@ -12,7 +12,7 @@ using namespace	Collide;
 
 IC void minmax(float &mn, float &mx) { if (mn > mx) std::swap(mn,mx); }
 
-void	IGame_Level::SoundEvent	( ref_sound* S, float range )
+void	IGame_Level::SoundEvent	(ref_sound_data_ptr S, float range )
 {
 	if (S->g_object&&S->g_object->getDestroy()) return;
 
@@ -40,10 +40,9 @@ void	IGame_Level::SoundEvent	( ref_sound* S, float range )
 	}
 }
 
-void __stdcall _sound_event	(ref_sound* S, float range)
+void __stdcall _sound_event		(ref_sound_data_ptr S, float range)
 {
-	if ( g_pGameLevel && S && S->feedback )
-		g_pGameLevel->SoundEvent(S,range);
+	if ( g_pGameLevel && S && S->feedback )	g_pGameLevel->SoundEvent	(S,range);
 }
 
 //----------------------------------------------------------------------

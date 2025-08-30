@@ -299,16 +299,16 @@ void CActor::Load	(LPCSTR section )
 	// sounds
 	char buf[256];
 
-	::Sound->create		(sndHit[0],			TRUE,	strconcat(buf,*cName(),"\\hurt1"),SOUND_TYPE_MONSTER_INJURING);
-	::Sound->create		(sndHit[1],			TRUE,	strconcat(buf,*cName(),"\\hurt2"),SOUND_TYPE_MONSTER_INJURING);
-	::Sound->create		(sndHit[2],			TRUE,	strconcat(buf,*cName(),"\\hurt3"),SOUND_TYPE_MONSTER_INJURING);
-	::Sound->create		(sndHit[3],			TRUE,	strconcat(buf,*cName(),"\\hurt4"),SOUND_TYPE_MONSTER_INJURING);
-	::Sound->create		(sndDie[0],			TRUE,	strconcat(buf,*cName(),"\\die0"), SOUND_TYPE_MONSTER_DYING);
-	::Sound->create		(sndDie[1],			TRUE,	strconcat(buf,*cName(),"\\die1"), SOUND_TYPE_MONSTER_DYING);
-	::Sound->create		(sndDie[2],			TRUE,	strconcat(buf,*cName(),"\\die2"), SOUND_TYPE_MONSTER_DYING);
-	::Sound->create		(sndDie[3],			TRUE,	strconcat(buf,*cName(),"\\die3"), SOUND_TYPE_MONSTER_DYING);
+	::Sound->create		(sndHit[0],			strconcat(buf,*cName(),"\\hurt1"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+	::Sound->create		(sndHit[1],			strconcat(buf,*cName(),"\\hurt2"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+	::Sound->create		(sndHit[2],			strconcat(buf,*cName(),"\\hurt3"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+	::Sound->create		(sndHit[3],			strconcat(buf,*cName(),"\\hurt4"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+	::Sound->create		(sndDie[0],			strconcat(buf,*cName(),"\\die0"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+	::Sound->create		(sndDie[1],			strconcat(buf,*cName(),"\\die1"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+	::Sound->create		(sndDie[2],			strconcat(buf,*cName(),"\\die2"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+	::Sound->create		(sndDie[3],			strconcat(buf,*cName(),"\\die3"), st_Effect, SOUND_TYPE_MONSTER_DYING);
 
-	m_HeavyBreathSnd.create(TRUE, pSettings->r_string(section,"heavy_breath_snd"), SOUND_TYPE_MONSTER_INJURING);
+	m_HeavyBreathSnd.create(pSettings->r_string(section,"heavy_breath_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
 	m_bHeavyBreathSndPlaying = false;
 
 	cam_Set					(eacFirstEye);
@@ -400,7 +400,7 @@ void CActor::HitSignal(float perc, Fvector& vLocalDir, CObject* who, s16 element
 	if (g_Alive()) 
 	{
 		ref_sound& S = sndHit[Random.randI(SND_HIT_COUNT)];
-		if (S.feedback) return;
+		if (S._feedback()) return;
 
 		// Play hit-ref_sound
 		::Sound->play_at_pos	(S,this,Position());

@@ -11,7 +11,7 @@
 
 void CPoltergeist::LoadFlame(LPCSTR section)
 {
-	m_flame_sound.create		(TRUE, pSettings->r_string(section,"flame_sound"), SOUND_TYPE_WORLD);
+	m_flame_sound.create		(pSettings->r_string(section,"flame_sound"), st_Effect, SOUND_TYPE_WORLD);
 	m_flame_particles			= pSettings->r_string(section,"flame_particles");
 	m_flame_fire_delay			= pSettings->r_u32(section,"flame_fire_delay");
 	m_flame_length				= pSettings->r_float(section,"flame_length");
@@ -28,7 +28,7 @@ void CPoltergeist::FireFlame(const CObject *target_object)
 	element->position			= position;
 	element->target_object		= target_object;
 	element->time_started		= Level().timeServer();
-	element->sound.clone		(m_flame_sound, SOUND_TYPE_WORLD);
+	element->sound.clone		(m_flame_sound, st_Effect, SOUND_TYPE_WORLD);
 	element->sound.play_at_pos	(this,element->position);
 	
 	m_flames.push_back			(element);
@@ -58,7 +58,7 @@ void CPoltergeist::FireFlame(const CObject *target_object)
 struct remove_predicate {
 	bool	operator() (CPoltergeist::SFlameElement *element)	{
 		
-		if ((element->time_started == 0) && !element->sound.feedback) {
+		if ((element->time_started == 0) && !element->sound._feedback()) {
 			xr_delete(element);
 			return true;
 		}
@@ -167,7 +167,7 @@ void CPoltergeist::RemoveFlames()
 
 	// Пройти по всем объектам и проверить на хит врага
 	for ( ;I != E; ++I) {
-		if ((*I)->sound.feedback) (*I)->sound.stop();
+		if ((*I)->sound._feedback()) (*I)->sound.stop();
 		xr_delete((*I));
 	}
 	

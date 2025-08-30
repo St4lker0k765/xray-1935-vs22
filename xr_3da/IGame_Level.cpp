@@ -33,15 +33,8 @@ IGame_Level::~IGame_Level	()
 	xr_delete					( pLevel		);
 	FS.r_close					( LL_Stream		);
 
-	Sound->destroy				(Sounds_Ambience);
-
 	// Render-level unload
 	Render->level_Unload		();
-
-	// Unload sounds
-	for (u32 i=0; i<Sounds.size(); i++)
-		Sound->destroy	(Sounds[i]);
-	Sounds.clear();
 
 	// Unregister
 	Device.seqRender.Remove		(this);
@@ -140,7 +133,6 @@ void	IGame_Level::OnFrame		( )
 	}
 
 	// Update all objects
-	::Sound->update_events		( );
 	VERIFY						(bReady);
 	Engine.Sheduler.Update		( );
 	Objects.Update				( );

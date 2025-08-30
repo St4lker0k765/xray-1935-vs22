@@ -73,7 +73,7 @@ void CAI_PseudoDog::Load(LPCSTR section)
 	m_anger_hunger_threshold	= pSettings->r_float(section, "anger_hunger_threshold");
 	m_anger_loud_threshold		= pSettings->r_float(section, "anger_loud_threshold");
 
-	::Sound->create(psy_effect_sound,TRUE, pSettings->r_string(section,"sound_psy_effect"), SOUND_TYPE_WORLD);
+	::Sound->create(psy_effect_sound, pSettings->r_string(section,"sound_psy_effect"), st_Effect, SOUND_TYPE_WORLD);
 
 	psy_effect_turn_angle		= angle_normalize(pSettings->r_float(section,"psy_effect_turn_angle"));
 

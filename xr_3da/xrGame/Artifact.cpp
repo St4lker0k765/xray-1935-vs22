@@ -42,7 +42,7 @@ void CArtefact::Load(LPCSTR section)
 
 	inherited::Load			(section);
 
-	m_detectorSound.create	(TRUE,pSettings->r_string(section,"detector_sound"));
+	m_detectorSound.create	(pSettings->r_string(section,"detector_sound"), st_Effect, sg_SourceType);
 
 	m_fDetectionDist		= pSettings->r_float(section,"detector_dist");
 

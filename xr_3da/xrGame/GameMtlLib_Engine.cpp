@@ -28,7 +28,7 @@ void CreateSounds(SoundSVec4& lst, LPCSTR buf)
 	int cnt=_GetItemCount(buf);	R_ASSERT(cnt<=GAMEMTL_SUBITEM_COUNT);
 	for (int k=0; k<cnt; ++k){
 		lst.push_back		(ref_sound());
-		lst.back().create	(TRUE,	_GetItem(buf,k,tmp));
+		lst.back().create	(_GetItem(buf,k,tmp), st_Effect, sg_SourceType);
 	}
 }
 

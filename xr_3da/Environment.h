@@ -116,7 +116,7 @@ public:
 	{
 		ref_sound			left;
 		ref_sound			right;
-		bool				playing		()		{ return left.feedback && right.feedback; }
+		bool				playing		()		{ return left._feedback() && right._feedback(); }
 	};
 	xr_deque<music*>		playlist;
 

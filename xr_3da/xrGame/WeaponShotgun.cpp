@@ -181,7 +181,7 @@ void CWeaponShotgun::UpdateSounds()
 	inherited::UpdateSounds();
 
 	//UpdateFP();
-	if (sndShotBoth.snd.feedback)		sndShotBoth.set_position		(vLastFP);
+	if (sndShotBoth.snd._feedback())		sndShotBoth.set_position		(vLastFP);
 }
 
 

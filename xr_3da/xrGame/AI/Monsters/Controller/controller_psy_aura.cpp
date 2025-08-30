@@ -21,7 +21,7 @@ void CPsyAuraController::reload(LPCSTR section)
 	inherited::reload(section, "PsyAura_");
 	
 	m_effector.Load(pSettings->r_string(section,"PsyAura_Postprocess_Section"));
-	::Sound->create(m_sound,TRUE, pSettings->r_string(section,"PsyAura_HeadSound"), SOUND_TYPE_WORLD);
+	::Sound->create(m_sound, pSettings->r_string(section,"PsyAura_HeadSound"), st_Effect, SOUND_TYPE_WORLD);
 
 	power_down_vel = pSettings->r_float(section,"PsyAura_Power_Down_Velocity");
 }
@@ -47,7 +47,7 @@ void CPsyAuraController::on_deactivate()
 void CPsyAuraController::schedule_update()
 {
 	inherited::schedule_update();
-	if (m_actor && is_active() && !m_sound.feedback) m_sound.play_at_pos(m_actor,m_actor->Position(), sm_2D);
+	if (m_actor && is_active() && !m_sound._feedback()) m_sound.play_at_pos(m_actor,m_actor->Position(), sm_2D);
 	
 	// Падение энергии у игрока
 	if (m_actor && is_active()) {
