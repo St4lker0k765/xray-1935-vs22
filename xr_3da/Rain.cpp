@@ -137,7 +137,7 @@ void	CEffect_Rain::Render	()
 	case stIdle:		
 		if (factor<EPS_L)		return;
 		state					= stWorking;
-		snd_Ambient.play		(0,TRUE);
+		snd_Ambient.play		(0, sm_Looped);
 		snd_Ambient.set_range	(15.f,20.f);
 		break;
 	case stWorking:
@@ -152,10 +152,13 @@ void	CEffect_Rain::Render	()
 	u32 desired_items			= iFloor	(0.5f*(1.f+factor)*float(params->max_desired_items));
 
 	// ambient sound
-	Fvector						sndP;
-	sndP.mad					(Device.vCameraPosition,Device.vCameraDirection,.1f);
-	snd_Ambient.set_position	(sndP);
-	snd_Ambient.set_volume		(factor);
+	if (snd_Ambient._feedback())
+	{
+		Fvector						sndP;
+		sndP.mad(Device.vCameraPosition, Device.vCameraDirection, .1f);
+		snd_Ambient.set_position(sndP);
+		snd_Ambient.set_volume(factor);
+	}
 
 	// visual
 	float		factor_visual	= factor/2.f+.5f;

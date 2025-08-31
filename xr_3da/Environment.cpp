@@ -117,7 +117,7 @@ void CEnvDescriptor::load	(LPCSTR exec_tm, LPCSTR S, CEnvironment* parent)
 	strcpy					(st,pSettings->r_string	(S,"sky_texture"));
 	strconcat				(st_env,st,"#small"		);
 	sky_texture.create		(st);
-	sky_texture_env.create	(st_env);
+	sky_texture_env.create	(st);
 	sky_color				= pSettings->r_fvector3	(S,"sky_color");		sky_color.mul(.5f);
 	far_plane				= pSettings->r_float	(S,"far_plane");
 	fog_color				= pSettings->r_fvector3	(S,"fog_color");

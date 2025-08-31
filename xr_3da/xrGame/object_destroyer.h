@@ -6,8 +6,7 @@
 //	Description : Object destroyer
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef XRAY_OBJECT_DESTROYER
-#define XRAY_OBJECT_DESTROYER
+#pragma once
 
 struct CDestroyer {
 	IC	static void delete_data(LPCSTR data)
@@ -143,5 +142,3 @@ IC	void delete_data(const T &data)
 	T	*temp = const_cast<T*>(&data);
 	CDestroyer::delete_data(*temp);
 }
-
-#endif // XRAY_OBJECT_DESTROYER

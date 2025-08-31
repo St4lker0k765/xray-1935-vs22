@@ -6,8 +6,7 @@
 //	Description : Object type traits
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef XRAY_OBJECT_TYPE_TRAITS
-#define XRAY_OBJECT_TYPE_TRAITS
+#pragma once
 
 //#define USE_BOOST
 
@@ -21,8 +20,8 @@
 	#define declare_has(a) \
 		template <typename T>\
 		struct has_##a {\
-		template <typename P> static detail::yes	select(detail::other<typename P::a>*);\
-			template <typename P> static detail::no		select(...);\
+			template <typename P> static detail::yes	select(detail::other<typename P::a>*);\
+			template <typename P> static detail::no	select(...);\
 			enum { value = sizeof(detail::yes) == sizeof(select<T>(0)) };\
 		};
 
@@ -136,13 +135,19 @@
 			enum { value = sizeof(detail::yes) == sizeof(select(detail::other<T>()))};
 		};
 
-		template <typename T1, typename T2>
+		template <typename _T1, typename _T2>
 		struct is_same {
+			typedef typename remove_const<_T1>::type T1;
+			typedef typename remove_const<_T2>::type T2;
+
 			enum { value = is_type<T1,T2>::value };
 		};
 
-		template <typename T1, typename T2>
+		template <typename _T1, typename _T2>
 		struct is_base_and_derived {
+			typedef typename remove_const<_T1>::type T1;
+			typedef typename remove_const<_T2>::type T2;
+
 			static detail::yes	select(T1*);
 			static detail::no	select(...);
 
@@ -150,9 +155,32 @@
 				value = 
 					is_class<T1>::result && 
 					is_class<T2>::result && 
-					sizeof(detail::yes) == sizeof(select((T2*)(0))) &&
-					!is_same<T1,T2>::value
+					!is_same<T1,T2>::value &&
+					sizeof(detail::yes) == sizeof(select((T2*)(0)))
 			};
+		};
+
+		template <template <typename _1> class T1, typename T2, typename T3>
+		struct is_base_and_derived_or_same_for_template_template_1_1 {
+			template <typename P>
+			static typename _if<
+				is_base_and_derived<P,T3>::value ||
+				is_same<P,T3>::value,
+				detail::yes,
+				detail::no
+			>::result			select(T1<P>*);
+			static detail::no	select(...);
+
+			enum { value = sizeof(detail::yes) == sizeof(select((T2*)0))};
+		};
+
+		template <template <typename _1> class T1, typename T2>
+		struct is_base_and_derived_or_same_from_template {
+			template <typename P>
+			static detail::yes	select(T1<P>*);
+			static detail::no	select(...);
+
+			enum { value = sizeof(detail::yes) == sizeof(select((T2*)0))};
 		};
 
 		declare_has(iterator);
@@ -161,6 +189,7 @@
 		declare_has(const_reference);
 		declare_has(value_type);
 		declare_has(size_type);
+//		declare_has(value_compare);
 
 		template <typename T>
 		struct is_stl_container {
@@ -175,6 +204,12 @@
 			};
 		};
 
+//		template <typename _T>
+//		struct is_tree_structure {
+//			enum { 
+//				value = 
+//					has_value_compare<_T>::value
+//			};
+//		};
 	};
-#endif
 #endif

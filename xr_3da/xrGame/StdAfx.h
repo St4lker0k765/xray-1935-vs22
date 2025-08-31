@@ -15,7 +15,6 @@
 #include "../igame_level.h"
 #include "../xr_object.h"
 #include "../sound.h"
-// #include "../xr_input.h"
 #include "../x_ray.h"
 #include "../std_classes.h"
 #include "../GameFont.h"
@@ -29,7 +28,7 @@
 #include "../SkeletonRigid.h"
 
 // ???
-#include <dinput.h>
+#include "../xr_input.h"
 
 // ???
 #pragma todo("Oles to Kostya/Slipch: following header(ode_include) should'nt be in 'stdafx.h' !!!")

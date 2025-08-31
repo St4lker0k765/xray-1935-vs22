@@ -356,7 +356,7 @@ void CSE_ALifeTrader::STATE_Read			(NET_Packet &tNetPacket, u16 size)
 	inherited1::STATE_Read		(tNetPacket, size);
 	inherited2::STATE_Read		(tNetPacket, size);
 	if (m_wVersion > 35)
-		tNetPacket.r			(&m_tOrgID,sizeof(m_tOrgID));
+		m_tOrgID = tNetPacket.r_u32();
 		
 	if (m_wVersion > 29) {
 		delete_data				(m_tpOrderedArtefacts);
@@ -365,7 +365,7 @@ void CSE_ALifeTrader::STATE_Read			(NET_Packet &tNetPacket, u16 size)
 			ALife::SArtefactTraderOrder	*l_tpArtefactOrder = xr_new<ALife::SArtefactTraderOrder>();
 			tNetPacket.r_stringZ(l_tpArtefactOrder->m_caSection);
 			tNetPacket.r_u32	(l_tpArtefactOrder->m_dwTotalCount);
-			load_data			(l_tpArtefactOrder->m_tpOrders,tNetPacket);
+			//load_data			(l_tpArtefactOrder->m_tpOrders,tNetPacket);
 			m_tpOrderedArtefacts.insert(mk_pair(*l_tpArtefactOrder->m_caSection,l_tpArtefactOrder));
 		}
 	}

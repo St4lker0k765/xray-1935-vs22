@@ -6,8 +6,7 @@
 //	Description : Object saver
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef XRAY_OBJECT_SAVER
-#define XRAY_OBJECT_SAVER
+#pragma once
 
 template <class M, typename P>
 struct CSaver {
@@ -29,31 +28,17 @@ struct CSaver {
 	};
 
 	template <typename T>
-	struct CHelper2 {
-		template <bool a>
-		IC	static void save_data(const T &data, M &stream, const P &p)
-		{
-			CHelper1<T>::save_data<object_type_traits::is_base_and_derived<IPureSavableObject,T>::value>(data,stream,p);
-		}
-
-		template <>
-		IC	static void save_data<true>(const T &data, M &stream, const P &p)
-		{
-			T* data1 = const_cast<T*>(&data);
-			data1->UPDATE_Write	(stream);
-		}
-	};
-
-	template <typename T>
 	struct CHelper {
 
 		template <bool pointer>
 		IC	static void save_data(const T &data, M &stream, const P &p)
 		{
-			CHelper2<T>::save_data<
-				object_type_traits::is_base_and_derived<IPureServerObject,T>::value &&
-				(object_type_traits::is_base_and_derived<NET_Packet,M>::value || object_type_traits::is_same<NET_Packet,M>::value)
-			>	(data,stream,p);
+			CHelper1<T>::save_data<
+				object_type_traits::is_base_and_derived_or_same_from_template<
+					IPureSavableObject,
+					T
+				>::value
+			>(data,stream,p);
 		}
 
 		template <>
@@ -103,7 +88,12 @@ struct CSaver {
 
 	IC	static void save_data(const shared_str &data, M &stream, const P &p)
 	{
-		stream.w_stringZ				(*data);
+		stream.w_stringZ				(data);
+	}
+
+	IC	static void save_data(const xr_string &data, M &stream, const P &p)
+	{
+		stream.w_stringZ				(data.c_str());
 	}
 
 	template <typename T1, typename T2>
@@ -217,5 +207,3 @@ IC	void save_data(const T &data, M &stream)
 {
 	save_data(data,stream,object_saver::detail::CEmptyPredicate());
 }
-
-#endif // XRAY_OBJECT_SAVER
