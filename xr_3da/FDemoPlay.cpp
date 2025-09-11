@@ -24,7 +24,7 @@ CDemoPlay::CDemoPlay(const char *name, float ms, BOOL bc, float life_time) : CEf
 
 	m_pMotion			= 0;
 	m_MParam			= 0;
-	char		nm[255],fn[255];
+	string_path			nm,fn;
 	strcpy		(nm,name);	if (strext(nm))	strcpy(strext(nm),".anm");
 	if (FS.exist(fn,"$level$",nm))
 	{
@@ -79,13 +79,13 @@ void CDemoPlay::stat_Stop	()
 {
 	if (!stat_started)		return;
 	stat_started			= FALSE;
-	stat_Timer_total.Stop	();
+	float	stat_total		= stat_Timer_total.GetElapsed_sec	();
 
 	float	rfps_min, rfps_max, rfps_middlepoint, rfps_average				;
 
 	// total
 	u32	dwFramesTotal		= Device.dwFrame-stat_StartFrame				;
-	rfps_average			= float(dwFramesTotal)/stat_Timer_total.Get()	;
+	rfps_average			= float(dwFramesTotal)/stat_total	;
 
 	// min/max/average
 	rfps_min				= flt_max;
@@ -155,8 +155,7 @@ BOOL CDemoPlay::Process(Fvector &P, Fvector &D, Fvector &N, float& fFov, float& 
 
 	// Per-frame statistics
 	{
-		stat_Timer_frame.Stop		();
-		stat_table.push_back		(stat_Timer_frame.Get());
+		stat_table.push_back		(stat_Timer_frame.GetElapsed_sec());
 		stat_Timer_frame.Start		();
 	}
 

@@ -3,6 +3,7 @@
 #include "ai_space.h"
 #include "script_process.h"
 #include "script_engine.h"
+#include "script_engine_space.h"
 #include "script_thread.h"
 #include "script_debugger.h"
 
@@ -12,15 +13,15 @@ u32 CDbgScriptThreads::Fill()
 	u32 res = 0;
 
 #ifdef XRGAME_EXPORTS
-	CScriptProcess* sp = ai().script_engine().script_process("game");
+	CScriptProcess* sp = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
 
-	if (!sp)
-		return	res;
+	if (sp)
+		res += FillFrom(sp);
+	
+	sp = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+	if (sp)
+		res += FillFrom(sp);
 
-	res += FillFrom(sp);
-	VERIFY(sp);
-	sp = ai().script_engine().script_process("level");
-	res += FillFrom(sp);
 	return res;
 #else
 	return res;
@@ -36,11 +37,10 @@ u32 CDbgScriptThreads::FillFrom(CScriptProcess* sp)
 		SScriptThread th;
 //		th.pScript		= (*It);
 		th.lua			= (*It)->lua();
-		th.scriptID		= (*It)->m_thread_reference;
-		th.active		= (*It)->m_bActive;
-		strcat(th.name, (*It)->m_script_name);
-		strcat(th.process, *sp->name());
-
+		th.scriptID		= (*It)->thread_reference();
+		th.active		= (*It)->active();
+		strcat			(th.name, *(*It)->script_name());
+		strcat			(th.process, *sp->name());
 		m_threads.push_back(th);
 	}
 	return m_threads.size();
@@ -58,12 +58,13 @@ lua_State* CDbgScriptThreads::FindScript(int nThreadID)
 
 void  CDbgScriptThreads::DrawThreads()
 {
-	CScriptDebugger::GetDebugger()->ClearThreads();
+	//CScriptDebugger::GetDebugger()->ClearThreads();
+	m_debugger->ClearThreads();
 	xr_vector<SScriptThread>::iterator It = m_threads.begin();
 	for(;It!=m_threads.end();++It){
 		SScriptThread th;
 		th = *It;
-		CScriptDebugger::GetDebugger()->AddThread(th);
+		m_debugger->AddThread(th);
 	}
 }
 

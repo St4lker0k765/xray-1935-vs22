@@ -147,7 +147,7 @@ CLevel::~CLevel()
 	
 	xr_delete					(m_client_spawn_manager);
 	
-	ai().script_engine().remove_script_process("level");
+	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
 	xr_delete					(game);
 	xr_delete					(game_events);
@@ -324,7 +324,7 @@ void CLevel::OnFrame	()
 	g_pGamePersistent->Environment().SetGameTime	(GetGameDayTimeSec(),GetGameTimeFactor());
 
 	//Device.Statistic.Scripting.Begin	();
-	ai().script_engine().script_process	("level")->update();
+	ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel)->update();
 	//Device.Statistic.Scripting.End		();
 
 	//просчитать полет пуль

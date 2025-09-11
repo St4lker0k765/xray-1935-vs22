@@ -285,6 +285,7 @@
     <ClCompile Include="script_action_planner_action_wrapper.cpp" />
     <ClCompile Include="property_storage_script.cpp" />
     <ClCompile Include="property_evaluator_script.cpp" />
+    <ClCompile Include="script_engine_help.cpp" />
     <ClCompile Include="script_property_evaluator_wrapper.cpp" />
     <ClCompile Include="motivation_script.cpp" />
     <ClCompile Include="script_motivation_wrapper.cpp" />
@@ -1195,6 +1196,10 @@
     <ClInclude Include="agent_manager_space.h" />
     <ClInclude Include="agent_manager_actions.h" />
     <ClInclude Include="agent_manager_actions_inline.h" />
+    <ClInclude Include="associative_vector.h" />
+    <ClInclude Include="associative_vector_compare_predicate.h" />
+    <ClInclude Include="associative_vector_compare_predicate_inline.h" />
+    <ClInclude Include="associative_vector_inline.h" />
     <ClInclude Include="member_order.h" />
     <ClInclude Include="member_order_inline.h" />
     <ClInclude Include="agent_manager_motivations.h" />
@@ -1203,6 +1208,7 @@
     <ClInclude Include="agent_manager_properties_inline.h" />
     <ClInclude Include="damage_manager.h" />
     <ClInclude Include="damage_manager_inline.h" />
+    <ClInclude Include="script_engine_space.h" />
     <ClInclude Include="wrapper_abstract.h" />
     <ClInclude Include="wrapper_abstract_inline.h" />
     <ClInclude Include="action_management_config.h" />

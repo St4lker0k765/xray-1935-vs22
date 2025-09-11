@@ -1384,7 +1384,7 @@ void CUIInventoryWnd::UpdateTime()
 	if (strTime != prevStrTime)
 	{
 		string64	buf;
-		strconcat(buf, "Current Time:      ", *strTime);
+		xr_strconcat(buf, "Current Time:      ", *strTime);
 		UIStaticTime.SetText(buf);
 		prevStrTime = strTime;
 	}

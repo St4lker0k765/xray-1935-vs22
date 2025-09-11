@@ -47,27 +47,36 @@ public:
 		u16			smap_ID;
 	}				vis;
 
-	union			_xform	{
-		struct		_D		{
-			Fmatrix						combine;
+	union			_xform 
+	{
+		struct		_D 
+		{
+			Fmatrix						combine = {};
 			BOOL						transluent;
 		}	D;
-		struct		_P		{
-			Fmatrix						world;
-			Fmatrix						view;
-			Fmatrix						project;
-			Fmatrix						combine;
+
+		struct		_P 
+		{
+			Fmatrix						world = {};
+			Fmatrix						view = {};
+			Fmatrix						project = {};
+			Fmatrix						combine = {};
 		}	P;
-		struct		_S		{
-			Fmatrix						view;
-			Fmatrix						project;
-			Fmatrix						combine;
+
+		struct		_S 
+		{
+			Fmatrix						view = {};
+			Fmatrix						project = {};
+			Fmatrix						combine = {};
 			u32							size;
 			u32							posX;
 			u32							posY;
 			BOOL						transluent;
 		}	S;
-	}	X;
+
+	};
+
+	_xform X = {};
 #endif
 
 public:

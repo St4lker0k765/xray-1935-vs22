@@ -38,10 +38,10 @@ IC void	Reduce				(int& w, int& h, int& l, int& skip)
 
 void				TW_Save	(IDirect3DTexture9* T, LPCSTR name, LPCSTR prefix, LPCSTR postfix)
 {
-	string256		fn;		strconcat	(fn,name,"_",prefix,"-",postfix);
+	string256		fn;		xr_strconcat	(fn,name,"_",prefix,"-",postfix);
 	for (int it=0; it<int(xr_strlen(fn)); it++)	
 		if ('\\'==fn[it])	fn[it]	= '_';
-	string256		fn2;	strconcat	(fn2,"debug\\",fn,".dds");
+	string256		fn2;	xr_strconcat	(fn2,"debug\\",fn,".dds");
 	Log						("* debug texture save: ",fn2);
 	R_CHK					(D3DXSaveTextureToFile	(fn2,D3DXIFF_DDS,T,0));
 }
@@ -210,7 +210,7 @@ IDirect3DBaseTexture9*	CRender::texture_load(LPCSTR fRName)
 {
 	IDirect3DTexture9*		pTexture2D		= NULL;
 	IDirect3DCubeTexture9*	pTextureCUBE	= NULL;
-	string256				fn;
+	string_path				fn;
 	u32						dwWidth,dwHeight;
 	D3DFORMAT				fmt;
 
@@ -347,7 +347,7 @@ _BUMP:
 
 		// 
 		string256			fnameB;
-		strconcat			(fnameB,"$user$",fname,"X");
+		xr_strconcat			(fnameB,"$user$",fname,"X");
 		ref_texture			t_temp		= Device.Resources->_CreateTexture	(fnameB);
 		t_temp->surface_set	(T_normal_2C	);
 		_RELEASE			(T_normal_2C	);	// texture should keep reference to it by itself
@@ -409,7 +409,7 @@ _BUMP_from_base:
 
 		// 
 		string256			fnameB;
-		strconcat			(fnameB,"$user$",fname,"_bumpX");
+		xr_strconcat			(fnameB,"$user$",fname,"_bumpX");
 		ref_texture			t_temp			= Device.Resources->_CreateTexture	(fnameB);
 		t_temp->surface_set	(T_normal_2C	);
 		_RELEASE			(T_normal_2C	);	// texture should keep reference to it by itself

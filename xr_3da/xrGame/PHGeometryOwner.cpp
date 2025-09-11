@@ -176,7 +176,7 @@ void CPHGeometryOwner::add_Shape(const SBoneShape& shape,const Fmatrix& offset)
 			//Fmatrix position;
 			//position.set(box.m_rotate);
 			//position.c.set(box.m_translate);
-			//position.mulA(offset);
+			//position.mulA_43(offset);
 			//box.m_rotate.set(position);
 			//box.m_translate.set(position.c);
 			box.transform(box,m);

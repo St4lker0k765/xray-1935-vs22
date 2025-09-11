@@ -332,9 +332,9 @@ void CWeapon::Load		(LPCSTR section)
 void CWeapon::LoadZoomOffset (LPCSTR section, LPCSTR prefix)
 {
 	string256 full_name;
-	m_pHUD->SetZoomOffset(pSettings->r_fvector3	(hud_sect, strconcat(full_name, prefix, "zoom_offset")));
-	m_pHUD->SetZoomRotateX(pSettings->r_float	(hud_sect, strconcat(full_name, prefix, "zoom_rotate_x")));
-	m_pHUD->SetZoomRotateY(pSettings->r_float	(hud_sect, strconcat(full_name, prefix, "zoom_rotate_y")));
+	m_pHUD->SetZoomOffset(pSettings->r_fvector3	(hud_sect, xr_strconcat(full_name, prefix, "zoom_offset")));
+	m_pHUD->SetZoomRotateX(pSettings->r_float	(hud_sect, xr_strconcat(full_name, prefix, "zoom_rotate_x")));
+	m_pHUD->SetZoomRotateY(pSettings->r_float	(hud_sect, xr_strconcat(full_name, prefix, "zoom_rotate_y")));
 
 	if(pSettings->line_exist(hud_sect, "zoom_rotate_time"))
 		m_fZoomRotateTime = pSettings->r_float(hud_sect,"zoom_rotate_time");
@@ -1071,12 +1071,12 @@ void CWeapon::UpdateHudPosition	()
 				Fmatrix hud_rotation_y;
 				hud_rotation_y.identity();
 				hud_rotation_y.rotateY(m_pHUD->ZoomRotateY()*m_fZoomRotationFactor);
-				hud_rotation.mulA(hud_rotation_y);
+				hud_rotation.mulA_43(hud_rotation_y);
 
 				Fvector offset = m_pHUD->ZoomOffset();
 				offset.mul(m_fZoomRotationFactor);
 				hud_rotation.translate_over(offset);
-				trans.mulB(hud_rotation);
+				trans.mulB_43(hud_rotation);
 
 				if(pActor->IsZoomAimingMode())
 					m_fZoomRotationFactor += Device.fTimeDelta/m_fZoomRotateTime;

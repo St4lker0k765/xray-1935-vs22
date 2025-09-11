@@ -66,12 +66,12 @@ IC	void CMovementManager::set_level_dest_vertex(const u32 level_vertex_id)
 
 IC	void CMovementManager::time_start()
 {
-	m_start_time			= CPU::GetCycleCount();
+	m_start_time			= CPU::GetCLK();
 }
 
 IC	bool CMovementManager::time_over() const
 {
-	return					(CPU::GetCycleCount() - m_start_time >= m_time_work);
+	return					(CPU::GetCLK() - m_start_time >= m_time_work);
 }
 
 IC	void CMovementManager::enable_movement(bool enabled)

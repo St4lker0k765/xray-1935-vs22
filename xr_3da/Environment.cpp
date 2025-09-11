@@ -115,7 +115,7 @@ void CEnvDescriptor::load	(LPCSTR exec_tm, LPCSTR S, CEnvironment* parent)
 	exec_time				= tm.x*3600.f+tm.y*60.f+tm.z;
 	string_path	st,st_env;
 	strcpy					(st,pSettings->r_string	(S,"sky_texture"));
-	strconcat				(st_env,st,"#small"		);
+	xr_strconcat			(st_env,st,"#small"		);
 	sky_texture.create		(st);
 	sky_texture_env.create	(st);
 	sky_color				= pSettings->r_fvector3	(S,"sky_color");		sky_color.mul(.5f);
@@ -301,8 +301,8 @@ void CEnvironment::load		()
 		{
 			string256	_n, _l, _r;
 			strcpy		(_n,*it->first);
-			strconcat	(_l,_n,"_l");
-			strconcat	(_r,_n,"_r");
+			xr_strconcat	(_l,_n,"_l");
+			xr_strconcat	(_r,_n,"_r");
 			music*		m = xr_new<music>	();
 			m->left.create		(_l, st_Music, sg_SourceType);
 			m->right.create		(_r, st_Music, sg_SourceType);

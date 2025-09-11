@@ -6,7 +6,7 @@
 #define WIN32_LEAN_AND_MEAN			// Exclude rarely-used stuff from Windows headers
 #define STRICT						// Enable strict syntax
 #define IDIRECTPLAY2_OR_GREATER		// ?
-#define DIRECTINPUT_VERSION	0x0700	//
+#define DIRECTINPUT_VERSION	0x0800	//
 #define _CRT_SECURE_NO_DEPRECATE	// vc8.0 stuff, don't deprecate several ANSI functions
 
 // windows.h

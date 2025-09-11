@@ -35,9 +35,9 @@ void CUIFrameLine::Init(LPCSTR base_name, int x, int y, int size, bool horizonta
 	// init graphics
 	string256		buf;
 	// frame
-	elements[flBack].CreateShader	(strconcat(buf,base_name,"_back"),	"hud\\default");
-	elements[flFirst].CreateShader	(strconcat(buf,base_name,"_b"),		"hud\\default");
-	elements[flSecond].CreateShader	(strconcat(buf,base_name,"_e"),		"hud\\default");
+	elements[flBack].CreateShader	(xr_strconcat(buf,base_name,"_back"),	"hud\\default");
+	elements[flFirst].CreateShader	(xr_strconcat(buf,base_name,"_b"),		"hud\\default");
+	elements[flSecond].CreateShader	(xr_strconcat(buf,base_name,"_e"),		"hud\\default");
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -119,7 +119,7 @@ void CUIZoneMap::Init()
 	CGameGraph::LEVEL_MAP::const_iterator currLIt = std::find_if(levelMap.begin(), levelMap.end(), currentLevel);
 
 	shared_str				map_texture;
-	string256			gameLtxPath;
+	string_path			gameLtxPath;
 	FS.update_path					(gameLtxPath, "$game_data$", "game.ltx");
 	CInifile			gameLtx		(gameLtxPath);
 

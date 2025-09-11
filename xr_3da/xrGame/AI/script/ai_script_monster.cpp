@@ -342,8 +342,8 @@ const Fmatrix CScriptMonster::GetUpdatedMatrix(shared_str caBoneName, const Fvec
 
 	if (xr_strlen(caBoneName)) {
 		CBoneInstance	&l_tBoneInstance = smart_cast<CKinematics*>(Visual())->LL_GetBoneInstance(smart_cast<CKinematics*>(Visual())->LL_BoneID(caBoneName));
-		l_tMatrix.mulA	(l_tBoneInstance.mTransform);
-		l_tMatrix.mulA	(XFORM());
+		l_tMatrix.mulA_43(l_tBoneInstance.mTransform);
+		l_tMatrix.mulA_43(XFORM());
 	}
 
 	return			(l_tMatrix);

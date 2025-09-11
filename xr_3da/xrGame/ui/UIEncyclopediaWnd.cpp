@@ -93,7 +93,7 @@ void CUIEncyclopediaWnd::Init()
 //	MAX_PICTURE_WIDTH = uiXml.ReadAttribInt("item_static", 0, "width", 0);
 
 	string256 header;
-	strconcat(header, ALL_PDA_HEADER_PREFIX, "/Encyclopedia");
+	xr_strconcat(header, ALL_PDA_HEADER_PREFIX, "/Encyclopedia");
 	m_InfosHeaderStr = header;
 
 	xml_init.InitAutoStatic(uiXml, "left_auto_static", &UIEncyclopediaInfoBkg);

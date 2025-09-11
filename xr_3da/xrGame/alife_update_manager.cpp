@@ -93,8 +93,8 @@ void CALifeUpdateManager::shedule_Update	(u32 dt)
 
 void CALifeUpdateManager::set_process_time	(int microseconds)
 {
-	graph().set_process_time		(u64(float(microseconds) - float(microseconds)*update_monster_factor())*CPU::cycles_per_microsec);
-	scheduled().set_process_time	(u64(float(microseconds)*update_monster_factor())*CPU::cycles_per_microsec);
+	graph().set_process_time		(u64(float(microseconds) - float(microseconds)*update_monster_factor())*CPU::clk_per_microsec);
+	scheduled().set_process_time	(u64(float(microseconds)*update_monster_factor())*CPU::clk_per_microsec);
 }
 
 void CALifeUpdateManager::init_ef_storage() const
@@ -213,7 +213,7 @@ void CALifeUpdateManager::new_game			(LPCSTR save_name)
 
 	spawns().load						(save_name);
 
-	strconcat							(m_save_name,save_name,SAVE_EXTENSION);
+	xr_strconcat							(m_save_name,save_name,SAVE_EXTENSION);
 
 	server().PerformIDgen				(0x0000);
 
@@ -264,8 +264,8 @@ void CALifeUpdateManager::reload		(LPCSTR section)
 bool CALifeUpdateManager::load_game		(LPCSTR game_name, bool no_assert)
 {
 	{
-		string256				temp,file_name;
-		strconcat				(temp,game_name,SAVE_EXTENSION);
+		string_path				temp,file_name;
+		xr_strconcat				(temp,game_name,SAVE_EXTENSION);
 		FS.update_path			(file_name,"$game_saves$",temp);
 		if (!FS.exist(file_name)) {
 			R_ASSERT3			(no_assert,"There is no saved game ",file_name);
@@ -276,7 +276,7 @@ bool CALifeUpdateManager::load_game		(LPCSTR game_name, bool no_assert)
 	strcpy						(S,**m_server_command_line);
 	LPSTR						temp = strchr(S,'/');
 	R_ASSERT2					(temp,"Invalid server options!");
-	strconcat					(S1,game_name,temp);
+	xr_strconcat					(S1,game_name,temp);
 	*m_server_command_line		= S1;
 	return						(true);
 }

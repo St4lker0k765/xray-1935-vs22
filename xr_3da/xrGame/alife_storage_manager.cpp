@@ -62,7 +62,7 @@ void CALifeStorageManager::save	(LPCSTR save_name)
 	}
 	else {
 		VERIFY					(xr_strlen(m_save_name));
-		strconcat				(m_save_name,save_name,SAVE_EXTENSION);
+		xr_strconcat				(m_save_name,save_name,SAVE_EXTENSION);
 	}
 
 	CMemoryWriter				stream;
@@ -77,7 +77,7 @@ void CALifeStorageManager::save	(LPCSTR save_name)
 	news().save					(stream);
 	registry().save				(stream);
 
-	string256					temp;
+	string_path					temp;
 	FS.update_path				(temp,"$game_saves$",m_save_name);
 	stream.save_to				(temp);
 	Msg							("* Game %s is successfully saved to file '%s' (%d bytes)",m_save_name,temp,stream.size());
@@ -85,7 +85,7 @@ void CALifeStorageManager::save	(LPCSTR save_name)
 
 bool CALifeStorageManager::load	(LPCSTR save_name)
 {
-	u64							start = CPU::GetCycleCount();
+	u64							start = CPU::GetCLK();
 	string256					save;
 	strcpy						(save,m_save_name);
 	if (!save_name) {
@@ -93,8 +93,8 @@ bool CALifeStorageManager::load	(LPCSTR save_name)
 			R_ASSERT2			(false,"There is no file name specified!");
 	}
 	else
-		strconcat				(m_save_name,save_name,SAVE_EXTENSION);
-	string256					file_name;
+		xr_strconcat				(m_save_name,save_name,SAVE_EXTENSION);
+	string_path					file_name;
 	FS.update_path				(file_name,"$game_saves$",m_save_name);
 
 	IReader						*stream;
@@ -123,8 +123,8 @@ bool CALifeStorageManager::load	(LPCSTR save_name)
 
 	VERIFY						(graph().actor());
 	
-	u64							finish = CPU::GetCycleCount();
-	Msg							("* Game %s is successfully loaded from file '%s' (%.3fs)",save_name, file_name,float(finish - start)*CPU::cycles2seconds);
+	u64							finish = CPU::GetCLK();
+	Msg							("* Game %s is successfully loaded from file '%s' (%.3fs)",save_name, file_name,float(finish - start)*CPU::clk_to_seconds);
 	return						(true);
 }
 

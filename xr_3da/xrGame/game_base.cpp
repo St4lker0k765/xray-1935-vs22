@@ -102,7 +102,7 @@ game_GameState::game_GameState()
 	phase				=	GAME_PHASE_NONE;
 	round				=	-1;
 
-	m_qwStartProcessorTime		= CPU::GetCycleCount();
+	m_qwStartProcessorTime		= CPU::GetCLK();
 	m_qwStartGameTime			= 12*60*60*1000;
 	m_fTimeFactor				= pSettings->r_float("alife","time_factor");
 
@@ -110,7 +110,7 @@ game_GameState::game_GameState()
 
 CLASS_ID game_GameState::getCLASS_ID(LPCSTR game_type_name, bool isServer)
 {
-	string256		S;
+	string_path		S;
 	FS.update_path	(S,"$game_data$","script.ltx");
 	CInifile		*l_tpIniFile = xr_new<CInifile>(S);
 	R_ASSERT		(l_tpIniFile);
@@ -143,7 +143,7 @@ void game_GameState::switch_Phase		(u32 new_phase)
 
 ALife::_TIME_ID game_GameState::GetGameTime()
 {
-	return			(m_qwStartGameTime + iFloor(m_fTimeFactor*float(CPU::GetCycleCount() - m_qwStartProcessorTime)*CPU::cycles2milisec));
+	return			(m_qwStartGameTime + iFloor(m_fTimeFactor*float(CPU::GetCLK() - m_qwStartProcessorTime)*CPU::clk_to_milisec));
 }
 
 float game_GameState::GetGameTimeFactor()
@@ -154,14 +154,14 @@ float game_GameState::GetGameTimeFactor()
 void game_GameState::SetGameTimeFactor (const float fTimeFactor)
 {
 	m_qwStartGameTime			= GetGameTime();
-	m_qwStartProcessorTime		= CPU::GetCycleCount();
+	m_qwStartProcessorTime		= CPU::GetCLK();
 	m_fTimeFactor				= fTimeFactor;
 }
 
 void game_GameState::SetGameTimeFactor	(ALife::_TIME_ID GameTime, const float fTimeFactor)
 {
 	m_qwStartGameTime			= GameTime;
-	m_qwStartProcessorTime		= CPU::GetCycleCount();
+	m_qwStartProcessorTime		= CPU::GetCLK();
 	m_fTimeFactor				= fTimeFactor;
 
 }

@@ -8,6 +8,8 @@
 #define R_ASSERT3(expr,e2,e3) if (!(expr)) ::Debug.fail(#expr,e2,e3,__FILE__, __LINE__)
 #define R_CHK(expr) { HRESULT hr = expr; if (FAILED(hr)) ::Debug.error(hr,#expr,__FILE__, __LINE__); }
 
+#	define CHECK_OR_EXIT(expr,message)	do {if (!(expr)) ::Debug.do_exit(message);} while (0)
+
 #ifdef DEBUG
 #define	NODEFAULT Debug.fatal("nodefault: reached")
 #define VERIFY(expr) if (!(expr)) ::Debug.fail(#expr,__FILE__, __LINE__)

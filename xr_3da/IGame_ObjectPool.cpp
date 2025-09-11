@@ -24,21 +24,22 @@ void IGame_ObjectPool::load	()
 	int	p_count			= 0;
 
 	::Render->model_Logging	(FALSE);
-	for (CInifile::RootIt	S	= R.begin(); S!=R.end(); S++)
+	for (CInifile::Root::iterator	S	= R.begin(); S!=R.end(); S++)
 	{
-		if (pSettings->line_exist(*S->Name,"$prefetch"))
+		CInifile::Sect* sect = *S;
+		if (pSettings->line_exist(*sect->Name, "$prefetch"))
 		{
-			Msg					("* prefetching: %s",	*S->Name);
-			int		count		=	pSettings->r_s32	(*S->Name,"$prefetch");
+			Msg					("* prefetching: %s",	*sect->Name);
+			int		count		=	pSettings->r_s32	(*sect->Name,"$prefetch");
 			R_ASSERT2			((count>0) && (count<=128), "Too many objects for prefetching");
-			CLASS_ID CLS		=	pSettings->r_clsid	(*S->Name,"class");
+			CLASS_ID CLS		=	pSettings->r_clsid	(*sect->Name,"class");
 			p_count				+=	count;
 
 			for (int c=0; c<count; c++)
 			{
 				CObject* pObject	= (CObject*) NEW_INSTANCE(CLS);
-				pObject->Load		(*S->Name);
-				VERIFY2				(*pObject->cNameSect(),*S->Name);
+				pObject->Load		(*sect->Name);
+				VERIFY2				(*pObject->cNameSect(),*sect->Name);
 				map_POOL.insert		(mk_pair(pObject->cNameSect(),pObject));
 			}
 		}

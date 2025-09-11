@@ -87,7 +87,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			{
 				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
-				m_shadow.mulB		(bias_t);
+				m_shadow.mulB_43	(bias_t);
 			}
 			FPU::m24r		();
 		}

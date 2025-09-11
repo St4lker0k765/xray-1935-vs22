@@ -39,7 +39,7 @@ void CObjectAnimator::SetActiveMotion(COMotion* mot)
 
 void CObjectAnimator::LoadMotions(const char* fname)
 {
-	string256			full_path;
+	string_path			full_path;
 	if (!FS.exist( full_path, "$level$", fname ))
 		if (!FS.exist( full_path, "$game_anims$", fname ))
 			Debug.fatal("Can't find motion file '%s'.",fname);

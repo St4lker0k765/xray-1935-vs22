@@ -226,9 +226,9 @@ public:
 						Msg("! invalid vertex number (%d)!",_min(id1,id2));
 					else {
 						Sleep				(1);
-						u64 t1x = CPU::GetCycleCount();
+						u64 t1x = CPU::GetCLK();
 						//						float fValue = ai().m_tpAStar->ffFindMinimalPath(id1,id2);
-						u64 t2x = CPU::GetCycleCount();
+						u64 t2x = CPU::GetCLK();
 						t2x -= t1x;
 						//						Msg("* %7.2f[%d] : %11I64u cycles (%.3f microseconds)",fValue,ai().m_tpAStar->m_tpaNodes.size(),t2x,CPU::cycles2microsec*t2x);
 					}
@@ -591,7 +591,7 @@ public:
 		};
 		//#endif
 		Console->Hide	();
-		char fn[256]; strconcat(fn,args,".xrdemo");
+		char fn[256]; xr_strconcat(fn,args,".xrdemo");
 		g_pGameLevel->Cameras.AddEffector(xr_new<CDemoRecord> (fn));
 	}
 };
@@ -607,7 +607,7 @@ public:
 			  Msg	("! There are no level(s) started");
 		  } else {
 			  Console->Hide				();
-			  char fn[256]; strconcat	(fn,args,".xrdemo");
+			  char fn[256]; xr_strconcat	(fn,args,".xrdemo");
 			  g_pGameLevel->Cameras.AddEffector(xr_new<CDemoPlay> (fn,1.0f));
 		  }
 	  }
@@ -910,10 +910,8 @@ public:
 			P->m_Flags.set	(FS_Path::flNeedRescan,TRUE);
 			FS.rescan_pathes();
 			// run script
-			if (ai().script_engine().script_process("level")) {
-				ai().script_engine().script_process("level")->add_script(S);
-				ai().script_engine().reload_modules(true);
-			}
+			if (ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel))
+				ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel)->add_script(S,false,true);
 		}
 	}
 };
@@ -925,19 +923,20 @@ public:
 		if (!xr_strlen(args))
 			Log("* Specify string to run!");
 		else {
-			if (ai().script_engine().script_process("level")) {
-				ai().script_engine().script_process("level")->add_string(args);
-				ai().script_engine().reload_modules(true);
-			}
+			if (ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel))
+				ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel)->add_script(args,true,true);
 		}
 	}
 };
-
+#ifdef DEBUG
 class CCC_ScriptDbg : public IConsole_Command {
 public:
 	CCC_ScriptDbg(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void Execute(LPCSTR args) {
-		CScriptDebugger* d = CScriptDebugger::GetDebugger();
+		
+		if(strstr(cName,"script_debug_break")==cName ){
+		
+		CScriptDebugger* d = ai().script_engine().debugger();
 		if(d){
 			if(d->Active())
 				d->initiateDebugBreak();
@@ -945,14 +944,29 @@ public:
 				Msg("Script debugger not active.");
 		}else
 			Msg("Script debugger not present.");
-	}
+		}
+		else if(strstr(cName,"script_debug_stop")==cName ){
+			ai().script_engine().stopDebugger();
+		}
+		else if(strstr(cName,"script_debug_restart")==cName ){
+			ai().script_engine().restartDebugger();
+		};
+	};
+	
 
 	virtual void	Info	(TInfo& I)		
 	{
-		strcpy(I,"script debugger <DebugBreak> command"); 
+		if(strstr(cName,"script_debug_break")==cName )
+			strcpy(I,"initiate script debugger [DebugBreak] command"); 
+
+		else if(strstr(cName,"script_debug_stop")==cName )
+			strcpy(I,"stop script debugger activity"); 
+
+		else if(strstr(cName,"script_debug_restart")==cName )
+			strcpy(I,"restarts script debugger or start if no script debugger presents"); 
 	}
 };
-
+#endif
 class CCC_PostprocessTest : public IConsole_Command {
 public:
 	CCC_PostprocessTest(LPCSTR N) : IConsole_Command(N)  { };
@@ -1158,13 +1172,13 @@ void CCC_RegisterCommands()
 	
 #ifdef DEBUG
 	CMD1(CCC_DebugNode,			"ai_dbg_node");
+	CMD1(CCC_ScriptDbg,			"script_debug_break");
 #endif // DEBUG
 	
 
 	CMD1(CCC_Script,			"run_script");
 	CMD1(CCC_ScriptCommand,		"run_string");
 
-	CMD1(CCC_ScriptDbg,			"script_debug_break");
 
 	CMD1(CCC_PostprocessTest,	"pp_test");
 

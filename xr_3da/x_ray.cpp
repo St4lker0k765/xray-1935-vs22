@@ -53,7 +53,7 @@ void InitEngine()
 
 void InitSettings()
 {
-	string256					fname; 
+	string_path					fname; 
 	FS.update_path				(fname,"$game_data$","system.ltx");
 	pSettings					= xr_new<CInifile>	(fname,TRUE);
 }
@@ -336,13 +336,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	Engine.External.Initialize	( );
 	Startup	 				();
 	Core._destroy			();
-
-	// check for need to execute something external
-	if (strstr(lpCmdLine,"-exec ")) 
-	{
-		char *N = strstr(lpCmdLine,"-exec ")+6;
-		return (int)_execl(N,N,0);
-	}
 	return 0;
 }
 
@@ -414,7 +407,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 			if (strstr(Core.Params,"-$")) {
 				string256				buf,cmd,param;
 				sscanf					(strstr(Core.Params,"-$")+2,"%[^ ] %[^ ] ",cmd,param);
-				strconcat				(buf,cmd," ",param);
+				xr_strconcat				(buf,cmd," ",param);
 				Console->Execute		(buf);
 			}
 		} else {
@@ -519,10 +512,10 @@ void CApplication::Level_Scan()
 	for (u32 i=0; i<folder->size(); i++)
 	{
 		string256	N1,N2,N3,N4;
-		strconcat	(N1,(*folder)[i],"level");
-		strconcat	(N2,(*folder)[i],"level.ltx");
-		strconcat	(N3,(*folder)[i],"level.game");
-		strconcat	(N4,(*folder)[i],"level.cform");
+		xr_strconcat	(N1,(*folder)[i],"level");
+		xr_strconcat	(N2,(*folder)[i],"level.ltx");
+		xr_strconcat	(N3,(*folder)[i],"level.game");
+		xr_strconcat	(N4,(*folder)[i],"level.cform");
 		if	(
 			FS.exist("$game_levels$",N1)		&&
 			FS.exist("$game_levels$",N2)		&&
@@ -552,7 +545,7 @@ void CApplication::Level_Set(u32 L)
 int CApplication::Level_ID(LPCSTR name)
 {
 	char buffer	[256];
-	strconcat	(buffer,name,"\\");
+	xr_strconcat	(buffer,name,"\\");
 	for (u32 I=0; I<Levels.size(); I++)
 	{
 		if (0==stricmp(buffer,Levels[I].folder))	return int(I);

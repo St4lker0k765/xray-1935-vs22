@@ -21,13 +21,14 @@ extern void export_classes(lua_State *L);
 
 CScriptEngine::CScriptEngine			()
 {
-//	lua_setgcthreshold		(lua(),64*1024);
-	m_current_thread		= 0;
 	m_stack_level			= 0;
 	m_reload_modules		= false;
-	m_global_script_loaded	= false;
+	m_last_no_file_length	= 0;
+	*m_last_no_file			= 0;
+
 #ifdef USE_DEBUGGER
-	m_scriptDebugger		= xr_new<CScriptDebugger>();
+	m_scriptDebugger		= NULL;
+	restartDebugger			();	
 #endif
 }
 
@@ -44,344 +45,129 @@ CScriptEngine::~CScriptEngine			()
 void CScriptEngine::unload				()
 {
 	lua_settop				(lua(),m_stack_level);
+	m_last_no_file_length	= 0;
+	*m_last_no_file			= 0;
 }
 
 int CScriptEngine::lua_panic			(CLuaVirtualMachine *L)
 {
-	script_log		(eLuaMessageTypeError,"PANIC");
-	if (!print_output(L,"unknown script"))
-		print_error(L,LUA_ERRRUN);
+	print_output	(L,"PANIC",LUA_ERRRUN);
 	return			(0);
-}
-
-void CScriptEngine::lua_hook_call		(CLuaVirtualMachine *L, lua_Debug *tpLuaDebug)
-{
-	ai().script_engine().script_stack_tracker().script_hook(L,tpLuaDebug);
 }
 
 void CScriptEngine::lua_error			(CLuaVirtualMachine *L)
 {
-	print_error				(L,LUA_ERRRUN);
+	print_output			(L,"",LUA_ERRRUN);
 
+#if !XRAY_EXCEPTIONS
 	Debug.fatal				("LUA error: %s",lua_tostring(L,-1));
+#else
+	throw					lua_tostring(L,-1);
+#endif
 }
 
-void lua_cast_failed(CLuaVirtualMachine *L, LUABIND_TYPE_INFO info)
+int  CScriptEngine::lua_pcall_failed	(CLuaVirtualMachine *L)
 {
-//	print_output			(L,ai().script_engine().current_thread(),0);
-	ai().script_engine().print_error	(L,LUA_ERRRUN);
+	print_output			(L,"",LUA_ERRRUN);
+#if !XRAY_EXCEPTIONS
+	Debug.fatal				("LUA error: %s",lua_isstring(L,-1) ? lua_tostring(L,-1) : "");
+#endif
+	if (lua_isstring(L,-1))
+		lua_pop				(L,1);
+	return					(LUA_ERRRUN);
+}
+
+void lua_cast_failed					(CLuaVirtualMachine *L, LUABIND_TYPE_INFO info)
+{
+	CScriptEngine::print_output	(L,"",LUA_ERRRUN);
+
 	Debug.fatal				("LUA error: cannot cast lua value to %s",info->name());
 }
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
+void CScriptEngine::setup_callbacks		()
+{
+#ifdef USE_DEBUGGER
+	if( debugger() )
+		debugger()->PrepareLuaBind	();
+#endif
+
+#ifdef USE_DEBUGGER
+	if (!debugger() || !debugger()->Active() ) 
+#endif
+	{
+#if !XRAY_EXCEPTIONS
+		luabind::set_error_callback		(CScriptEngine::lua_error);
+#endif
+		luabind::set_pcall_callback		(CScriptEngine::lua_pcall_failed);
+	}
+
+#if !XRAY_EXCEPTIONS
+	luabind::set_cast_failed_callback	(lua_cast_failed);
+#endif
+	lua_atpanic							(lua(),CScriptEngine::lua_panic);
+}
+
 #ifdef DEBUG
-
-#ifndef BOOST_NO_STRINGSTREAM
-#	include <sstream>
-#else
-#	include <strstream>
-#endif
-
-std::string to_string					(luabind::object const& o)
+#	include "script_thread.h"
+void CScriptEngine::lua_hook_call		(CLuaVirtualMachine *L, lua_Debug *dbg)
 {
-	using namespace luabind;
-	if (o.type() == LUA_TSTRING) return object_cast<std::string>(o);
-	lua_State* L = o.lua_state();
-	LUABIND_CHECK_STACK(L);
-
-#ifdef BOOST_NO_STRINGSTREAM
-	std::strstream s;
-#else
-	std::stringstream s;
-#endif
-
-	if (o.type() == LUA_TNUMBER)
-	{
-		s << object_cast<float>(o);
-		return s.str();
-	}
-
-	s << "<" << lua_typename(L, o.type()) << ">";
-#ifdef BOOST_NO_STRINGSTREAM
-	s << std::ends;
-#endif
-	return s.str();
-}
-
-void strreplaceall						(std::string &str, LPCSTR S, LPCSTR N)
-{
-	LPSTR	A;
-	int		S_len = xr_strlen(S);
-	while ((A = strstr(str.c_str(),S)) != 0)
-		str.replace(A - str.c_str(),S_len,N);
-}
-
-std::string &process_signature				(std::string &str)
-{
-	strreplaceall	(str,"custom [","");
-	strreplaceall	(str,"]","");
-	strreplaceall	(str,"float","number");
-	strreplaceall	(str,"lua_State*, ","");
-	strreplaceall	(str," ,lua_State*","");
-	return			(str);
-}
-
-std::string member_to_string			(luabind::object const& e, LPCSTR function_signature)
-{
-#if !defined(LUABIND_NO_ERROR_CHECKING)
-    using namespace luabind;
-	lua_State* L = e.lua_state();
-	LUABIND_CHECK_STACK(L);
-
-	if (e.type() == LUA_TFUNCTION)
-	{
-		e.pushvalue();
-		detail::stack_pop p(L, 1);
-
-		{
-			if (lua_getupvalue(L, -1, 3) == 0) return to_string(e);
-			detail::stack_pop p2(L, 1);
-			if (lua_touserdata(L, -1) != reinterpret_cast<void*>(0x1337)) return to_string(e);
-		}
-
-#ifdef BOOST_NO_STRINGSTREAM
-		std::strstream s;
-#else
-		std::stringstream s;
-#endif
-		{
-			lua_getupvalue(L, -1, 2);
-			detail::stack_pop p2(L, 1);
-		}
-
-		{
-			lua_getupvalue(L, -1, 1);
-			detail::stack_pop p2(L, 1);
-			detail::method_rep* m = static_cast<detail::method_rep*>(lua_touserdata(L, -1));
-
-			for (std::vector<detail::overload_rep>::const_iterator i = m->overloads().begin();
-				i != m->overloads().end(); ++i)
-			{
-				std::string str;
-				i->get_signature(L, str);
-				if (i != m->overloads().begin())
-					s << "\n";
-				s << function_signature << process_signature(str) << ";";
-			}
-		}
-#ifdef BOOST_NO_STRINGSTREAM
-		s << std::ends;
-#endif
-		return s.str();
-	}
-
-    return to_string(e);
-#else
-    return "";
-#endif
-}
-
-void print_class						(lua_State *L, luabind::detail::class_rep *crep)
-{
-	std::string			S;
-	// print class and bases
-	{
-		S				= (crep->get_class_type() != luabind::detail::class_rep::cpp_class) ? "LUA class " : "C++ class ";
-		S.append		(crep->name());
-		typedef std::vector<luabind::detail::class_rep::base_info> BASES;
-		const BASES &bases = crep->bases();
-		BASES::const_iterator	I = bases.begin(), B = I;
-		BASES::const_iterator	E = bases.end();
-		if (B != E)
-			S.append	(" : ");
-		for ( ; I != E; ++I) {
-			if (I != B)
-				S.append(",");
-			S.append	((*I).base->name());
-		}
-		Msg				("%s {",S.c_str());
-	}
-	// print class constants
-	{
-		const luabind::detail::class_rep::STATIC_CONSTANTS	&constants = crep->static_constants();
-		luabind::detail::class_rep::STATIC_CONSTANTS::const_iterator	I = constants.begin();
-		luabind::detail::class_rep::STATIC_CONSTANTS::const_iterator	E = constants.end();
-		for ( ; I != E; ++I)
-			Msg		("    const %s = %d;",(*I).first,(*I).second);
-		if (!constants.empty())
-			Msg		("    ");
-	}
-	// print class properties
-	{
-		typedef std::map<const char*, luabind::detail::class_rep::callback, luabind::detail::ltstr> PROPERTIES;
-		const PROPERTIES &properties = crep->properties();
-		PROPERTIES::const_iterator	I = properties.begin();
-		PROPERTIES::const_iterator	E = properties.end();
-		for ( ; I != E; ++I)
-			Msg	("    property %s;",(*I).first);
-		if (!properties.empty())
-			Msg		("    ");
-	}
-	// print class constructors
-	{
-		const std::vector<luabind::detail::construct_rep::overload_t>	&constructors = crep->constructors().overloads;
-		std::vector<luabind::detail::construct_rep::overload_t>::const_iterator	I = constructors.begin();
-		std::vector<luabind::detail::construct_rep::overload_t>::const_iterator	E = constructors.end();
-		for ( ; I != E; ++I) {
-			std::string S;
-			(*I).get_signature(L,S);
-			strreplaceall	(S,"custom [","");
-			strreplaceall	(S,"]","");
-			strreplaceall	(S,"float","number");
-			strreplaceall	(S,"lua_State*, ","");
-			strreplaceall	(S," ,lua_State*","");
-			Msg		("    %s %s;",crep->name(),S.c_str());
-		}
-		if (!constructors.empty())
-			Msg		("    ");
-	}
-	// print class methods
-	{
-		crep->get_table	(L);
-		luabind::object	table(L);
-		table.set		();
-		for (luabind::object::iterator i = table.begin(); i != table.end(); ++i) {
-			luabind::object	object = *i;
-			std::string	S;
-			S			= "    function ";
-			S.append	(to_string(i.key()).c_str());
-
-			strreplaceall	(S,"function __add","operator +");
-			strreplaceall	(S,"function __sub","operator -");
-			strreplaceall	(S,"function __mul","operator *");
-			strreplaceall	(S,"function __div","operator /");
-			strreplaceall	(S,"function __pow","operator ^");
-			strreplaceall	(S,"function __lt","operator <");
-			strreplaceall	(S,"function __le","operator <=");
-			strreplaceall	(S,"function __eq","operator ==");
-			Msg			("%s",member_to_string(object,S.c_str()).c_str());
-		}
-	}
-	Msg			("};\n");
-}
-
-void print_free_functions				(lua_State *L, const luabind::object &object, LPCSTR header, const std::string &indent)
-{
-	u32							count = 0;
-	luabind::object::iterator	I = object.begin();
-	luabind::object::iterator	E = object.end();
-	for ( ; I != E; ++I) {
-		if ((*I).type() != LUA_TFUNCTION)
-			continue;
-		(*I).pushvalue();
-		luabind::detail::free_functions::function_rep* rep = 0;
-		if (lua_iscfunction(L, -1))
-		{
-			if (lua_getupvalue(L, -1, 2) != 0)
-			{
-				// check the magic number that identifies luabind's functions
-				if (lua_touserdata(L, -1) == (void*)0x1337)
-				{
-					if (lua_getupvalue(L, -2, 1) != 0)
-					{
-						if (!count)
-							Msg("\n%snamespace %s {",indent.c_str(),header);
-						++count;
-						rep = static_cast<luabind::detail::free_functions::function_rep*>(lua_touserdata(L, -1));
-						std::vector<luabind::detail::free_functions::overload_rep>::const_iterator	i = rep->overloads().begin();
-						std::vector<luabind::detail::free_functions::overload_rep>::const_iterator	e = rep->overloads().end();
-						for ( ; i != e; ++i) {
-							std::string	S;
-							(*i).get_signature(L,S);
-							Msg("    %sfunction %s%s;",indent.c_str(),rep->name(),process_signature(S).c_str());
-						}
-						lua_pop(L, 1);
-					}
-				}
-				lua_pop(L, 1);
-			}
-		}
-		lua_pop(L, 1);
-	}
-	{
-		std::string				_indent = indent;
-		_indent.append			("    ");
-		object.pushvalue();
-		lua_pushnil		(L);
-		while (lua_next(L, -2) != 0) {
-			if (lua_type(L, -1) == LUA_TTABLE) {
-				if (xr_strcmp("_G",lua_tostring(L, -2))) {
-					LPCSTR				S = lua_tostring(L, -2);
-					luabind::object		object(L);
-					object.set			();
-					if (!xr_strcmp("security",S)) {
-						S = S;
-					}
-					print_free_functions(L,object,S,_indent);
-				}
-			}
-#pragma todo("Dima to Dima : Remove this hack if find out why")
-			if (lua_isnumber(L,-2)) {
-				lua_pop(L,1);
-				lua_pop(L,1);
-				break;
-			}
-			lua_pop	(L, 1);
-		}
-	}
-	if (count)
-		Msg("%s};",indent.c_str());
-}
-
-void print_help							(lua_State *L)
-{
-	Msg					("\nList of the classes exported to LUA\n");
-	luabind::detail::class_registry::get_registry(L)->iterate_classes(L,&print_class);
-	Msg					("End of list of the classes exported to LUA\n");
-	Msg					("\nList of the namespaces exported to LUA\n");
-	print_free_functions(L,luabind::get_globals(L),"","");
-	Msg					("End of list of the namespaces exported to LUA\n");
-}
-#else
-void print_help							(lua_State *L)
-{
-	Msg					("! Release build doesn't support lua-help :(");
+	if (ai().script_engine().current_thread())
+		ai().script_engine().current_thread()->script_hook(L,dbg);
+	else
+		ai().script_engine().m_stack_is_ready	= true;
 }
 #endif
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
+int auto_load				(lua_State *L)
+{
+	if ((lua_gettop(L) < 2) || !lua_istable(L,1) || !lua_isstring(L,2)) {
+		lua_pushnil	(L);
+		return		(1);
+	}
 
-void CScriptEngine::script_export		()
+	ai().script_engine().process_file_if_exists(lua_tostring(L,2),false);
+	lua_rawget		(L,1);
+	return			(1);
+}
+
+void CScriptEngine::setup_auto_load		()
+{
+	luaL_newmetatable					(lua(),"XRAY_AutoLoadMetaTable");
+	lua_pushstring						(lua(),"__index");
+	lua_pushcfunction					(lua(), auto_load);
+	lua_settable						(lua(),-3);
+	lua_pushstring 						(lua(),"_G"); 
+	lua_gettable 						(lua(),LUA_GLOBALSINDEX); 
+	luaL_getmetatable					(lua(),"XRAY_AutoLoadMetaTable");
+	lua_setmetatable					(lua(),-2);
+	//. ??????????
+	// lua_settop							(lua(),-0);
+}
+
+void CScriptEngine::init				()
 {
 	luabind::open						(lua());
-	
-#ifdef USE_DEBUGGER
-	m_scriptDebugger->PrepareLuaBind	();
-#endif
-	
-#ifdef USE_DEBUGGER
-	if (!CScriptDebugger::GetDebugger()->Active())
-#endif
-		luabind::set_error_callback		(CScriptEngine::lua_error);
-
-
-	luabind::set_cast_failed_callback	(lua_cast_failed);
-	lua_atpanic							(lua(),CScriptEngine::lua_panic);
-	
+	setup_callbacks						();
 	export_classes						(lua());
+	setup_auto_load						();
 
-	load_class_registrators				();
+#ifdef DEBUG
+	m_stack_is_ready					= true;
+#endif
+
+	bool								save = m_reload_modules;
+	m_reload_modules					= true;
+	process_file_if_exists				("_G",false);
+	m_reload_modules					= save;
+
+	register_script_classes				();
 	object_factory().register_script	();
 
 #ifdef DEBUG
 #	ifdef USE_DEBUGGER
-		if( !CScriptDebugger::GetDebugger()->Active() )
+		if( !debugger() || !debugger()->Active()  )
 #	endif
-			lua_sethook					(lua(),CScriptEngine::lua_hook_call,	LUA_HOOKCALL | LUA_HOOKRET | LUA_HOOKLINE | LUA_HOOKTAILRET,	0);
+			lua_sethook					(lua(),lua_hook_call,	LUA_MASKLINE|LUA_MASKCALL|LUA_MASKRET,	0);
 #endif
 
 #ifdef XRGAME_EXPORTS
@@ -390,92 +176,103 @@ void CScriptEngine::script_export		()
 	m_stack_level						= lua_gettop(lua());
 }
 
-bool CScriptEngine::load_file			(LPCSTR caScriptName, bool bCall)
+void CScriptEngine::remove_script_process	(const EScriptProcessors &process_id)
 {
-	VERIFY			(bCall);
-	string256		l_caNamespaceName;
-	_splitpath		(caScriptName,0,0,l_caNamespaceName,0);
-	if (!xr_strlen(l_caNamespaceName))
-		return		(load_file_into_namespace(caScriptName,"_G",bCall));
-	else
-		return		(load_file_into_namespace(caScriptName,l_caNamespaceName,bCall));
-}
-
-void CScriptEngine::remove_script_process	(LPCSTR process_name)
-{
-	CScriptProcessStorage::iterator	I = m_script_processes.find(process_name);
+	CScriptProcessStorage::iterator	I = m_script_processes.find(process_id);
 	if (I != m_script_processes.end()) {
 		xr_delete						((*I).second);
 		m_script_processes.erase		(I);
 	}
 }
 
-void CScriptEngine::add_file			(LPCSTR file_name)
-{
-	m_load_queue.push_back	(xr_strdup(file_name));
-}
-
 void CScriptEngine::load_common_scripts()
 {
 #ifdef DBG_DISABLE_SCRIPTS
-    return;
+	return;
 #endif
-
-    char S[256];
-    FS.update_path(S, "$game_data$", "script.ltx");
-    CInifile* l_tpIniFile = xr_new<CInifile>(S);
-    R_ASSERT(l_tpIniFile);
-
-    if (!l_tpIniFile->section_exist("common")) {
-        xr_delete(l_tpIniFile);
-        return;
-    }
-
-    if (l_tpIniFile->line_exist("common", "script")) {
-        const char* caScriptString = l_tpIniFile->r_string("common", "script");
-        u32 n = _GetItemCount(caScriptString);
-        for (u32 i = 0; i < n; ++i) {
-            char item[256];
-            _GetItem(caScriptString, i, item);
-            
-            add_file(item);
-            process();
-
-            // Формируем имя функции и вызываем
-            std::string fun_name = std::string(item) + "_initialize";
-            if (object("_G", fun_name.c_str(), LUA_TFUNCTION)) {
-                luabind::functor<void> f;
-                R_ASSERT(functor(fun_name.c_str(), f));
-                f();
-            }
-        }
-    }
-
-    xr_delete(l_tpIniFile);
-}
-
-
-void CScriptEngine::process	()
-{
-	string256					S,S1;
-	for (u32 i=0, n=m_load_queue.size(); !m_load_queue.empty(); ++i) {
-		LPSTR					S2 = m_load_queue.front();
-		m_load_queue.pop_front	();
-		R_ASSERT2				(xr_strcmp(S2,"_G"),"File name \"_G.script\" is reserved and cannot be used!");
-		if ((!*S2 && !m_global_script_loaded) || ((m_reload_modules && (i < n)) || !namespace_loaded(S2))) {
-			if (!*S2)
-				m_global_script_loaded = true;
-			FS.update_path		(S,"$game_scripts$",strconcat(S1,S2,".script"));
-			Msg					("* loading script %s",S1);
-			load_file			(S,true);
-		}
-		xr_free					(S2);
+	string_path		S;
+	FS.update_path	(S,"$game_config$","script.ltx");
+	CInifile		*l_tpIniFile = xr_new<CInifile>(S);
+	R_ASSERT		(l_tpIniFile);
+	if (!l_tpIniFile->section_exist("common")) {
+		xr_delete			(l_tpIniFile);
+		return;
 	}
-	m_reload_modules			= false;
+
+	if (l_tpIniFile->line_exist("common","script")) {
+		LPCSTR			caScriptString = l_tpIniFile->r_string("common","script");
+		u32				n = _GetItemCount(caScriptString);
+		string256		I;
+		for (u32 i=0; i<n; ++i) {
+			process_file(_GetItem(caScriptString,i,I));
+			if (object("_G",strcat(I,"_initialize"),LUA_TFUNCTION)) {
+//				lua_dostring			(lua(),strcat(I,"()"));
+				luabind::functor<void>	f;
+				R_ASSERT				(functor(I,f));
+				f						();
+			}
+		}
+	}
+
+	xr_delete			(l_tpIniFile);
 }
 
-void CScriptEngine::register_script_classes	()
+void CScriptEngine::process_file_if_exists	(LPCSTR file_name, bool warn_if_not_exist)
 {
+	u32						string_length = xr_strlen(file_name);
+	if (!warn_if_not_exist && no_file_exists(file_name,string_length))
+		return;
+
+	string_path				S,S1;
+	if (m_reload_modules || (*file_name && !namespace_loaded(file_name))) {
+		FS.update_path		(S,"$game_scripts$", xr_strconcat(S1,file_name,".script"));
+		if (!warn_if_not_exist && !FS.exist(S)) {
+#ifdef DEBUG
+			print_stack		();
+			Msg				("* trying to access variable %s, which doesn't exist, or to load script %s, which doesn't exist too",file_name,S1);
+			m_stack_is_ready= true;
+#endif
+			add_no_file		(file_name,string_length);
+			return;
+		}
+#if 1//def DEBUG
+		Msg					("* loading script %s",S1);
+#endif
+		m_reload_modules	= false;
+		load_file_into_namespace(S,*file_name ? file_name : "_G");
+	}
+}
+
+void CScriptEngine::process_file	(LPCSTR file_name)
+{
+	process_file_if_exists	(file_name,true);
+}
+
+void CScriptEngine::process_file	(LPCSTR file_name, bool reload_modules)
+{
+	m_reload_modules		= reload_modules;
+	process_file_if_exists	(file_name,true);
+	m_reload_modules		= false;
+}
+
+void CScriptEngine::register_script_classes		()
+{
+#ifdef DBG_DISABLE_SCRIPTS
+	return;
+#endif
+	string_path					S;
+	FS.update_path				(S,"$game_config$","script.ltx");
+	CInifile					*l_tpIniFile = xr_new<CInifile>(S);
+	R_ASSERT					(l_tpIniFile);
+
+	if (!l_tpIniFile->section_exist("common")) {
+		xr_delete				(l_tpIniFile);
+		return;
+	}
+
+	m_class_registrators		= l_tpIniFile->line_exist("common", "class_registrators") ?  l_tpIniFile->r_string("common", "class_registrators") : "";
+	xr_delete					(l_tpIniFile);
+
 	u32							n = _GetItemCount(*m_class_registrators);
 	string256					I;
 	for (u32 i=0; i<n; ++i) {
@@ -489,29 +286,7 @@ void CScriptEngine::register_script_classes	()
 	}
 }
 
-void CScriptEngine::load_class_registrators		()
-{
-#ifdef DBG_DISABLE_SCRIPTS
-	return;
-#endif
-	string256		S;
-	FS.update_path	(S,"$game_data$","script.ltx");
-	CInifile		*l_tpIniFile = xr_new<CInifile>(S);
-	R_ASSERT		(l_tpIniFile);
-	if (!l_tpIniFile->section_exist("common")) {
-		xr_delete			(l_tpIniFile);
-		return;
-	}
-
-	if (l_tpIniFile->line_exist("common","class_registrators"))
-		m_class_registrators = l_tpIniFile->r_string("common","class_registrators");
-	else
-		m_class_registrators = "";
-
-	xr_delete			(l_tpIniFile);
-}
-
-bool CScriptEngine::function_object(LPCSTR function_to_call, luabind::object &object)
+bool CScriptEngine::function_object(LPCSTR function_to_call, luabind::object &object, int type)
 {
 	if (!xr_strlen(function_to_call))
 		return				(false);
@@ -519,15 +294,49 @@ bool CScriptEngine::function_object(LPCSTR function_to_call, luabind::object &ob
 	string256				name_space, function;
 
 	parse_script_namespace	(function_to_call,name_space,function);
-	if (xr_strcmp(name_space,"_G")) {
-		add_file			(name_space);
-		process				();
-	}
+	if (xr_strcmp(name_space,"_G"))
+		process_file		(name_space);
 
-	if (!this->object(name_space,function,LUA_TFUNCTION))
+	if (!this->object(name_space,function,type))
 		return				(false);
 
 	luabind::object			lua_namespace	= this->name_space(name_space);
 	object					= lua_namespace[function];
 	return					(true);
+}
+
+#ifdef USE_DEBUGGER
+void CScriptEngine::stopDebugger				()
+{
+	if (debugger()){
+		xr_delete	(m_scriptDebugger);
+		Msg			("Script debugger succesfully stoped.");
+	}
+	else
+		Msg			("Script debugger not present.");
+}
+
+void CScriptEngine::restartDebugger				()
+{
+	if(debugger())
+		stopDebugger();
+
+	m_scriptDebugger = xr_new<CScriptDebugger>();
+	debugger()->PrepareLuaBind();
+	Msg				("Script debugger succesfully restarted.");
+}
+#endif
+
+bool CScriptEngine::no_file_exists	(LPCSTR file_name, u32 string_length)
+{
+	if (m_last_no_file_length != string_length)
+		return				(false);
+
+	return					(!memcmp(m_last_no_file,file_name,string_length*sizeof(char)));
+}
+
+void CScriptEngine::add_no_file		(LPCSTR file_name, u32 string_length)
+{
+	m_last_no_file_length	= string_length;
+	CopyMemory			(m_last_no_file,file_name,(string_length+1)*sizeof(char));
 }

@@ -36,7 +36,7 @@ BOOL CCF_Polygonal::LoadModel( CInifile* ini, const char *section )
 	R_ASSERT			(section);
 
 	// Locate file
-	string256			full_path;
+	string_path			full_path;
 	LPCSTR				N = ini->r_string(section,"cform");
 	if (!FS.exist(full_path, "$level$", N)) {
 		Debug.fatal("Can't find cform file '%s'.",N);

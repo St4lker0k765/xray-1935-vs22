@@ -34,7 +34,7 @@ void ContactShotMark(CDB::TRI* T,dContactGeom* c)
 		{
 			SGameMtlPair* mtl_pair		= GMLib.GetMaterialPair(T->material,data->material);
 			//	char buf[40];
-			//	R_ASSERT3(mtl_pair,strconcat(buf,"Undefined material pair:  # ", GMLib.GetMaterial(T->material)->name),GMLib.GetMaterial(data->material)->name);
+			//	R_ASSERT3(mtl_pair,xr_strconcat(buf,"Undefined material pair:  # ", GMLib.GetMaterial(T->material)->name),GMLib.GetMaterial(data->material)->name);
 			if(mtl_pair)
 			{
 				if(vel_cret>vel_cret_wallmark && !mtl_pair->CollideMarks.empty())

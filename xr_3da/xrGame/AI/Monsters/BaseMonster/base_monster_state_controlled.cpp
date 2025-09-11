@@ -70,50 +70,52 @@ void CBaseMonsterControlled::ExecuteAttack()
 
 	switch (m_tAction)	{
 		// ************
-		case ACTION_RUN: 		 // бежать на врага
+	case ACTION_RUN: 		 // бежать на врага
+	{
 		// ************	
-			pMonster->set_action							(ACT_RUN);
-			pMonster->MotionMan.accel_activate				(eAT_Aggressive);
-			pMonster->MotionMan.accel_set_braking			(false);
+		pMonster->set_action(ACT_RUN);
+		pMonster->MotionMan.accel_activate(eAT_Aggressive);
+		pMonster->MotionMan.accel_set_braking(false);
 
-			pMonster->CMonsterMovement::set_target_point	(pMonster->EnemyMan.get_enemy_position(), pMonster->EnemyMan.get_enemy_vertex());
-			pMonster->CMonsterMovement::set_rebuild_time	(100 + u32(50.f * dist));
-			pMonster->CMonsterMovement::set_distance_to_end	(2.5f);
-			pMonster->CMonsterMovement::set_use_covers		();
-			pMonster->CMonsterMovement::set_cover_params	(5.f, 30.f, 1.f, 30.f);
-			pMonster->CMonsterMovement::set_try_min_time	(false);
+		pMonster->CMonsterMovement::set_target_point(pMonster->EnemyMan.get_enemy_position(), pMonster->EnemyMan.get_enemy_vertex());
+		pMonster->CMonsterMovement::set_rebuild_time(100 + u32(50.f * dist));
+		pMonster->CMonsterMovement::set_distance_to_end(2.5f);
+		pMonster->CMonsterMovement::set_use_covers();
+		pMonster->CMonsterMovement::set_cover_params(5.f, 30.f, 1.f, 30.f);
+		pMonster->CMonsterMovement::set_try_min_time(false);
 
-			pSquad = monster_squad().get_squad(pMonster);
-			squad_active = pSquad && pSquad->SquadActive();
+		pSquad = monster_squad().get_squad(pMonster);
+		squad_active = pSquad && pSquad->SquadActive();
 
-			// Получить команду
-			SSquadCommand command;
-			pSquad->GetCommand(pMonster, command);
-			if (!squad_active || (command.type != SC_ATTACK)) squad_active = false;
+		// Получить команду
+		SSquadCommand command;
+		pSquad->GetCommand(pMonster, command);
+		if (!squad_active || (command.type != SC_ATTACK)) squad_active = false;
 
 
-			if (squad_active) {
-				pMonster->set_use_dest_orient	(true);
-				pMonster->set_dest_direction	(command.direction);
-			}
+		if (squad_active) {
+			pMonster->set_use_dest_orient(true);
+			pMonster->set_dest_direction(command.direction);
+		}
 
-			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0,0,pMonster->get_sd()->m_dwAttackSndDelay);
+		pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0, 0, pMonster->get_sd()->m_dwAttackSndDelay);
 
-			break;
+	}break;
 			
 		// *********************
 		case ACTION_MELEE:		// атаковать вплотную
-		// *********************
-			
-			pMonster->MotionMan.m_tAction	= ACT_ATTACK;
+		{
+			// *********************
+
+			pMonster->MotionMan.m_tAction = ACT_ATTACK;
 
 			// Смотреть на врага 
 			DO_IN_TIME_INTERVAL_BEGIN(FaceEnemyLastTime, 1200);
-				pMonster->FaceTarget(enemy);
+			pMonster->FaceTarget(enemy);
 			DO_IN_TIME_INTERVAL_END();
 
-			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0,0,pMonster->get_sd()->m_dwAttackSndDelay);
-			break;
+			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0, 0, pMonster->get_sd()->m_dwAttackSndDelay);
+		}break;
 	}
 	
 	m_tPrevAction = m_tAction;

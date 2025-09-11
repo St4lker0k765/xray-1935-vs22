@@ -20,8 +20,8 @@ void	uber_deffer	(CBlender_Compile& C, LPCSTR _vspec, LPCSTR _pspec, BOOL _aref)
 
 
 	string256		ps,vs,dt;
-	strconcat		(vs,"deffer_", _vspec, lmap?"_lmh":""	);
-	strconcat		(ps,"deffer_", _pspec, lmap?"_lmh":""	);
+	xr_strconcat		(vs,"deffer_", _vspec, lmap?"_lmh":""	);
+	xr_strconcat		(ps,"deffer_", _pspec, lmap?"_lmh":""	);
 	strcpy			(dt,C.detail_texture?C.detail_texture:"");
 
 	if	(_aref)		{ strcat(ps,"_aref");	}
@@ -36,7 +36,7 @@ void	uber_deffer	(CBlender_Compile& C, LPCSTR _vspec, LPCSTR _pspec, BOOL _aref)
 		}
 	} else {
 		strcpy			(fnameA,_t.bump_get().c_str());
-		strconcat		(fnameB,fnameA,"#");
+		xr_strconcat		(fnameB,fnameA,"#");
 		strcat			(vs,"_bump");
 		strcat			(ps,"_bump");
 		if (C.bDetail_Bump)		{

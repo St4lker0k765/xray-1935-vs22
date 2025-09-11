@@ -582,7 +582,7 @@ void CPHElement::InterpolateGlobalTransform(Fmatrix* m){
 void CPHElement::GetGlobalTransformDynamic(Fmatrix* m)
 {
 	PHDynamicData::DMXPStoFMX(dBodyGetRotation(m_body),dBodyGetPosition(m_body),*m);
-	m->mulB(m_inverse_local_transform);
+	m->mulB_43(m_inverse_local_transform);
 	//bUpdate=false;
 	m_flags.set(flUpdate,FALSE);
 }
@@ -651,7 +651,7 @@ void CPHElement::StataticRootBonesCallBack(CBoneInstance* B)
 		Fmatrix global_transform;
 		global_transform.set(m_shell->mXFORM);
 		//if(m_parent_element)
-		global_transform.mulB(mXFORM);
+		global_transform.mulB_43(mXFORM);
 		SetTransform(global_transform);
 
 		FillInterpolation();
@@ -677,7 +677,7 @@ void CPHElement::StataticRootBonesCallBack(CBoneInstance* B)
 		InterpolateGlobalTransform(&mXFORM);
 		parent.set(m_shell->mXFORM);
 		parent.invert();
-		mXFORM.mulA(parent);
+		mXFORM.mulA_43(parent);
 		B->mTransform.set(mXFORM);
 	}
 	VERIFY2(!fis_zero(DET((B->mTransform))),"Bones callback returns 0 matrix");
@@ -689,7 +689,7 @@ void CPHElement::StataticRootBonesCallBack(CBoneInstance* B)
 	//	B->mTransform.set(mXFORM);
 	//parent.set(B->mTransform);
 	//parent.invert();
-	//m_shell->mXFORM.mulB(parent);
+	//m_shell->mXFORM.mulB_43(parent);
 
 	//}
 
@@ -712,7 +712,7 @@ void CPHElement::BonesCallBack(CBoneInstance* B)
 		Fmatrix global_transform;
 		global_transform.set(m_shell->mXFORM);
 		//if(m_parent_element)
-		global_transform.mulB(mXFORM);
+		global_transform.mulB_43(mXFORM);
 		SetTransform(global_transform);
 
 		FillInterpolation();
@@ -746,7 +746,7 @@ void CPHElement::BonesCallBack(CBoneInstance* B)
 		InterpolateGlobalTransform(&mXFORM);
 		parent.set(m_shell->mXFORM);
 		parent.invert();
-		mXFORM.mulA(parent);
+		mXFORM.mulA_43(parent);
 		B->mTransform.set(mXFORM);
 	}
 	VERIFY2(!fis_zero(DET((B->mTransform))),"Bones callback returns 0 matrix");
@@ -758,7 +758,7 @@ void CPHElement::BonesCallBack(CBoneInstance* B)
 	//	B->mTransform.set(mXFORM);
 	//parent.set(B->mTransform);
 	//parent.invert();
-	//m_shell->mXFORM.mulB(parent);
+	//m_shell->mXFORM.mulB_43(parent);
 
 	//}
 
@@ -1188,7 +1188,7 @@ void CPHElement::PresetActive()
 	m_start_time=Device.fTimeGlobal;
 	Fmatrix global_transform;
 	global_transform.set(m_shell->mXFORM);
-	global_transform.mulB(mXFORM);
+	global_transform.mulB_43(mXFORM);
 	SetTransform(global_transform);
 
 	if(!m_parent_element) 
@@ -1239,14 +1239,14 @@ void CPHElement::cv2bone_Xfrom(const Fquaternion& q,const Fvector& pos, Fmatrix&
 	VERIFY2(_valid(q)&&_valid(pos),"cv2bone_Xfrom receive wrong data");
 	xform.rotation(q);
 	xform.c.set(pos);
-	xform.mulB(m_inverse_local_transform);
+	xform.mulB_43(m_inverse_local_transform);
 	VERIFY2(_valid(xform),"cv2bone_Xfrom returns wrong data");
 }
 void CPHElement::cv2obj_Xfrom(const Fquaternion& q,const Fvector& pos, Fmatrix& xform)
 {
 	
 	cv2bone_Xfrom(q,pos,xform);
-	xform.mulB(m_shell->m_object_in_root);
+	xform.mulB_43(m_shell->m_object_in_root);
 	VERIFY2(_valid(xform),"cv2obj_Xfrom returns wrong data");
 }
 

@@ -12,23 +12,43 @@ public:
 	typedef _vector3<T>	Tvector;
 	typedef _matrix<T>	Tmatrix;
 public:
-	union{
-		struct{
+	union
+	{
+		struct
+		{
 			Tvector	min;
 			Tvector	max;
 		};
-		struct{
+		struct
+		{
 			T x1, y1, z1;
 			T x2, y2, z2;
 		};
 	};
+
+	IC _box3()
+	{
+		x1 = y1 = z1 = x2 = y2 = z2 = static_cast<T>(0);
+	}
+
+	IC _box3(const std::initializer_list<T>& list)
+	{
+		R_ASSERT2(list.size() == 6, "Initializer list must contain exactly 6 elements.");
+		auto it = list.begin();
+		x1 = *it++;
+		y1 = *it++;
+		z1 = *it++;
+		x2 = *it++;
+		y2 = *it++;
+		z2 = *it++;
+	}
 
 	IC	BOOL	is_valid	()											{return (x2>=x1)&&(y2>=y1)&&(z2>=z1);}
 
 	IC	const T* data		()	const									{ return &min.x;	}	
 
 	IC 	SelfRef	set			(const Tvector &_min, const Tvector &_max)	{ min.set(_min);	max.set(_max);		return *this;	};
-	IC	SelfRef	set			(T x1, T y1, T z1, T x2, T y2, T z2)		{ min.set(x1,y1,z1);max.set(x2,y2,z2);	return *this;	};
+	IC	SelfRef	set			(T x1_, T y1_, T z1_, T x2_, T y2_, T z2_)		{ min.set(x1_,y1_,z1_);max.set(x2_,y2_,z2_);	return *this;	};
 	IC	SelfRef	set			(SelfCRef b)								{ min.set(b.min);	max.set(b.max);		return *this;	};
     IC 	SelfRef	setb		(const Tvector& center, const Tvector& dim)	{ min.sub(center,dim);max.add(center,dim);return *this;	}
 
@@ -46,17 +66,17 @@ public:
 	IC	SelfRef	offset		(const Tvector &p)				{ min.add(p); max.add(p);	return *this;	};
 	IC	SelfRef	add			(SelfCRef b, const Tvector &p)	{ min.add(b.min, p); max.add(b.max, p);				return *this;	};
 	
-	IC	BOOL	contains	(T x, T y, T z)		const		{ return (x>=x1) && (x<=x2) && (y>=y1) && (y<=y2) && (z>=z1) && (z<=z2); };
-	IC	BOOL	contains	(const Tvector &p)	const		{ return contains(p.x,p.y,p.z);	};
-	IC	BOOL	contains	(SelfCRef b)		const		{ return contains(b.min) && contains(b.max); };
+	ICF	BOOL	contains	(T x, T y, T z)		const		{ return (x>=x1) && (x<=x2) && (y>=y1) && (y<=y2) && (z>=z1) && (z<=z2); };
+	ICF	BOOL	contains	(const Tvector &p)	const		{ return contains(p.x,p.y,p.z);	};
+	ICF	BOOL	contains	(SelfCRef b)		const		{ return contains(b.min) && contains(b.max); };
 	
 	IC	BOOL	similar		(SelfCRef b)		const		{ return min.similar(b.min) && max.similar(b.max); };
 	
-	IC	SelfRef	modify		(const Tvector &p)				{ min.min(p); max.max(p);				return *this;	}
-	IC	SelfRef	modify		(T x, T y, T z)					{ _vector3<T> tmp = {x,y,z}; return		modify(tmp);	}
+	ICF	SelfRef	modify		(const Tvector &p)				{ min.min(p); max.max(p);				return *this;	}
+	ICF	SelfRef	modify		(T x, T y, T z)					{ _vector3<T> tmp = {x,y,z}; return		modify(tmp);	}
 	IC	SelfRef	merge		(SelfCRef b)					{ modify(b.min); modify(b.max);			return *this;	};
 	IC	SelfRef	merge		(SelfCRef b1, SelfCRef b2)		{ invalidate(); merge(b1); merge(b2);	return *this;	}
-	IC	SelfRef	xform		(SelfCRef B, const Tmatrix &m)
+	ICF	SelfRef	xform		(SelfCRef B, const Tmatrix &m)
 	{
 		// The three edges transformed: you can efficiently transform an X-only vector3
 		// by just getting the "X" column of the matrix
@@ -82,7 +102,7 @@ public:
 		if(negative(vz.z))	min.z += vz.z; else max.z += vz.z;
 		return *this;
 	}
-	IC	SelfRef	xform		(const Tmatrix &m)
+	ICF	SelfRef	xform		(const Tmatrix &m)
     {
 		Self b;
         b.set(*this);
@@ -118,7 +138,7 @@ public:
 	};
 	
 	// Detects if this box intersect other
-	IC	BOOL	intersect	(SelfCRef box )
+	ICF	BOOL	intersect	(SelfCRef box )
 	{
 		if( max.x < box.min.x )	return FALSE;
 		if( max.y < box.min.y )	return FALSE;

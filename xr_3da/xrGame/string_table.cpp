@@ -54,7 +54,7 @@ void CStringTable::Load	(LPCSTR xml_file)
 {
 	CUIXml uiXml;
 	string128 xml_file_full;
-	strconcat(xml_file_full, xml_file, ".xml");
+	xr_strconcat(xml_file_full, xml_file, ".xml");
 	bool xml_result = uiXml.Init("$game_data$", xml_file_full);
 	R_ASSERT3(xml_result, "xml file not found", xml_file_full);
 

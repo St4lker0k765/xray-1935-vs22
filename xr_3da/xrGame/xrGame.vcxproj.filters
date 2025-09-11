@@ -4197,6 +4197,9 @@
     <ClCompile Include="ui\UIChatWnd.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Chat</Filter>
     </ClCompile>
+    <ClCompile Include="script_engine_help.cpp">
+      <Filter>AI\AScript\ScriptEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="agent_manager.h">
@@ -7516,6 +7519,21 @@
     </ClInclude>
     <ClInclude Include="ui\UIChatWnd.h">
       <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="associative_vector.h">
+      <Filter>AI\AScript</Filter>
+    </ClInclude>
+    <ClInclude Include="associative_vector_compare_predicate.h">
+      <Filter>AI\AScript</Filter>
+    </ClInclude>
+    <ClInclude Include="associative_vector_compare_predicate_inline.h">
+      <Filter>AI\AScript</Filter>
+    </ClInclude>
+    <ClInclude Include="associative_vector_inline.h">
+      <Filter>AI\AScript</Filter>
+    </ClInclude>
+    <ClInclude Include="script_engine_space.h">
+      <Filter>AI\AScript\ScriptEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -75,7 +75,7 @@ void CUIStalkersRankingWnd::Init()
 
 	string256 buf;
 	ZeroMemory(buf, sizeof(buf));
-	strconcat(buf, ALL_PDA_HEADER_PREFIX, "/", UIArticleHeader.GetText());
+	xr_strconcat(buf, ALL_PDA_HEADER_PREFIX, "/", UIArticleHeader.GetText());
 	UIInfoHeader.UITitleText.SetText(buf);
 }
 

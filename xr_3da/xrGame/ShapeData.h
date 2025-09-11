@@ -9,13 +9,13 @@ struct CShapeData
     };
 	union shape_data
 	{
-		Fsphere		sphere;
+		Fsphere		sphere = {};
 		Fmatrix		box;
 	};
 	struct shape_def
 	{
 		u8			type;
-		shape_data	data;
+		shape_data	data = {};
 	};
     DEFINE_VECTOR					(shape_def,ShapeVec,ShapeIt);
 	ShapeVec						shapes;

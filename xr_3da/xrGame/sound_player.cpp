@@ -30,7 +30,7 @@ void CSoundPlayer::clear			()
 
 void CSoundPlayer::init				()
 {
-	seed							(u32(CPU::GetCycleCount() & 0xffffffff));
+	seed							(u32(CPU::GetCLK() & 0xffffffff));
 }
 
 void CSoundPlayer::reinit			()
@@ -76,7 +76,7 @@ u32 CSoundPlayer::load				(xr_vector<ref_sound*> &sounds, LPCSTR prefix, u32 max
 {
 	sounds.clear				();
 	for (int j=0, N = _GetItemCount(prefix); j<N; ++j) {
-		string256				fn, s;
+		string_path				fn, s;
 		LPSTR					S = (LPSTR)&s;
 		_GetItem				(prefix,j,S);
 		if (FS.exist(fn,"$game_sounds$",S,".ogg")){

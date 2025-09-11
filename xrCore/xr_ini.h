@@ -13,18 +13,23 @@ struct	xr_token;
 class XRCORE_API CInifile
 {
 public:
-	struct XRCORE_API Item
+	struct XRCORE_API	Item
 	{
 		shared_str	first;
 		shared_str	second;
+#ifdef DEBUG
 		shared_str	comment;
-
-		Item() : first(0), second(0), comment(0) {};
+#endif
+		Item() : first(0), second(0)
+#ifdef DEBUG
+			, comment(0)
+#endif
+		{};
 	};
 	typedef xr_vector<Item>			Items;
 	typedef Items::iterator			SectIt;
-    struct XRCORE_API Sect {
-		shared_str			Name;
+    struct XRCORE_API	Sect {
+		shared_str		Name;
 		Items			Data;
 
 		IC SectIt		begin()		{ return Data.begin();	}
@@ -33,13 +38,13 @@ public:
 		IC void			clear()		{ Data.clear();			}
 	    BOOL			line_exist	(LPCSTR L, LPCSTR* val=0);
 	};
-	typedef	xr_vector<Sect>		Root;
-	typedef Root::iterator		RootIt;
+	typedef	xr_vector<Sect*>		Root;
+	typedef Root::iterator			RootIt;
 
 	// factorisation
-	static CInifile*	Create	( LPCSTR szFileName, BOOL ReadOnly=TRUE);
-	static void			Destroy	( CInifile*);
-    static IC BOOL		IsBOOL	( LPCSTR B)	{ return (xr_strcmp(B,"on")==0 || xr_strcmp(B,"yes")==0 || xr_strcmp(B,"true")==0 || xr_strcmp(B,"1")==0);}
+	static CInifile*	Create		( LPCSTR szFileName, BOOL ReadOnly=TRUE);
+	static void			Destroy		( CInifile*);
+    static IC BOOL		IsBOOL		( LPCSTR B)	{ return (xr_strcmp(B,"on")==0 || xr_strcmp(B,"yes")==0 || xr_strcmp(B,"true")==0 || xr_strcmp(B,"1")==0);}
 private:
 	LPSTR		fName;
 	Root		DATA;
@@ -51,7 +56,7 @@ public:
 				CInifile		( IReader* F, LPCSTR path=0 );
 				CInifile		( LPCSTR szFileName, BOOL ReadOnly=TRUE, BOOL bLoadAtStart=TRUE, BOOL SaveAtEnd=TRUE);
 	virtual 	~CInifile		( );
-    void		save_as         ( LPCSTR new_fname=0 );
+    bool		save_as         ( LPCSTR new_fname=0 );
 
 	LPCSTR		fname			( ) { return fName; };
 
@@ -105,6 +110,7 @@ public:
 	BOOL		r_bool			( const shared_str& S, LPCSTR L )				{ return r_bool(*S,L);			}
 	int			r_token			( LPCSTR S, LPCSTR L,	const xr_token *token_list);
 	BOOL		r_line			( LPCSTR S, int L,	LPCSTR* N, LPCSTR* V );
+	BOOL		r_line			( const shared_str& S, int L,	LPCSTR* N, LPCSTR* V );
 
     void		w_string		( LPCSTR S, LPCSTR L, LPCSTR			V, LPCSTR comment=0 );
 	void		w_u8			( LPCSTR S, LPCSTR L, u8				V, LPCSTR comment=0 );

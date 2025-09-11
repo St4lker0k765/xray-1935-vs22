@@ -105,8 +105,8 @@ public:
 	IC CTimer* GetTimerGlobal				(){return &TimerGlobal;}
 	u32	 TimerAsync							()
 	{
-		u64	qTime		= TimerGlobal.GetElapsed_clk();
-		return u32((qTime*u64(1000))/CPU::cycles_per_second);
+		u64	qTime		= TimerGlobal.GetElapsed_ticks();
+		return u32((qTime*u64(1000))/CPU::clk_per_second);
 	}
 	u32	 TimerAsyncMM						(void)
 	{

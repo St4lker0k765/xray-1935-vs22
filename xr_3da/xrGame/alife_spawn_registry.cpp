@@ -39,9 +39,9 @@ void CALifeSpawnRegistry::load	(IReader &file_stream, LPCSTR game_name)
 	R_ASSERT2					(file_stream.find_chunk(SPAWN_CHUNK_DATA),"Cannot find chunk SPAWN_CHUNK_DATA!");
 	xr_free						(m_spawn_name);
 	m_spawn_name				= (LPSTR)xr_malloc(256*sizeof(char));
-	file_stream.r_stringZ		(m_spawn_name);
+	file_stream.r_stringZ		(m_spawn_name, sizeof(m_spawn_name));
 
-	string256					file_name;
+	string_path					file_name;
 	IReader						*stream;
 	R_ASSERT3					(FS.exist(file_name, "$game_spawn$", m_spawn_name, ".spawn"),"Can't find file spawn file:",m_spawn_name);
 	int							spawn_age = FS.get_file_age(file_name);
@@ -50,7 +50,7 @@ void CALifeSpawnRegistry::load	(IReader &file_stream, LPCSTR game_name)
 	int							game_age = FS.get_file_age(game_name);
 	R_ASSERT3					(game_age >= spawn_age,"Delete saved game ",game_name);
 	
-	string256					graph_file_name;
+	string_path					graph_file_name;
 	FS.update_path				(graph_file_name,"$game_data$",GRAPH_NAME);
 	int							graph_age = FS.get_file_age(graph_file_name);
 	VERIFY3						(spawn_age >= graph_age,"Rebuild spawn file ",file_name);
@@ -66,12 +66,12 @@ void CALifeSpawnRegistry::load	(LPCSTR spawn_name)
 	xr_free						(m_spawn_name);
 	m_spawn_name				= xr_strdup(spawn_name);
 
-	string256					file_name;
+	string_path					file_name;
 	IReader						*stream;
 	R_ASSERT3					(FS.exist(file_name, "$game_spawn$", m_spawn_name, ".spawn"),"Can't find file spawn file:",m_spawn_name);
 	int							spawn_age = FS.get_file_age(file_name);
 	
-	string256					graph_file_name;
+	string_path					graph_file_name;
 	FS.update_path				(graph_file_name,"$game_data$",GRAPH_NAME);
 	int							graph_age = FS.get_file_age(graph_file_name);
 	VERIFY3						(spawn_age >= graph_age,"Rebuild spawn file ",file_name);

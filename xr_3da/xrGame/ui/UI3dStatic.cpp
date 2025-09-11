@@ -78,7 +78,7 @@ void  CUI3dStatic::Draw()
 			 					    - m_pCurrentItem->Visual()->vis.sphere.P.y, 
 								    - m_pCurrentItem->Visual()->vis.sphere.P.z);
 
-		matrix.mulA(translate_matrix);
+		matrix.mulA_43(translate_matrix);
 
 
 		rx_m.identity();
@@ -89,9 +89,9 @@ void  CUI3dStatic::Draw()
 		rz_m.rotateZ(m_z_angle);
 
 
-		matrix.mulA(rx_m);
-		matrix.mulA(ry_m);
-		matrix.mulA(rz_m);
+		matrix.mulA_43(rx_m);
+		matrix.mulA_43(ry_m);
+		matrix.mulA_43(rz_m);
 		
 
 		
@@ -111,7 +111,7 @@ void  CUI3dStatic::Draw()
 		scale_matrix.identity();
 		scale_matrix.scale( scale, scale,scale);
 
-		matrix.mulA(scale_matrix);
+		matrix.mulA_43(scale_matrix);
         
 
 		float right_item_offset, up_item_offset;
@@ -128,14 +128,14 @@ void  CUI3dStatic::Draw()
 								   up_item_offset,
 								   DIST);
 
-		matrix.mulA(translate_matrix);
+		matrix.mulA_43(translate_matrix);
 
 		Fmatrix camera_matrix;
 		camera_matrix.identity();
 		camera_matrix = Device.mView;
 		camera_matrix.invert();
 
-		matrix.mulA(camera_matrix);
+		matrix.mulA_43(camera_matrix);
 
 		
 		::Render->set_Object(NULL); 

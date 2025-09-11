@@ -7,7 +7,7 @@
 
 #include "LocatorAPI_Notifications.h"
 
-void __cdecl CThread::startup(void* P)
+void CThread::startup(void* P)
 {
 	CThread* T 			= (CThread*)P;
 	T->Execute			();
@@ -62,7 +62,7 @@ void CFS_PathNotificator::Execute(void)
     	Path& P			= *it;
         P.FWaitHandle	= FindFirstChangeNotification(P.FDirectory.c_str(), P.bRecurse, FNotifyOptionFlags);
         if (P.FWaitHandle == INVALID_HANDLE_VALUE)
-            Debug.fatal	("Can't create notify handle for path: '%s'\nwith error: '%s'",P.FDirectory.c_str(),Debug.error2string(GetLastError()).c_str());
+            Debug.fatal	("Can't create notify handle for path: '%s'\nwith error: '%s'",P.FDirectory.c_str(),Debug.error2string(GetLastError()));
     }
     LeaveCriticalSection(&CS);
 //	if (FWaitHandle == INVALID_HANDLE_VALUE)
@@ -109,17 +109,5 @@ void CLocatorAPI::ClearEventNotification()
 	    xr_delete				(FThread);
     }
 	DeleteCriticalSection		(&CS);
-}
-
-void CLocatorAPI::lock_rescan()
-{
-	m_Flags.set(flLockRescan,TRUE);
-}
-
-void CLocatorAPI::unlock_rescan()
-{
-	m_Flags.set(flLockRescan,FALSE);
-	if (m_Flags.is(flNeedRescan)) 
-    	rescan_pathes();
 }
 

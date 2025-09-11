@@ -11,21 +11,30 @@
 #include "script_space.h"
 #include "ai_space.h"
 #include "script_debugger.h"
+
+#include <ostream>
+#include <luabind/operator.hpp>
+
 using namespace luabind;
 
 void LuaLog(LPCSTR caMessage)
 {
 	ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeMessage,"%s",caMessage);
 #ifdef USE_DEBUGGER
-	if( CScriptDebugger::GetDebugger()->Active() ){
-		CScriptDebugger::GetDebugger()->Write(caMessage);
+	if( ai().script_engine().debugger() ){
+		ai().script_engine().debugger()->Write(caMessage);
 	}
 #endif
 }
 
-void LoadScriptModule(LPCSTR script_name)
+void ErrorLog(LPCSTR caMessage)
 {
-	ai().script_engine().add_file(script_name);
+	ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"%s",caMessage);
+#ifdef USE_DEBUGGER
+	if( ai().script_engine().debugger() ){
+		ai().script_engine().debugger()->Write(caMessage);
+	}
+#endif
 }
 
 void FlushLogs()
@@ -38,10 +47,7 @@ void FlushLogs()
 
 void verify_if_thread_is_running()
 {
-	if (!ai().script_engine().current_thread()) {
-		ai().script_engine().script_stack_tracker().print_stack(ai().script_engine().lua());
-		VERIFY2		(ai().script_engine().current_thread(),"coroutine.yield() is called outside the LUA thread!");
-	}
+	R_ASSERT2	(ai().script_engine().current_thread(),"coroutine.yield() is called outside the LUA thread!");
 }
 
 bool editor()
@@ -85,11 +91,103 @@ LPCSTR user_name()
 	return			(Core.UserName);
 }
 
+void prefetch_module(LPCSTR file_name)
+{
+	ai().script_engine().process_file(file_name);
+}
+
+struct profile_timer_script {
+	CStatTimer					m_timer;
+	int							m_recurse_mark;
+	
+	IC								profile_timer_script	()
+	{
+		m_recurse_mark			= 0;
+	}
+
+	IC								profile_timer_script	(const profile_timer_script &profile_timer)
+	{
+		*this					= profile_timer;
+	}
+
+	IC		profile_timer_script&	operator=				(const profile_timer_script &profile_timer)
+	{
+		m_timer					= profile_timer.m_timer;
+		m_recurse_mark			= profile_timer.m_recurse_mark;
+		return					(*this);
+	}
+
+	IC		bool					operator<				(const profile_timer_script &profile_timer) const
+	{
+		return					(m_timer.GetElapsed_ticks() < profile_timer.m_timer.GetElapsed_ticks());
+	}
+
+	IC		void					start					()
+	{
+		if (m_recurse_mark) {
+			++m_recurse_mark;
+			return;
+		}
+
+		++m_recurse_mark;
+		m_timer.Begin			();
+	}
+
+	IC		void					stop					()
+	{
+		R_ASSERT					(m_recurse_mark);
+		--m_recurse_mark;
+		
+		if (m_recurse_mark)
+			return;
+		
+		m_timer.End				();
+	}
+
+	IC		float					time					() const
+	{
+		return					(float(m_timer.GetElapsed_sec())*1000000.f);
+	}
+};
+
+IC	profile_timer_script	operator+	(const profile_timer_script &portion0, const profile_timer_script &portion1)
+{
+	profile_timer_script	result;
+	result.m_timer.accum	= portion0.m_timer.accum + portion1.m_timer.accum;
+	result.m_timer.count	= portion0.m_timer.count + portion1.m_timer.count;
+	return					(result);
+}
+
+IC	std::ostream& operator<<(std::ostream &stream, profile_timer_script &timer)
+{
+	stream					<< timer.time();
+	return					(stream);
+}
+
+#ifdef XRGAME_EXPORTS
+ICF	u32	script_time_global	()	{ return Device.dwTimeGlobal; }
+#else
+ICF	u32	script_time_global	()	{ return 0; }
+#endif
+
 void CScriptEngine::script_register(lua_State *L)
 {
+	module(L)[
+		class_<profile_timer_script>("profile_timer")
+			.def(constructor<>())
+			.def(constructor<profile_timer_script&>())
+			.def(const_self + profile_timer_script())
+			.def(const_self < profile_timer_script())
+			.def(tostring(self))
+			.def("start",&profile_timer_script::start)
+			.def("stop",&profile_timer_script::stop)
+			.def("time",&profile_timer_script::time)
+	];
+
 	function	(L,	"log",							LuaLog);
+	function	(L,	"error_log",					ErrorLog);
 	function	(L,	"flush",						FlushLogs);
-	function	(L,	"module",						LoadScriptModule);
+	function	(L,	"prefetch",						prefetch_module);
 	function	(L,	"verify_if_thread_is_running",	verify_if_thread_is_running);
 	function	(L,	"editor",						editor);
 	function	(L,	"bit_and",						bit_and);
@@ -97,6 +195,7 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L,	"bit_xor",						bit_xor);
 	function	(L,	"bit_not",						bit_not);
 	function	(L, "user_name",					user_name);
+	function	(L, "time_global",					script_time_global);
 #ifdef XRGAME_EXPORTS
 	function	(L,	"device",						get_device);
 #endif

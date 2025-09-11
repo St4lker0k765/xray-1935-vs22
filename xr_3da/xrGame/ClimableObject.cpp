@@ -195,7 +195,7 @@ float CClimableObject::DDSideToAxis(CPHCharacter *actor,Fvector &dir)
 void CClimableObject ::OnRender()
 {
 	Fmatrix form;m_box.xform_get(form);
-	//form.mulA(XFORM());
+	//form.mulA_43(XFORM());
 	RCache.dbg_DrawOBB(XFORM(),m_box.m_halfsize,D3DCOLOR_XRGB(0,0,255));
 	Fvector p1,p2,d;
 	d.set(m_axis);

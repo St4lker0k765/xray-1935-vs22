@@ -109,7 +109,7 @@ xr_vector<u16>*		game_sv_GameState::get_children				(ClientID id)
 s32					game_sv_GameState::get_option_i				(LPCSTR lst, LPCSTR name, s32 def)
 {
 	string64		op;
-	strconcat		(op,"/",name,"=");
+	xr_strconcat		(op,"/",name,"=");
 	if (strstr(lst,op))	return atoi	(strstr(lst,op)+xr_strlen(op));
 	else				return def;
 }
@@ -119,7 +119,7 @@ string64&			game_sv_GameState::get_option_s				(LPCSTR lst, LPCSTR name, LPCSTR 
 	static string64	ret;
 
 	string64		op;
-	strconcat		(op,"/",name,"=");
+	xr_strconcat		(op,"/",name,"=");
 	LPCSTR			start	= strstr(lst,op);
 	if (start)		
 	{
@@ -238,7 +238,7 @@ void game_sv_GameState::OnPlayerDisconnect		(ClientID /**id_who/**/, LPSTR, u16 
 
 void game_sv_GameState::Create					(shared_str &options)
 {
-	string256	fn_game;
+	string_path	fn_game;
 	if (FS.exist(fn_game, "$level$", "level.game")) 
 	{
 		IReader *F = FS.r_open	(fn_game);
@@ -274,17 +274,17 @@ void game_sv_GameState::Create					(shared_str &options)
 	}
 
 	// loading scripts
-	ai().script_engine().remove_script_process("game");
-	string256					S;
+	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
+	string_path					S;
 	FS.update_path				(S,"$game_data$","script.ltx");
 	CInifile					*l_tpIniFile = xr_new<CInifile>(S);
 	R_ASSERT					(l_tpIniFile);
 
 	if( l_tpIniFile->section_exist( type_name() ) )
 		if (l_tpIniFile->r_string(type_name(),"script"))
-			ai().script_engine().add_script_process("game",xr_new<CScriptProcess>("game",l_tpIniFile->r_string(type_name(),"script")));
+			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame,xr_new<CScriptProcess>("game",l_tpIniFile->r_string(type_name(),"script")));
 		else
-			ai().script_engine().add_script_process("game",xr_new<CScriptProcess>("game",""));
+			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame,xr_new<CScriptProcess>("game",""));
 
 	xr_delete					(l_tpIniFile);
 
@@ -367,8 +367,11 @@ void game_sv_GameState::Update		()
 		C->ps->ping				= u16(C->stats.getPing());
 	}
 	
-	if(ai().script_engine().script_process("game"))
-		ai().script_engine().script_process("game")->update();
+	if (Level().game) {
+		CScriptProcess				*script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
+		if (script_process)
+			script_process->update	();
+	}
 }
 
 game_sv_GameState::game_sv_GameState()
@@ -384,7 +387,7 @@ game_sv_GameState::game_sv_GameState()
 
 game_sv_GameState::~game_sv_GameState()
 {
-	ai().script_engine().remove_script_process("game");
+	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
 	xr_delete(m_event_queue);
 }
 /*

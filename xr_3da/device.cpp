@@ -78,38 +78,9 @@ void CRenderDevice::End		(void)
 	R_ASSERT2		(SUCCEEDED(_hr),	"Presentation failed. Driver upgrade needed?");
 }
 
-#pragma pack(push,8)
-struct THREAD_NAME
-{
-	DWORD	dwType;
-	LPCSTR	szName;
-	DWORD	dwThreadID;
-	DWORD	dwFlags;
-};
-
-void	SetThreadName(LPCSTR name)
-{
-	THREAD_NAME		tn;
-	tn.dwType		= 0x1000;
-	tn.szName		= name;
-	tn.dwThreadID	= DWORD(-1);
-	tn.dwFlags		= 0;
-	__try
-	{
-		RaiseException(0x406D1388,0,sizeof(tn)/sizeof(DWORD),(DWORD*)&tn);
-	}
-	__except(EXCEPTION_CONTINUE_EXECUTION)
-	{
-	}
-}
-
-#pragma pack(pop)
-
 
 volatile u32	mt_Thread_marker		= 0x12345678;
-void __cdecl	mt_Thread	(void *ptr)	{
-	SetThreadName			("X-RAY Secondary thread");
-
+void 			mt_Thread	(void *ptr)	{
 	while (true) {
 		// waiting for Device permission to execute
 		EnterCriticalSection	(&Device.mt_csEnter);
@@ -145,7 +116,7 @@ void CRenderDevice::Run			()
     BOOL		bGotMsg;
 
 	Log				("Starting engine...");
-	SetThreadName	("X-RAY Primary thread");
+	thread_name		("X-RAY Primary thread");
 
 	// Startup timers and calculate timer delta
 	dwTimeGlobal				= 0;
@@ -163,7 +134,7 @@ void CRenderDevice::Run			()
 	InitializeCriticalSection	(&mt_csLeave);
 	EnterCriticalSection		(&mt_csEnter);
 	mt_bMustExit				= FALSE;
-    _beginthread				( mt_Thread, 0, (void *) 0  );
+	thread_spawn				(mt_Thread,"X-RAY Secondary thread",0,0);
 
 	// Message cycle
     PeekMessage					( &msg, NULL, 0U, 0U, PM_NOREMOVE );
@@ -260,10 +231,10 @@ void CRenderDevice::FrameMove()
 		fTimeDelta = 0.1f * fTimeDelta + 0.9f*fPreviousFrameTime;			// smooth random system activity - worst case ~7% error
 		if (fTimeDelta>.06666f) fTimeDelta=.06666f;							// limit to 15fps minimum
 
-		u64	qTime		= TimerGlobal.GetElapsed_clk();
-		fTimeGlobal		= float(qTime)*CPU::cycles2seconds;
+		u64	qTime		= TimerGlobal.GetElapsed_ticks();
+		fTimeGlobal		= float(qTime)*CPU::clk_to_seconds;
 
-		dwTimeGlobal	= u32((qTime*u64(1000))/CPU::cycles_per_second);
+		dwTimeGlobal	= u32((qTime*u64(1000))/CPU::clk_per_second);
 		dwTimeDelta		= iFloor(fTimeDelta*1000.f+0.5f);
 	}
 

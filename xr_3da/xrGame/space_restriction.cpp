@@ -161,7 +161,7 @@ void CSpaceRestriction::merge_in_out_restrictions	()
 
 CSpaceRestriction::CBaseRestrictionPtr CSpaceRestriction::merge	(CBaseRestrictionPtr bridge, const RESTRICTIONS &temp_restrictions) const
 {
-	u32								acc_length = xr_strlen(*bridge->name()) + 1;
+	/*u32								acc_length = xr_strlen(*bridge->name()) + 1;
 	{
 		RESTRICTIONS::const_iterator	I = temp_restrictions.begin();
 		RESTRICTIONS::const_iterator	E = temp_restrictions.end();
@@ -169,15 +169,23 @@ CSpaceRestriction::CBaseRestrictionPtr CSpaceRestriction::merge	(CBaseRestrictio
 			acc_length					+= xr_strlen(*(*I)->name()) + 1;
 	}
 	
-	LPSTR							S = (LPSTR)xr_malloc(acc_length*sizeof(char));
+	LPSTR							S = xr_alloc<char>(acc_length);
 	S[0]							= 0;
 	shared_str						temp = bridge->name();
 	RESTRICTIONS::const_iterator	I = temp_restrictions.begin();
 	RESTRICTIONS::const_iterator	E = temp_restrictions.end();
 	for ( ; I != E; ++I)
-		temp						= strconcat(S,*temp,",",*(*I)->name());
+		temp						= xr_strconcat(S,*temp,",",*(*I)->name());
 
-	xr_free							(S);
+	xr_free							(S);*/
+
+	string2048 tempBuffer;
+	shared_str						temp = bridge->name();
+
+	for (const SpaceRestrictionHolder::CBaseRestrictionPtr& it : temp_restrictions)
+	{
+		temp = xr_strconcat(tempBuffer, *temp, ",", it->name().c_str());
+	}
 
 	return							(m_space_restriction_manager->restriction(temp));
 }
