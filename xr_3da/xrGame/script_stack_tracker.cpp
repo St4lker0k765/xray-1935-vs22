@@ -10,12 +10,16 @@
 #include "script_stack_tracker.h"
 #include "script_storage_space.h"
 #include "script_space.h"
-#include "ai_space.h"
-#include "script_engine.h"
+
+#ifdef XRGAME_EXPORTS
+#	include "script_engine.h"
+#	include "ai_space.h"
+#endif
 
 CScriptStackTracker::CScriptStackTracker	()
 {
 	m_current_stack_level	= 0;
+	m_virtual_machine		= 0;
 	for (int i=0; i<max_stack_size; ++i)
 		m_stack[i]			= xr_new<lua_Debug>();
 }
@@ -32,8 +36,7 @@ void CScriptStackTracker::script_hook	(lua_State *L, lua_Debug *dbg)
 
 	switch	(dbg->event) {
 		case LUA_HOOKCALL : {
-			if (m_current_stack_level >= max_stack_size)
-				return;
+			VERIFY		(m_current_stack_level < max_stack_size);
 			if (!lua_getstack(L,0,m_stack[m_current_stack_level]))
 				break;
 			lua_getinfo	(L,"nSlu",m_stack[m_current_stack_level]);
@@ -41,15 +44,15 @@ void CScriptStackTracker::script_hook	(lua_State *L, lua_Debug *dbg)
 				lua_getinfo	(L,"nSlu",m_stack[m_current_stack_level - 1]);
 			++m_current_stack_level;
 			break;
-		}
+							}
 		case LUA_HOOKRET : {
-			if (m_current_stack_level > 0)
-				--m_current_stack_level;
+			VERIFY		(m_current_stack_level > 0);
+			--m_current_stack_level;
 			break;
 		}
 		case LUA_HOOKTAILRET : {
-			if (m_current_stack_level > 0)
-				--m_current_stack_level;
+			VERIFY		(m_current_stack_level > 0);
+			--m_current_stack_level;
 			break;
 		}
 		case LUA_HOOKLINE : {
@@ -68,17 +71,19 @@ void CScriptStackTracker::script_hook	(lua_State *L, lua_Debug *dbg)
 
 void CScriptStackTracker::print_stack	(lua_State *L)
 {
-	VERIFY					(L);// && (m_virtual_machine == L));
+	VERIFY					(L && (m_virtual_machine == L));
 
+#ifdef XRGAME_EXPORTS
 	for (int j=m_current_stack_level - 1, k=0; j>=0; --j, ++k) {
 		lua_Debug			l_tDebugInfo = *m_stack[j];
 		if (!l_tDebugInfo.name)
-			ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"%2d : [%s] %s(%d) : %s",k,l_tDebugInfo.what,l_tDebugInfo.short_src,l_tDebugInfo.currentline,"");
+			ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"%2d : [C  ] C source code : %s",k,l_tDebugInfo.short_src);
 		else
 			if (!xr_strcmp(l_tDebugInfo.what,"C"))
-				ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"%2d : [C  ] %s",k,l_tDebugInfo.name);
+				ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"%2d : [C  ] C source code : %s",k,l_tDebugInfo.name);
 			else
 				ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"%2d : [%s] %s(%d) : %s",k,l_tDebugInfo.what,l_tDebugInfo.short_src,l_tDebugInfo.currentline,l_tDebugInfo.name);
 	}
+#endif
 	m_current_stack_level	= 0;
 }

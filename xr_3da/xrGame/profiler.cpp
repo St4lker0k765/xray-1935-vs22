@@ -58,7 +58,7 @@ IC	void CProfiler::convert_string(LPCSTR str, shared_str &out, u32 max_string_si
 
 void CProfiler::setup_timer	(LPCSTR timer_id, u64 timer_time)
 {
-	float						_time = float(timer_time)*CPU::clk_to_milisec;
+	float						_time = float(timer_time)*CPU::cycles2milisec;
 	TIMERS::iterator			i = m_timers.find(timer_id);
 	if (i == m_timers.end()) {
 		strcpy					(m_temp,timer_id);

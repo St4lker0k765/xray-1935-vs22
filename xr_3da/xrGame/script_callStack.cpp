@@ -3,8 +3,7 @@
 #include "script_CallStack.h"
 #include "script_debugger.h"
 
-CScriptCallStack::CScriptCallStack(CScriptDebugger*d)
-:m_debugger(d)
+CScriptCallStack::CScriptCallStack()
 {}
 
 CScriptCallStack::~CScriptCallStack()
@@ -63,7 +62,7 @@ void CScriptCallStack::GotoStackTraceLevel(int nLevel)
 	m_nCurrentLevel = nLevel;
 
 	char * ppath = m_files[nLevel].path;
-	m_debugger->_SendMessage(	DMSG_GOTO_FILELINE,
+	CScriptDebugger::_SendMessage(	DMSG_GOTO_FILELINE,
 									(WPARAM)ppath,
 									(LPARAM)m_lines[nLevel]);
 

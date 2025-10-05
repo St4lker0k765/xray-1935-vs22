@@ -55,7 +55,7 @@ struct SFillPropData{
         for (int i=0; i<LOCATION_TYPE_COUNT; ++i){
             VERIFY				(locations[i].empty());
             string256			caSection, T;
-            xr_strconcat			(caSection,SECTION_HEADER,itoa(i,T,10));
+            strconcat			(caSection,SECTION_HEADER,itoa(i,T,10));
             R_ASSERT			(Ini->section_exist(caSection));
             for (k = 0; Ini->r_line(caSection,k,&N,&V); ++k)
                 locations[i].push_back	(xr_rtoken(V,atoi(N)));

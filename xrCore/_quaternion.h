@@ -140,7 +140,7 @@
 #define QEPSILON				0.00001f
 
 template <class T>
-struct _quaternion {
+struct  _quaternion {
 public:
 	typedef T				TYPE;
 	typedef _quaternion<T>	Self;
@@ -347,14 +347,11 @@ public:
 	// with t==0 being all q0, and t==1 being all q1.
 	// returns a quaternion with a positive W - always takes shortest route
 	// through the positive W domain.
-	ICF	SelfRef	slerp(SelfCRef Q0, SelfCRef Q1, T tm)
+	IC	SelfRef	slerp(SelfCRef Q0, SelfCRef Q1, T tm)
 	{
 		T Scale0,Scale1,sign;
-
-#ifdef DEBUG		
-		if (!( ( T(0) <= tm ) && ( tm <= T(1) ) ) )
-			Debug.fatal("Quaternion::slerp - invalid 'tm' arrived: %f",tm);
-#endif
+		
+		VERIFY( ( 0 <= tm ) && ( tm <= 1.0f ) );
 		
 		T cosom =	(Q0.w * Q1.w) + (Q0.x * Q1.x) + (Q0.y * Q1.y) + (Q0.z * Q1.z);
 		

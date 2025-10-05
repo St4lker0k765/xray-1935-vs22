@@ -108,7 +108,7 @@ void CRenderDevice::Create	()
 	// Hide the cursor if necessary
 	ShowCursor		(FALSE);
 
-	string_path		fname; 
+	string256		fname; 
 	FS.update_path	(fname,"$game_data$","shaders.xr");
 
 	//////////////////////////////////////////////////////////////////////////

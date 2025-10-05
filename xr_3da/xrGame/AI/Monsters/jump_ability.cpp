@@ -134,7 +134,7 @@ Fvector CJumpingAbility::get_target(CObject *obj)
 
 	Fmatrix	global_transform;
 	global_transform.set	(obj->XFORM());
-	global_transform.mulB_43	(bone.mTransform);
+	global_transform.mulB	(bone.mTransform);
 	
 	Fvector target_pos		= global_transform.c;
 	target_pos.y			-= obj->Radius() / 2;

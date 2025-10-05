@@ -109,7 +109,7 @@ void CDetailManager::Load		()
 		return;
 	}
 
-	string_path			fn;
+	string256			fn;
 	FS.update_path		(fn,"$level$","level.details");
 	dtFS				= FS.r_open(fn);
 

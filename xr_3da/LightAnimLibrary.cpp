@@ -190,7 +190,7 @@ void ELightAnimLibrary::Unload()
 
 void ELightAnimLibrary::Load()
 {
-	string_path fn;
+	string256 fn;
     FS.update_path(fn,_game_data_,"lanims.xr");
 	IReader* fs=FS.r_open(fn);
     if (fs){
@@ -223,7 +223,7 @@ void ELightAnimLibrary::Save()
     }
 	F.close_chunk	();
 
-	string_path fn;
+	string256 fn;
     FS.update_path(fn,_game_data_,"lanims.xr");
     F.save_to(fn);
 }

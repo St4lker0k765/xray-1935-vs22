@@ -20,11 +20,11 @@ CLevelGraph::CLevelGraph					(LPCSTR filename, u32 current_version)
 	sh_debug.create				("debug\\ai_nodes","$null");
 	m_best_point				= 0;
 #endif
-	string_path					file_name;
+	string256					file_name;
 	FS.update_path				(file_name,"$level$","level.ai");
 #else
 	string256					file_name;
-	xr_strconcat					(file_name,filename,"level.ai");
+	strconcat					(file_name,filename,"level.ai");
 #endif
 	m_reader					= FS.r_open	(file_name);
 

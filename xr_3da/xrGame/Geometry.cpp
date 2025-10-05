@@ -266,7 +266,7 @@ void CODEGeom::move_local_basis(const Fmatrix& inv_new_mul_old)
 {
 	Fmatrix new_form;
 	get_local_form(new_form);
-	new_form.mulA_43(inv_new_mul_old);
+	new_form.mulA(inv_new_mul_old);
 	set_local_form(new_form);
 }
 void CODEGeom::build(const Fvector& ref_point)

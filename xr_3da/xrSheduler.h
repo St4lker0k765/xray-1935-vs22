@@ -37,7 +37,7 @@ public:
 	void			Switch		();
 	IC void			Slice		()
 	{
-		if ((CPU::GetCLK()-cycles_start)>cycles_limit)
+		if ((CPU::GetCycleCount()-cycles_start)>cycles_limit)
 			Switch();
 	}
 

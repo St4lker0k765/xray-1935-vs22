@@ -2,9 +2,9 @@
 #define LocatorAPI_NotificationsH
 #pragma once
 
-class	CThread
+class CThread
 {
-	static void				startup			(void* P);
+	static void __cdecl startup(void* P);
 protected:
 	volatile u32			thID;
 	volatile BOOL			Terminated;
@@ -17,7 +17,7 @@ public:
 	virtual 				~CThread		(){}
 	void					Start			()
 	{
-		thread_spawn		(startup,"FS-notify",0,this);
+		_beginthread		(startup,0,this);
 	}
 	virtual	void			Execute			() = 0;
     void					Terminate		() {Terminated=TRUE;}
@@ -28,8 +28,8 @@ class CFS_PathNotificator : public CThread
 private:
     struct Path	{
     	shared_str						FDirectory;
-        void* 							FWaitHandle;
-        fastdelegate::FastDelegate0<>	FChangeEvent;
+        void* 						FWaitHandle;
+        fastdelegate::FastDelegate0	FChangeEvent;
 		BOOL 						bRecurse;
     };
     DEFINE_VECTOR			(HANDLE,HANDLEVec,HANDLEIt);

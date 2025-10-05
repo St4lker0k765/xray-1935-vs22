@@ -85,7 +85,7 @@ void CGameTask::load_shared	(LPCSTR)
 
 	CUIXml uiXml;
 	string_path xml_file_full;
-	xr_strconcat	(xml_file_full, *shared_str(item_data.file_name), ".xml");
+	strconcat	(xml_file_full, *shared_str(item_data.file_name), ".xml");
 
 	bool xml_result = uiXml.Init("$game_data$", xml_file_full);
 	R_ASSERT3(xml_result, "xml file not found", xml_file_full);

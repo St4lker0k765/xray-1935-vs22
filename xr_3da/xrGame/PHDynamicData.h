@@ -70,9 +70,9 @@ public:
 
 			aTransform.identity();
 			aTransform.translate_over(Translate);
-			aTransform.mulA_43(NormTransform);
+			aTransform.mulA(NormTransform);
 			aTransform.translate_over(Translate1);
-			aTransform.mulA_43(Transform);
+			aTransform.mulA(Transform);
 			
 		//	Translate.add(Translate1);	
 			//transform.translate_over(Translate1);

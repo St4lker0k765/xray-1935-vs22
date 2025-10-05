@@ -276,7 +276,7 @@ void CUIPdaCommunication::InitPdaDialog()
 	string128		buf2;
 	buf = UIPdaDialogWnd.UICharacterInfo.UIName.GetText();
 	UIPdaDialogWnd.UICharIconHeader.UITitleText.SetText(buf.c_str());
-	xr_strconcat(buf2, ALL_PDA_HEADER_PREFIX, PDA_CONTACTS_HEADER_SUFFIX, "/", buf.c_str());
+	strconcat(buf2, ALL_PDA_HEADER_PREFIX, PDA_CONTACTS_HEADER_SUFFIX, "/", buf.c_str());
 	UIPdaDialogWnd.UIMsglogHeader.UITitleText.SetText(buf2);
 }
 

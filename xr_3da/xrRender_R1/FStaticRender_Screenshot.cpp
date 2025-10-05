@@ -70,8 +70,8 @@ void CRender::Screenshot		(LPCSTR postfix, BOOL bSquare)
 
 	string64		buf,t_stemp;
 	timestamp		(t_stemp);
-	xr_strconcat		(buf,"ss_",Core.UserName,"_",t_stemp);
-	if (postfix)	xr_strconcat	(buf,"_#",postfix,".tga");
+	strconcat		(buf,"ss_",Core.UserName,"_",t_stemp);
+	if (postfix)	strconcat	(buf,"_#",postfix,".tga");
 	else			strcat		(buf,".tga");
 	IWriter*		fs  = FS.w_open("$screenshots$",buf); R_ASSERT(fs);
 

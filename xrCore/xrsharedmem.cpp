@@ -38,15 +38,11 @@ smem_value*			smem_container::dock			(u32 dwCRC, u32 dwLength, void* ptr)
 	// if not found - create new entry
 	if (0==result)
 	{
-		result					= (smem_value*)	Memory.mem_alloc	(4*sizeof(u32) + dwLength
-#ifdef DEBUG
-			, "storage: smem"
-#endif
-			);
+		result					= (smem_value*)	xr_malloc	(4*sizeof(u32) + dwLength);
 		result->dwReference		= 0;
 		result->dwCRC			= dwCRC;
 		result->dwLength		= dwLength;
-		CopyMemory			(result->value,ptr,dwLength);
+		Memory.mem_copy			(result->value,ptr,dwLength);
 		container.insert		(saved_place,result);
 	}
 
@@ -62,7 +58,6 @@ void				smem_container::clean			()
 	cdb::iterator	end	= container.end		();
 	for (; it!=end; it++)	if (0==(*it)->dwReference)	xr_free	(*it);
 	container.erase	(remove(container.begin(),container.end(),(smem_value*)0),container.end());
-	if (container.empty())	container.clear	();
 	cs.Leave		();
 }
 
@@ -71,10 +66,8 @@ void				smem_container::dump			()
 	cs.Enter		();
 	cdb::iterator	it	= container.begin	();
 	cdb::iterator	end	= container.end		();
-	FILE* F			= fopen("x:\\$smem_dump$.txt","w");
 	for (; it!=end; it++)
-		fprintf		(F,"%4d : crc[%6x], %d bytes\n",(*it)->dwReference,(*it)->dwCRC,(*it)->dwLength);
-	fclose			(F);
+		Msg	("%4d : crc[%6x], %d bytes",(*it)->dwReference,(*it)->dwCRC,(*it)->dwLength);
 	cs.Leave		();
 }
 
@@ -83,14 +76,14 @@ u32					smem_container::stat_economy	()
 	cs.Enter		();
 	cdb::iterator	it		= container.begin	();
 	cdb::iterator	end		= container.end		();
-	s64				counter	= 0;
+	s32				counter	= 0;
 	for (; it!=end; it++)	{
-		counter		+=		s64( s64((*it)->dwReference) * s64((*it)->dwLength) );
-		counter		-=		s64( (*it)->dwLength );
+		counter		+=		(*it)->dwReference * (*it)->dwLength;
+		counter		-=		(*it)->dwLength;
 	}
 	cs.Leave		();
 
-	return			u32(s64(counter)/s64(1024));
+	return			u32(counter);
 }
 
 smem_container::~smem_container	()

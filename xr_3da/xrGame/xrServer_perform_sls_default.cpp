@@ -11,7 +11,7 @@ void xrServer::SLS_Default	()
 	if ((game->Type() == GAME_SINGLE) && ai().get_alife())
 		return;
 	
-	string_path				fn_spawn;
+	string256				fn_spawn;
 	if (FS.exist(fn_spawn, "$level$", "level.spawn")) {
 		IReader*			SP		= FS.r_open(fn_spawn);
 		IReader*			S		= 0;

@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include <process.h>
-
 // mmsystem.h
 #define MMNOSOUND
 #define MMNOMIDI
@@ -19,7 +17,7 @@ XRCORE_API	CRandom			Random;
 #ifdef _M_AMD64
 u16			getFPUsw()		{ return 0;	}
 
-namespace	FPU 
+namespace FPU 
 {
 	XRCORE_API void 	m24		(void)	{
 		_control87	( _PC_24,   MCW_PC );
@@ -113,35 +111,23 @@ namespace FPU
 		_64r		= getFPUsw();	// 64, rounding
 
 		m24r		();
-		::Random.seed	( u32(CPU::GetCLK()%(1i64<<32i64)) );
 	}
 };
 #endif
 
 namespace CPU 
 {
-	XRCORE_API u64				clk_per_second	;
-	XRCORE_API u64				clk_per_milisec	;
-	XRCORE_API u64				clk_per_microsec;
-	XRCORE_API u64				clk_overhead	;
-	XRCORE_API float			clk_to_seconds	;
-	XRCORE_API float			clk_to_milisec	;
-	XRCORE_API float			clk_to_microsec	;
-	XRCORE_API u64				qpc_freq		= 0	;
-	XRCORE_API u64				qpc_overhead	= 0	;
-	XRCORE_API u32				qpc_counter		= 0	;
-	
+	XRCORE_API u64				cycles_per_second;
+	XRCORE_API u64				cycles_per_milisec;
+	XRCORE_API u64				cycles_per_microsec;
+	XRCORE_API u64				cycles_overhead;
+	XRCORE_API float			cycles2seconds;
+	XRCORE_API float			cycles2milisec;
+	XRCORE_API float			cycles2microsec;
 	XRCORE_API _processor_info	ID;
 
-	XRCORE_API u64				QPC	()			{
-		u64		_dest	;
-		QueryPerformanceCounter			((PLARGE_INTEGER)&_dest);
-		qpc_counter	++	;
-		return	_dest	;
-	}
-
 #ifdef M_BORLAND
-	u64	__fastcall GetCLK		(void)
+	u64	__fastcall GetCycleCount(void)
 	{
 		_asm    db 0x0F;
 		_asm    db 0x31;
@@ -151,80 +137,62 @@ namespace CPU
 	void Detect()
 	{
 		// General CPU identification
-		if (!_cpuid(&ID))
+		if (!_cpuid	(&ID))	
 		{
 			// Core.Fatal		("Fatal error: can't detect CPU/FPU.");
-			abort();
+			abort				();
 		}
 
 		// Timers & frequency
-		u64 start, end;
-		u32 dwStart, dwTest;
+		u64			start,end;
+		u32			dwStart,dwTest;
 
-		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+		SetPriorityClass	(GetCurrentProcess(),REALTIME_PRIORITY_CLASS);
 
 		// Detect Freq
-		dwTest = timeGetTime();
-		do { dwStart = timeGetTime(); } while (dwTest == dwStart);
-		start = GetCLK();
-		while (timeGetTime() - dwStart < 1000);
-		end = GetCLK();
-		clk_per_second = end - start;
+		dwTest	= timeGetTime();
+		do { dwStart = timeGetTime(); } while (dwTest==dwStart);
+		start	= GetCycleCount();
+		while (timeGetTime()-dwStart<1000) ;
+		end		= GetCycleCount();
+		cycles_per_second = end-start;
 
-		// Detect RDTSC Overhead
-		clk_overhead = 0;
-		u64 dummy = 0;
-		int i;
-		for (i = 0; i < 256; i++) {
-			start = GetCLK();
-			clk_overhead += GetCLK() - start - dummy;
+		// Detect Overhead
+		cycles_overhead = 0;
+		u64 dummy		= 0;
+		for (int i=0; i<64; i++)
+		{
+			start			=	GetCycleCount();
+			cycles_overhead	+=	GetCycleCount()-start-dummy;
 		}
-		clk_overhead /= 256;
+		cycles_overhead		/=	64;
+		SetPriorityClass	(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
 
-		// Detect QPC Overhead
-		QueryPerformanceFrequency((PLARGE_INTEGER)&qpc_freq);
-		qpc_overhead = 0;
-		for (i = 0; i < 256; i++) {
-			start = QPC();
-			qpc_overhead += QPC() - start - dummy;
-		}
-		qpc_overhead /= 256;
+		cycles_per_second	-=	cycles_overhead;
+		cycles_per_milisec	=	cycles_per_second/1000;
+		cycles_per_microsec	=	cycles_per_milisec/1000;
 
-		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
-
-		clk_per_second -= clk_overhead;
-		clk_per_milisec = clk_per_second / 1000;
-		clk_per_microsec = clk_per_milisec / 1000;
-
-		_control87(_PC_64, MCW_PC);
-		// _control87(_RC_CHOP, MCW_RC);
-
-		double a, b;
-		a = 1; b = double(clk_per_second);
-		clk_to_seconds = float(double(a / b));
-		a = 1000; b = double(clk_per_second);
-		clk_to_milisec = float(double(a / b));
-		a = 1000000; b = double(clk_per_second);
-		clk_to_microsec = float(double(a / b));
+		_control87	( _PC_64,   MCW_PC );
+		_control87	( _RC_CHOP, MCW_RC );
+		double a,b;
+		a = 1;		b = double(cycles_per_second);
+		cycles2seconds = float(double(a/b));
+		a = 1000;	b = double(cycles_per_second);
+		cycles2milisec = float(double(a/b));
+		a = 1000000;b = double(cycles_per_second);
+		cycles2microsec = float(double(a/b));
 	}
 };
 
 //------------------------------------------------------------------------------------
-void _initialize_cpu	(void) 
+void InitMath(void) 
 {
 	Msg("* Detected CPU: %s %s, F%d/M%d/S%d, %.2f mhz, %d-clk 'rdtsc'",
 		CPU::ID.v_name,CPU::ID.model_name,
 		CPU::ID.family,CPU::ID.model,CPU::ID.stepping,
-		float(CPU::clk_per_second/u64(1000000)),
-		u32(CPU::clk_overhead)
+		float(CPU::cycles_per_second/u64(1000000)),
+		u32(CPU::cycles_overhead)
 		);
-
-	if (strstr(Core.Params,"-x86"))		{
-		CPU::ID.feature	&= ~_CPU_FEATURE_3DNOW	;
-		CPU::ID.feature	&= ~_CPU_FEATURE_SSE	;
-		CPU::ID.feature	&= ~_CPU_FEATURE_SSE2	;
-	};
-
 	string128	features;	strcpy(features,"RDTSC");
     if (CPU::ID.feature&_CPU_FEATURE_MMX)	strcat(features,", MMX");
     if (CPU::ID.feature&_CPU_FEATURE_3DNOW)	strcat(features,", 3DNow!");
@@ -236,94 +204,10 @@ void _initialize_cpu	(void)
 	Didentity.identity		();	// Identity matrix
 	pvInitializeStatics		();	// Lookup table for compressed normals
 	FPU::initialize			();
-	_initialize_cpu_thread	();
 }
 
-#ifdef M_BORLAND
-void _initialize_cpu_thread	()
-{
-}
-#else
-// per-thread initialization
-#include <xmmintrin.h>
-#define _MM_DENORMALS_ZERO_MASK 0x0040
-#define _MM_DENORMALS_ZERO_ON 0x0040
-#define _MM_FLUSH_ZERO_MASK 0x8000
-#define _MM_FLUSH_ZERO_ON 0x8000
-#define _MM_SET_FLUSH_ZERO_MODE(mode) _mm_setcsr((_mm_getcsr() & ~_MM_FLUSH_ZERO_MASK) | (mode))
-#define _MM_SET_DENORMALS_ZERO_MODE(mode) _mm_setcsr((_mm_getcsr() & ~_MM_DENORMALS_ZERO_MASK) | (mode))
-static	BOOL	_denormals_are_zero_supported	= TRUE;
-void _initialize_cpu_thread	()
-{
-	// fpu & sse
-	FPU::m24r	();
-	if (CPU::ID.feature&_CPU_FEATURE_SSE)	{
-		//_mm_setcsr ( _mm_getcsr() | (_MM_FLUSH_ZERO_ON+_MM_DENORMALS_ZERO_ON) );
-		_MM_SET_FLUSH_ZERO_MODE			(_MM_FLUSH_ZERO_ON);
-		if (_denormals_are_zero_supported)	{
-			__try	{
-				_MM_SET_DENORMALS_ZERO_MODE	(_MM_DENORMALS_ZERO_ON);
-			} __except(EXCEPTION_EXECUTE_HANDLER) {
-				_denormals_are_zero_supported	= FALSE;
-			}
-		}
-	}
-}
-#endif
-// threading API 
-#pragma pack(push,8)
-struct THREAD_NAME	{
-	DWORD	dwType;
-	LPCSTR	szName;
-	DWORD	dwThreadID;
-	DWORD	dwFlags;
-};
-void	thread_name	(const char* name)
-{
-	THREAD_NAME		tn;
-	tn.dwType		= 0x1000;
-	tn.szName		= name;
-	tn.dwThreadID	= DWORD(-1);
-	tn.dwFlags		= 0;
-	__try
-	{
-		RaiseException(0x406D1388,0,sizeof(tn)/sizeof(DWORD),(DWORD*)&tn);
-	}
-	__except(EXCEPTION_CONTINUE_EXECUTION)
-	{
-	}
-}
-#pragma pack(pop)
 
-struct	THREAD_STARTUP
-{
-	thread_t*	entry	;
-	char*		name	;
-	void*		args	;
-};
-void	__cdecl			thread_entry	(void*	_params )	{
-	// initialize
-	THREAD_STARTUP*		startup	= (THREAD_STARTUP*)_params	;
-	thread_name			(startup->name);
-	thread_t*			entry	= startup->entry;
-	void*				arglist	= startup->args;
-	xr_delete			(startup);
-	_initialize_cpu_thread		();
-
-	// call
-	entry				(arglist);
-}
-
-void	thread_spawn	(thread_t*	entry, const char*	name, unsigned	stack, void* arglist )
-{
-	THREAD_STARTUP*		startup	= xr_new<THREAD_STARTUP>	();
-	startup->entry		= entry;
-	startup->name		= (char*)name;
-	startup->args		= arglist;
-	_beginthread		(thread_entry,stack,startup);
-}
-
-void spline1	( float t, Fvector *p, Fvector *ret )
+void spline1( float t, Fvector *p, Fvector *ret )
 {
 	float     t2  = t * t;
 	float     t3  = t2 * t;

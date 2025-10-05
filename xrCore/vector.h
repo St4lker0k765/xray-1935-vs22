@@ -76,14 +76,10 @@ IC BOOL  fis_zero		( float		val, float	cmp=EPS_S )					{ return _abs(val)<cmp;	}
 IC BOOL  dis_zero		( double	val, double	cmp=EPS_S )					{ return _abs(val)<cmp;		}
 
 // degree 2 radians and vice-versa
-namespace implement{
-	template <class T>	ICF T	deg2rad		( T val )						{ return (val*T(M_PI)/T(180));	};
-	template <class T>	ICF T	rad2deg		( T val )						{ return (val*T(180)/T(M_PI));	};
-};
-ICF float	deg2rad 	(float val)											{return implement::deg2rad(val);}
-ICF double	deg2rad 	(double val)										{return implement::deg2rad(val);}
-ICF float	rad2deg 	(float val)											{return implement::rad2deg(val);}
-ICF double	rad2deg 	(double val)										{return implement::rad2deg(val);}
+template <class T>		
+IC T	deg2rad			( T val )	{ return (val*T(M_PI)/T(180)); };
+template <class T>		
+IC T	rad2deg			( T val )	{ return (val*T(180)/T(M_PI)); };
 
 // clamping/snapping
 template <class T>
@@ -125,14 +121,13 @@ template <class T> struct _quaternion;
 #include "_random.h"
 #include "_compressed_normal.h"
 #include "_plane.h"
-#include "_plane2.h"
 #include "_flags.h"
 
 #pragma pack(pop)
 
 
 // normalize angle (0..2PI)
-ICF float		angle_normalize_always	(float a)
+IC float		angle_normalize(float a)
 {
 	float		div	 =	a/PI_MUL_2;
 	int			rnd  =	(div>0)?iFloor(div):iCeil(div);
@@ -141,26 +136,18 @@ ICF float		angle_normalize_always	(float a)
 	return		frac *	PI_MUL_2;
 }
 
-// normalize angle (0..2PI)
-ICF float		angle_normalize	(float a)
-{
-	if (a>=0 && a<=PI_MUL_2)	return	a;
-	else						return	angle_normalize_always(a);
-}
-
 // -PI .. +PI
-ICF float		angle_normalize_signed(float a)
+IC float		angle_normalize_signed(float a)
 {
-	if (a>=(-PI) && a<=PI)		return		a;
-	float angle = angle_normalize_always	(a);
+	float angle = angle_normalize(a);
 	if (angle>PI) angle-=PI_MUL_2;
 	return angle;
 }
 
-// -PI..PI
-ICF float		angle_difference_signed(float a, float b)
+// 0..PI
+IC float		angle_difference(float a, float b)
 {
-	float diff	= angle_normalize_signed(a) - angle_normalize_signed(b);
+	float diff	= angle_normalize(a) - angle_normalize(b);
 	if (diff>0) {
 		if (diff>PI)
 			diff	-= PI_MUL_2;
@@ -168,13 +155,7 @@ ICF float		angle_difference_signed(float a, float b)
 		if (diff<-PI)	
 			diff	+= PI_MUL_2;
 	}
-	return diff;
-}
-
-// 0..PI
-ICF float		angle_difference(float a, float b)
-{
-	return _abs	(angle_difference_signed(a,b));
+	return _abs	(diff);
 }
 
 // c=current, t=target, s=speed, dt=dt
@@ -206,37 +187,13 @@ IC bool			angle_lerp		(float& c, float t, float s, float dt)
 }
 
 // Just lerp :)	expects normalized angles in range [0..2PI)
-ICF float		angle_lerp		(float A, float B, float f)
+IC float		angle_lerp		(float A, float B, float f)
 {
 	float diff		= B - A;
 	if (diff>PI)		diff	-= PI_MUL_2;
 	else if (diff<-PI)	diff	+= PI_MUL_2;
 
 	return			A + diff*f;
-}
-
-IC float		angle_inertion	(float src, float tgt, float speed, float clmp, float dt)
-{
-	float a			= angle_normalize_signed	(tgt);
-	angle_lerp		(src,a,speed,dt);
-	src				= angle_normalize_signed	(src);
-	float dH		= angle_difference_signed	(src,a);
-	float dCH		= clampr					(dH,-clmp,clmp);
-	src				-= dH-dCH;
-	return			src;
-}
-
-IC float		angle_inertion_var(float src, float tgt, float min_speed, float max_speed, float clmp, float dt)
-{
-	tgt				= angle_normalize_signed	(tgt);
-	src				= angle_normalize_signed	(src);
-	float speed		= _abs((max_speed-min_speed)*angle_difference(tgt,src)/clmp)+min_speed;
-	angle_lerp		(src,tgt,speed,dt);
-	src				= angle_normalize_signed	(src);
-	float dH		= angle_difference_signed	(src,tgt);
-	float dCH		= clampr					(dH,-clmp,clmp);
-	src				-= dH-dCH;
-	return			src;
 }
 
 template <class T>
@@ -400,8 +357,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 //----------------------------------------------------------------------------------------------
 // Deprecate some features
 #ifndef XRCORE_EXPORTS
-//. #pragma deprecated("MIN","MAX","ABS",fabs,fabsf,sqrt,sqrtf,malloc,free,calloc,realloc,memcpy,memmove,memset,strdup,strlen,strcmp,sin,cos,sinf,cosf)
-#pragma deprecated("MIN","MAX","ABS",fabs,fabsf,sqrt,sqrtf,malloc,free,calloc,realloc,memmove,memset,strdup,strlen,strcmp,sin,cos,sinf,cosf)
+#pragma deprecated("MIN","MAX","ABS",fabs,fabsf,sqrt,sqrtf,malloc,free,calloc,realloc,memcpy,memmove,memset,strdup,strlen,strcmp,sin,cos,sinf,cosf)
 #endif
 
 #endif

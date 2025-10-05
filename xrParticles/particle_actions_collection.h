@@ -10,7 +10,7 @@ namespace PAPI{
                     virtual void 	Execute		(ParticleEffect *pe, float dt);\
                     virtual void 	Transform	(const Fmatrix& m);
 
-	struct PARTICLES_API PAAvoid : public ParticleAction
+	struct PAAvoid : public ParticleAction
 	{
 		pDomain positionL;	// Avoid region (in local space)
 		pDomain position;	// Avoid region
@@ -21,7 +21,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PABounce : public ParticleAction
+	struct PABounce : public ParticleAction
 	{
 		pDomain positionL;	// Bounce region (in local space)
 		pDomain position;	// Bounce region
@@ -32,14 +32,14 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PACopyVertexB : public ParticleAction
+	struct PACopyVertexB : public ParticleAction
 	{
 		BOOL copy_pos;		// True to copy pos to posB.
 
         _METHODS;
 	};
 
-	struct PARTICLES_API PADamping : public ParticleAction
+	struct PADamping : public ParticleAction
 	{
 		pVector damping;	// Damping constant applied to velocity
 		float vlowSqr;		// Low and high cutoff velocities
@@ -48,7 +48,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAExplosion : public ParticleAction
+	struct PAExplosion : public ParticleAction
 	{
 		pVector centerL;	// The center of the explosion (in local space)
 		pVector center;		// The center of the explosion
@@ -61,7 +61,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAFollow : public ParticleAction
+	struct PAFollow : public ParticleAction
 	{
 		float magnitude;	// The grav of each particle
 		float epsilon;		// Softening parameter
@@ -70,7 +70,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAGravitate : public ParticleAction
+	struct PAGravitate : public ParticleAction
 	{
 		float magnitude;	// The grav of each particle
 		float epsilon;		// Softening parameter
@@ -79,7 +79,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAGravity : public ParticleAction
+	struct PAGravity : public ParticleAction
 	{
 		pVector directionL;	// Amount to increment velocity (in local space)
 		pVector direction;	// Amount to increment velocity
@@ -87,7 +87,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAJet : public ParticleAction
+	struct PAJet : public ParticleAction
 	{
 		pVector	centerL;	// Center of the fan (in local space)
 		pDomain accL;		// Acceleration vector domain  (in local space)
@@ -100,7 +100,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAKillOld : public ParticleAction
+	struct PAKillOld : public ParticleAction
 	{
     	float age_limit;		// Exact age at which to kill particles.
 		BOOL kill_less_than;	// True to kill particles less than limit.
@@ -108,7 +108,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAMatchVelocity : public ParticleAction
+	struct PAMatchVelocity : public ParticleAction
 	{
 		float magnitude;	// The grav of each particle
 		float epsilon;		// Softening parameter
@@ -117,12 +117,12 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAMove : public ParticleAction
+	struct PAMove : public ParticleAction
 	{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAOrbitLine : public ParticleAction
+	struct PAOrbitLine : public ParticleAction
 	{
 		pVector pL, axisL;	// Endpoints of line to which particles are attracted (in local space)
 		pVector p, axis;	// Endpoints of line to which particles are attracted
@@ -133,7 +133,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAOrbitPoint : public ParticleAction
+	struct PAOrbitPoint : public ParticleAction
 	{
 		pVector centerL;	// Point to which particles are attracted (in local space)
 		pVector center;		// Point to which particles are attracted
@@ -144,7 +144,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PARandomAccel : public ParticleAction
+	struct PARandomAccel : public ParticleAction
 	{
 		pDomain gen_accL;	// The domain of random accelerations.(in local space)
 		pDomain gen_acc;	// The domain of random accelerations.
@@ -152,7 +152,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PARandomDisplace : public ParticleAction
+	struct PARandomDisplace : public ParticleAction
 	{
 		pDomain gen_dispL;	// The domain of random displacements.(in local space)
 		pDomain gen_disp;	// The domain of random displacements.
@@ -160,7 +160,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PARandomVelocity : public ParticleAction
+	struct PARandomVelocity : public ParticleAction
 	{
 		pDomain gen_velL;	// The domain of random velocities.(in local space)
 		pDomain gen_vel;	// The domain of random velocities.
@@ -168,14 +168,14 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PARestore : public ParticleAction
+	struct PARestore : public ParticleAction
 	{
 		float time_left;	// Time remaining until they should be in position.
 
         _METHODS;
 	};
 
-	struct PARTICLES_API PASink : public ParticleAction
+	struct PASink : public ParticleAction
 	{
 		BOOL kill_inside;	// True to dispose of particles *inside* domain
 		pDomain positionL;	// Disposal region (in local space)
@@ -184,7 +184,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PASinkVelocity : public ParticleAction
+	struct PASinkVelocity : public ParticleAction
 	{
 		BOOL kill_inside;	// True to dispose of particles with vel *inside* domain
 		pDomain velocityL;	// Disposal region (in local space)
@@ -193,7 +193,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PASpeedLimit : public ParticleAction
+	struct PASpeedLimit : public ParticleAction
 	{
 		float min_speed;		// Clamp speed to this minimum.
 		float max_speed;		// Clamp speed to this maximum.
@@ -201,7 +201,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PASource : public ParticleAction
+	struct PASource : public ParticleAction
 	{
 		enum{
 			flSingleSize		= (1ul<<29ul),// True to get positionB from position.
@@ -226,7 +226,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PATargetColor : public ParticleAction
+	struct PATargetColor : public ParticleAction
 	{
 		pVector color;		// Color to shift towards
 		float alpha;		// Alpha value to shift towards
@@ -235,7 +235,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PATargetSize : public ParticleAction
+	struct PATargetSize : public ParticleAction
 	{
 		pVector size;		// Size to shift towards
 		pVector scale;		// Amount to shift by per frame (1 == all the way)
@@ -243,7 +243,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PATargetRotate : public ParticleAction
+	struct PATargetRotate : public ParticleAction
 	{
 		pVector rot;		// Rotation to shift towards
 		float scale;		// Amount to shift by per frame (1 == all the way)
@@ -251,7 +251,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PATargetVelocity : public ParticleAction
+	struct PATargetVelocity : public ParticleAction
 	{
 		pVector velocityL;	// Velocity to shift towards (in local space)
 		pVector velocity;	// Velocity to shift towards
@@ -260,7 +260,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-	struct PARTICLES_API PAVortex : public ParticleAction
+	struct PAVortex : public ParticleAction
 	{
 		pVector centerL;	// Center of vortex (in local space)
 		pVector axisL;		// Axis around which vortex is applied (in local space)
@@ -273,7 +273,7 @@ namespace PAPI{
         _METHODS;
 	};
 
-    struct PARTICLES_API PATurbulence : public ParticleAction
+    struct PATurbulence : public ParticleAction
     {
 		float frequency;	// Frequency
 		int	octaves;		// Octaves

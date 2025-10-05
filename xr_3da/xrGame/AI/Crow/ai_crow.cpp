@@ -27,7 +27,7 @@ void CAI_Crow::SAnim::Load(CSkeletonAnimated* visual, LPCSTR prefix)
 
 void CAI_Crow::SSound::Load(LPCSTR prefix)
 {
-	string_path	fn;
+	string256	fn;
 	if (FS.exist(fn,"$game_sounds$",prefix,".ogg")){
 		m_Sounds.push_back	(ref_sound());
 		::Sound->create		(m_Sounds.back(),prefix, st_Effect, sg_SourceType);

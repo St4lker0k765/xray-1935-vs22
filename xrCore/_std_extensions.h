@@ -116,35 +116,41 @@ IC s64		_min	(s64 x, s64 y)	{ return y + ((x - y) & ((x - y) >> (sizeof(s64) * 8
 IC s64		_max	(s64 x, s64 y)	{ return x - ((x - y) & ((x - y) >> (sizeof(s64) * 8 - 1))); };
 
 // string management
+IC char*						strconcat				( char* dest, const char* S1, const char* S2)
+{	return strcat(strcpy(dest,S1),S2); }
+
+// dest = S1+S2+S3
+IC char*						strconcat				( char* dest, const char* S1, const char* S2, const char* S3)
+{	return strcat(strcat(strcpy(dest,S1),S2),S3); }
+
+// dest = S1+S2+S3+S4
+IC char*						strconcat				( char* dest, const char* S1, const char* S2, const char* S3, const char* S4)
+{	return strcat(strcat(strcat(strcpy(dest,S1),S2),S3),S4); }
+
+// dest = S1+S2+S3+S4+S5
+IC char*						strconcat				( char* dest, const char* S1, const char* S2, const char* S3, const char* S4, const char* S5)
+{	return strcat(strcat(strcat(strcat(strcpy(dest,S1),S2),S3),S4),S5); }
+
+// dest = S1+S2+S3+S4+S5+S6
+IC char*						strconcat				( char* dest, const char* S1, const char* S2, const char* S3, const char* S4, const char* S5, const char* S6)
+{	return strcat(strcat(strcat(strcat(strcat(strcpy(dest,S1),S2),S3),S4),S5),S6); }
 
 // return pointer to ".ext"
 IC char*						strext					( const char* S )
-{	return (char*) strrchr(S,'.');	}
+{	return (char*) strchr(S,'.');	}
 
 IC u32							xr_strlen				( const char* S )
 {	return (u32)strlen(S);			}
 
 IC char*						xr_strlwr				(char* S)
-{	return _strlwr(S);				}
+{	return strlwr(S);				}
 
 #ifdef BREAK_AT_STRCMP
-XRCORE_API	int					xr_strcmp				( const char* S1, const char* S2 );
+XRCORE_API	int	__stdcall		xr_strcmp				( const char* S1, const char* S2 );
 #else
 IC int							xr_strcmp				( const char* S1, const char* S2 )
 {	return (int)strcmp(S1,S2);  }
 #endif
-
-inline errno_t xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
-{
-	return						strncpy_s(destination, destination_size, source, destination_size);
-}
-
-
-template <int count>
-inline errno_t xr_strcpy(char(&destination)[count], LPCSTR source)
-{
-	return						xr_strcpy(destination, count, source);
-}
 
 XRCORE_API	char*				timestamp				(string64& dest);
 

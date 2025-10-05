@@ -42,7 +42,7 @@ public:
 	{
 		string256			S;
 		m_tGlobal.Load		(tpKinematics,caBaseName);
-		m_tTorso.Load		(tpKinematics,xr_strconcat(S,caBaseName,"torso_"));
+		m_tTorso.Load		(tpKinematics,strconcat(S,caBaseName,"torso_"));
 		m_tMoves.Load		(tpKinematics,caBaseName);
 		m_tInPlace.Load		(tpKinematics,caBaseName);
 	};

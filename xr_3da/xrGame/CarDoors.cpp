@@ -314,7 +314,7 @@ void CCar::SDoor::ClosedToOpening()
 	bone_instance.set_callback(pcar->PPhysicsShell()->GetBonesCallback(),joint->PSecond_element());
 	
 	door_form.set(bone_instance.mTransform);
-	//door_form.mulB_43(pcar->XFORM());
+	//door_form.mulB(pcar->XFORM());
 	joint->PSecond_element()->mXFORM.set(door_form);
 	pcar->m_pPhysicsShell->GetGlobalTransformDynamic(&root_form);
 	joint->PSecond_element()->Activate(root_form,false);

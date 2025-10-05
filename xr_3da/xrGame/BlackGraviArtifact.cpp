@@ -51,7 +51,7 @@ BOOL CBlackGraviArtefact::net_Spawn(LPVOID DC)
 	pStaticPG = xr_new<CParticlesObject>("anomaly\\galantine",Sector(),false);
 	Fmatrix pos;
 	//pos.rotateY(1.57);
-	//pos.mulA_43(pos);
+	//pos.mulA(pos);
 	pos.scale(0.7f,0.7f,0.7f);
 	pos.translate_over(XFORM().c);
 	

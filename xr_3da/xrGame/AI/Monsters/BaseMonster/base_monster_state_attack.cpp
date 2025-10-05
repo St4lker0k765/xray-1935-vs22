@@ -161,47 +161,45 @@ void CBaseMonsterAttack::Run()
 	switch (m_tAction) {	
 		
 		// ************
-	case ACTION_RUN:		 // бежать на врага
-	{
+		case ACTION_RUN:		 // бежать на врага
 		// ************	
-		LOG_EX("ATTACK: RUN");
-		pMonster->set_action(ACT_RUN);
-		pMonster->MotionMan.accel_activate(eAT_Aggressive);
-		pMonster->MotionMan.accel_set_braking(false);
+			LOG_EX("ATTACK: RUN");
+			pMonster->set_action							(ACT_RUN);
+			pMonster->MotionMan.accel_activate				(eAT_Aggressive);
+			pMonster->MotionMan.accel_set_braking			(false);
 
-		pMonster->CMonsterMovement::set_target_point(pMonster->EnemyMan.get_enemy_position(), pMonster->EnemyMan.get_enemy_vertex());
-		pMonster->CMonsterMovement::set_rebuild_time(100 + u32(50.f * dist));
-		pMonster->CMonsterMovement::set_distance_to_end(2.5f);
-		pMonster->CMonsterMovement::set_use_covers();
-		pMonster->CMonsterMovement::set_cover_params(5.f, 30.f, 1.f, 30.f);
-		pMonster->CMonsterMovement::set_try_min_time(false);
+			pMonster->CMonsterMovement::set_target_point	(pMonster->EnemyMan.get_enemy_position(), pMonster->EnemyMan.get_enemy_vertex());
+			pMonster->CMonsterMovement::set_rebuild_time	(100 + u32(50.f * dist));
+			pMonster->CMonsterMovement::set_distance_to_end	(2.5f);
+			pMonster->CMonsterMovement::set_use_covers		();
+			pMonster->CMonsterMovement::set_cover_params	(5.f, 30.f, 1.f, 30.f);
+			pMonster->CMonsterMovement::set_try_min_time	(false);
+			
+			pSquad = monster_squad().get_squad(pMonster);
+			squad_active = pSquad && pSquad->SquadActive();
+			
+			// Получить команду
+			SSquadCommand command;
+			pSquad->GetCommand(pMonster, command);
+			if (!squad_active || (command.type != SC_ATTACK)) squad_active = false;
 
-		pSquad = monster_squad().get_squad(pMonster);
-		squad_active = pSquad && pSquad->SquadActive();
 
-		// Получить команду
-		SSquadCommand command;
-		pSquad->GetCommand(pMonster, command);
-		if (!squad_active || (command.type != SC_ATTACK)) squad_active = false;
-
-
-		if (squad_active) {
-			pMonster->set_use_dest_orient(true);
-			pMonster->set_dest_direction(command.direction);
-		}
-
-		pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0, 0, pMonster->get_sd()->m_dwAttackSndDelay);
-
-	}break;
+			if (squad_active) {
+				pMonster->set_use_dest_orient	(true);
+				pMonster->set_dest_direction	(command.direction);
+			}
+			
+			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0,0,pMonster->get_sd()->m_dwAttackSndDelay);
+			
+			break;
 
 		// *********************
 		case ACTION_ATTACK_MELEE:		// атаковать вплотную
-		{
-			// *********************
+		// *********************
 
 			LOG_EX("ATTACK: ATTACK_MELEE");
-			pMonster->MotionMan.m_tAction = ACT_ATTACK;
-			bCanThreaten = false;
+			pMonster->MotionMan.m_tAction	= ACT_ATTACK;
+			bCanThreaten					= false;
 
 			// если враг крыса под монстром подпрыгнуть и убить
 //			if (m_bAttackRat) {
@@ -217,9 +215,9 @@ void CBaseMonsterAttack::Run()
 
 			// Смотреть на врага 
 			DO_IN_TIME_INTERVAL_BEGIN(m_dwFaceEnemyLastTime, 1200);
-			pMonster->FaceTarget(enemy);
+				pMonster->FaceTarget(enemy);
 			DO_IN_TIME_INTERVAL_END();
-
+			
 			if (flags.is(AF_CAN_ATTACK_FROM_BACK)) {
 				pMonster->MotionMan.SetSpecParams(ASP_BACK_ATTACK);
 				bEnableBackAttack = false;
@@ -227,93 +225,87 @@ void CBaseMonsterAttack::Run()
 
 			if (flags.is(AF_ATTACK_RAT)) pMonster->MotionMan.SetSpecParams(ASP_ATTACK_RAT);
 
-			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0, 0, pMonster->get_sd()->m_dwAttackSndDelay);
+			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0,0,pMonster->get_sd()->m_dwAttackSndDelay);
 
-		}break;
+			break;
 
 		// ****************
 		case ACTION_STEAL:
-		{
-			// ****************
+		// ****************
 
 			LOG_EX("ATTACK: STEAL");
 			pMonster->MotionMan.m_tAction = ACT_STEAL;
-			pMonster->CMonsterMovement::set_target_point(pMonster->EnemyMan.get_enemy_position(), pMonster->EnemyMan.get_enemy_vertex());
-			pMonster->CMonsterMovement::set_generic_parameters();
+			pMonster->CMonsterMovement::set_target_point		(pMonster->EnemyMan.get_enemy_position(), pMonster->EnemyMan.get_enemy_vertex());
+			pMonster->CMonsterMovement::set_generic_parameters	();
 
-			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundSteal, 0, 0, pMonster->get_sd()->m_dwAttackSndDelay);
-		}break;
+			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundSteal, 0,0,pMonster->get_sd()->m_dwAttackSndDelay);
+			break;
 		
 		// ******************
-		case ACTION_THREATEN:
-		{
-			// ******************
+		case ACTION_THREATEN: 
+		// ******************
 
 			LOG_EX("ATTACK: THREATEN");
-			pMonster->MotionMan.m_tAction = ACT_STAND_IDLE;
+			pMonster->MotionMan.m_tAction	= ACT_STAND_IDLE;
 
 			// Смотреть на врага 
 			DO_IN_TIME_INTERVAL_BEGIN(m_dwFaceEnemyLastTime, 1200);
-			pMonster->FaceTarget(enemy);
+				pMonster->FaceTarget(enemy);
 			DO_IN_TIME_INTERVAL_END();
 
 			pMonster->MotionMan.SetSpecParams(ASP_THREATEN);
 
 			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundThreaten);
-
-		}break;
+			
+			break;
 
 		// **********************************
 		case ACTION_ENEMY_POSITION_APPROACH:
-		{
-			// **********************************
+		// **********************************
 			LOG_EX("ATTACK: ENEMY_POSITION_APPROACH");
-			pMonster->MotionMan.m_tAction = ACT_RUN;
-			pMonster->CMonsterMovement::set_target_point(enemy->Position());
-			pMonster->CMonsterMovement::set_generic_parameters();
-			pMonster->MotionMan.accel_activate(eAT_Calm);
+			pMonster->MotionMan.m_tAction		= ACT_RUN;
+			pMonster->CMonsterMovement::set_target_point		(enemy->Position());
+			pMonster->CMonsterMovement::set_generic_parameters	();
+			pMonster->MotionMan.accel_activate					(eAT_Calm);
+			
+			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0,0,pMonster->get_sd()->m_dwAttackSndDelay);
 
-			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0, 0, pMonster->get_sd()->m_dwAttackSndDelay);
-
-		}break;
+			break;
 
 		// **********************************
 		case ACTION_ENEMY_WALK_AWAY:
-		{
-			// **********************************
+		// **********************************
 			LOG_EX("ATTACK: ENEMY_WALK_AWAY");
 
-			pMonster->MotionMan.m_tAction = ACT_WALK_FWD;
-			pMonster->CMonsterMovement::set_retreat_from_point(random_position(pMonster->EnemyMan.get_enemy_position(), 2.f));
-			pMonster->CMonsterMovement::set_generic_parameters();
-			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0, 0, pMonster->get_sd()->m_dwAttackSndDelay);
-			pMonster->MotionMan.accel_activate(eAT_Calm);
-
-		}break;
+			pMonster->MotionMan.m_tAction						= ACT_WALK_FWD;
+			pMonster->CMonsterMovement::set_retreat_from_point	(random_position(pMonster->EnemyMan.get_enemy_position(), 2.f));
+			pMonster->CMonsterMovement::set_generic_parameters	();
+			pMonster->CSoundPlayer::play						(MonsterSpace::eMonsterSoundAttack, 0,0,pMonster->get_sd()->m_dwAttackSndDelay);
+			pMonster->MotionMan.accel_activate					(eAT_Calm);
+		
+			break;
 
 		// **********************
-		case ACTION_ROTATION_JUMP:
-		{
-			// **********************
+		case ACTION_ROTATION_JUMP: 
+		// **********************
 
 			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundLanding);
-			pMonster->MotionMan.SetSpecParams(ASP_ROTATION_JUMP);
-			next_rot_jump_enabled = m_dwCurrentTime + Random.randI(3000, 4000);
-			pMonster->disable_path();
-		}break;
+			pMonster->MotionMan.SetSpecParams	(ASP_ROTATION_JUMP);
+			next_rot_jump_enabled				= m_dwCurrentTime + Random.randI(3000,4000);
+			pMonster->disable_path				();
+			break;
 		
 		// ********************		
 		case ACTION_ATTACK_RUN:
-		{
-			// ********************
+		// ********************
 			LOG_EX("ATTACK: Attack Run");
 
-			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundAttack, 0, 0, pMonster->get_sd()->m_dwAttackSndDelay);
-			pMonster->MotionMan.m_tAction = ACT_RUN;
+			pMonster->CSoundPlayer::play				(MonsterSpace::eMonsterSoundAttack, 0,0,pMonster->get_sd()->m_dwAttackSndDelay);			
+			pMonster->MotionMan.m_tAction				= ACT_RUN;
 			pMonster->CMonsterMovement::set_try_min_time(false);
 
-			pMonster->MotionMan.accel_activate(eAT_Aggressive);
-			pMonster->MotionMan.accel_set_braking(false);
+			pMonster->MotionMan.accel_activate			(eAT_Aggressive);
+			pMonster->MotionMan.accel_set_braking		(false);
 
 			// продлить путь на некоторое расстояние дальше
 			{
@@ -321,35 +313,34 @@ void CBaseMonsterAttack::Run()
 				Fvector dir;
 				dir.sub(enemy->Position(), pMonster->Position());
 				dir.normalize();
-				target_point.mad(pMonster->Position(), dir, 1.0f);
-
-				pMonster->CMonsterMovement::set_target_point(target_point);
-				pMonster->CMonsterMovement::set_generic_parameters();
+				target_point.mad(pMonster->Position(),dir,1.0f);
+			
+				pMonster->CMonsterMovement::set_target_point		(target_point);
+				pMonster->CMonsterMovement::set_generic_parameters	();
 			}
-
+			
 			pMonster->MotionMan.SetSpecParams(ASP_ATTACK_RUN);
-
-		}break;
+			
+			break;
 
 		// ********************		
 		case ACTION_PSI_ATTACK:
-		{
-			// ********************
+		// ********************
 			LOG_EX("PSI_ATTACK");
-
-			pMonster->MotionMan.m_tAction = ACT_ATTACK;
-
+			
+			pMonster->MotionMan.m_tAction	= ACT_ATTACK;
+			
 			// Смотреть на врага 
 			DO_IN_TIME_INTERVAL_BEGIN(m_dwFaceEnemyLastTime, 1200);
-			pMonster->FaceTarget(enemy);
+				pMonster->FaceTarget(enemy);
 			DO_IN_TIME_INTERVAL_END();
 
 			pMonster->MotionMan.SetSpecParams(ASP_PSI_ATTACK);
 			pMonster->CSoundPlayer::play(MonsterSpace::eMonsterSoundPsyAttack);
 			pMonster->play_effect_sound();
 
-			time_next_psi_attack = m_dwCurrentTime + Random.randI(2000, 4000);
-		}break;
+			time_next_psi_attack			= m_dwCurrentTime + Random.randI(2000,4000);
+			break;
 	}
 
 	init_flags.set(AF_NEW_ENEMY,FALSE);

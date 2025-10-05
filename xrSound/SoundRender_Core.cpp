@@ -122,7 +122,7 @@ void CSoundRender_Core::env_load	()
 	string_path					fn;
 	if (FS.exist(fn,"$game_data$",SNDENV_FILENAME))
 	{
-		s_environment				= xr_new<SoundEnvironment_LIB>();
+		s_environment				= new SoundEnvironment_LIB();
 		s_environment->Load			(fn);
 	}
 
@@ -203,9 +203,10 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 		if (P.b2sided)
 			CL.add_face_packed_D(P.v3,P.v2,P.v1,*(u32*)&P.occ,0.01f);
 	}
-	geom_SOM			= xr_new<CDB::MODEL> ();
+	geom_SOM			= new CDB::MODEL();
 	geom_SOM->build		(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()));
 #endif
+	geom->close(); //huikser: SVOROVAL NO HZ NAFIGA ETO
 }
 
 void CSoundRender_Core::set_geometry_env(IReader* I)
@@ -224,7 +225,7 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 	while (!names->eof())
 	{
 		string256			n;
-		names->r_stringZ	(n,sizeof(n));
+		names->r_stringZ	(n);
 		int id				= s_environment->GetID(n);
 		R_ASSERT			(id>=0);
 		ids.push_back		(u16(id));
@@ -238,7 +239,7 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 	
 	Memory.mem_copy		(_data, geom_ch->pointer(), geom_ch->length() );
 
-	IReader* geom		= xr_new<IReader>(_data, geom_ch->length(), 0);
+	IReader* geom		= new IReader(_data, geom_ch->length());
 	
 	hdrCFORM			H;
 	geom->r				(&H,sizeof(hdrCFORM));
@@ -257,7 +258,7 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 	geom_ENV			= ETOOLS::create_model(verts, H.vertcount, tris, H.facecount);
 	env_apply			();
 #else
-	geom_ENV			= xr_new<CDB::MODEL> ();
+	geom_ENV			= new CDB::MODEL();
 	geom_ENV->build		(verts, H.vertcount, tris, H.facecount);
 #endif
 	geom_ch->close			();
@@ -285,13 +286,13 @@ void	CSoundRender_Core::create				( ref_sound& S, const char* fName, esound_type
 {
 	if (!bPresent)		return;
 	verify_refsound		(S);
-    S._p				= xr_new<ref_sound_data>(fName,sound_type,game_type);
+    S._p				= new ref_sound_data(fName,sound_type,game_type);
 }
 
 void	CSoundRender_Core::clone				( ref_sound& S, const ref_sound& from, esound_type sound_type, int	game_type )
 {
 	if (!bPresent)		return;
-	S._p				= xr_new<ref_sound_data>();
+	S._p				= new ref_sound_data();
 	S._p->handle		= from._p->handle;
 	S._p->g_type		= (game_type==sg_SourceType)?S._p->handle->game_type():game_type;
 	S._p->s_type		= sound_type;
@@ -312,7 +313,7 @@ void	CSoundRender_Core::play_no_feedback		( ref_sound& S, CObject* O, u32 flags,
 	if (!bPresent || 0==S._handle())return;
 	verify_refsound		(S);
 	ref_sound_data_ptr	orig = S._p;
-	S._p				= xr_new<ref_sound_data>();
+	S._p				= new ref_sound_data();
 	S._p->handle		= orig->handle;
 	S._p->g_type		= orig->g_type;
 	S._p->g_object		= O;

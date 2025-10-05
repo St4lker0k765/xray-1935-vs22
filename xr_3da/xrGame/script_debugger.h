@@ -4,7 +4,7 @@
 #include "script_debugger_threads.h"
 #include "script_CallStack.h"
 #include "script_debugger_messages.h"
-//#include "script_debugger_utils.h"
+#include "script_debugger_utils.h"
 
 class CMailSlotMsg;
 struct lua_State;
@@ -20,30 +20,33 @@ struct lua_State;
 #define DMOD_STOP					11
 
 struct SBreakPoint{
-	shared_str	fileName;
+	string256	fileName;
 	s32			nLine;
-	SBreakPoint()	{nLine=0;};
+	SBreakPoint(){fileName[0]=0;nLine=0;};
 	SBreakPoint(const SBreakPoint& other)
 	{
 		operator = (other);
 	};
 	SBreakPoint& operator = (const SBreakPoint& other){
-		fileName=	other.fileName;
-		nLine	=	other.nLine;
+		fileName[0]=0;
+		strcat(fileName,other.fileName);
+		nLine = other.nLine;
 		return *this;
 	}
+
 };
+
 
 class CScriptDebugger
 {
 public:
-	void			Connect				(LPCSTR mslot_name);
 	void			Eval				(const char* strCode, char* res);
 	void			AddLocalVariable	(const Variable& var);
 	void			ClearLocalVariables	();
 	void			AddGlobalVariable	(const char* name, const char* type, const char* value);
 	void			ClearGlobalVariables();
 	void			StackLevelChanged	();
+//	void			Break				();
 	void			initiateDebugBreak	();
 	void			DebugBreak			(const char* szFile, int nLine);
 	void			ErrorBreak			(const char* szFile = 0, int nLine = 0);
@@ -55,8 +58,8 @@ public:
 	void			UnPrepareLua		(lua_State* l, int idx);
 	BOOL			PrepareLuaBind		();
 
-					CScriptDebugger		();
-	virtual			~CScriptDebugger	();
+	CScriptDebugger						();
+	virtual ~CScriptDebugger			();
 
 	void			Go					();
 	void			StepInto			();
@@ -72,11 +75,11 @@ public:
 	int				GetStackTraceLevel	();
 	
 	BOOL			Active				();
-//	static CScriptDebugger* GetDebugger	() { return m_pDebugger; };
-	LRESULT			_SendMessage(UINT message, WPARAM wParam, LPARAM lParam);
+	static CScriptDebugger* GetDebugger	() { return m_pDebugger; };
+	static LRESULT			_SendMessage(UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
-	void			DrawVariableInfo	(char* varName);
+	void			DrawVariableInfo(char* varName);
 	void			DrawCurrentState	();
 	void			DrawThreadInfo		(int nThreadID);
 	void			GetBreakPointsFromIde();
@@ -89,10 +92,10 @@ protected:
 	void			SendMessageToIde	(CMailSlotMsg&);
 
 
-	CDbgScriptThreads					*m_threads;
-	CDbgLuaHelper						*m_lua;
-	CScriptCallStack					*m_callStack;
-//	static CScriptDebugger*				m_pDebugger;
+	CDbgScriptThreads					m_threads;
+	CDbgLuaHelper						m_lua;
+	CScriptCallStack					m_callStack;
+	static CScriptDebugger*				m_pDebugger;
 	int									m_nMode;
 	int									m_nLevel;  //for step into/over/out
 	string_path							m_strPathName;	//for run_to_line_number
@@ -102,5 +105,4 @@ protected:
 	BOOL								m_bIdePresent;
 
 	xr_vector<SBreakPoint>				m_breakPoints;
-	string_path							m_curr_connected_mslot;
 };

@@ -6,10 +6,10 @@
 #include "log.h"
 
 extern BOOL					LogExecCB		= TRUE;
-static string_path			logFName		= "engine.log";
+static string64				logFName		= "engine.log";
 static BOOL 				no_log			= TRUE;
 static xrCriticalSection	logCS;
-xr_vector <shared_str>		LogFile;
+xr_vector <shared_str>			LogFile;
 static LogCallback			LogCB			= 0;
 
 void FlushLog			()
@@ -31,8 +31,8 @@ void FlushLog			()
 void AddOne				(const char *split) 
 {
 	logCS.Enter			();
-
-	if (IsDebuggerPresent()) {
+	if (IsDebuggerPresent())
+	{
 		OutputDebugString(split);
 		OutputDebugString("\n");
 	}
@@ -47,6 +47,7 @@ void AddOne				(const char *split)
 
 void Log				(const char *s) 
 {
+	if 		(no_log) return;
 	int		i,j;
 	char	split[1024];
 
@@ -138,7 +139,7 @@ void SetLogCB			(LogCallback cb)
 void CreateLog			(BOOL nl)
 {
     no_log				= nl;
-	xr_strconcat			(logFName,Core.ApplicationName,"_",Core.UserName,".log");
+	strconcat			(logFName,Core.ApplicationName,"_",Core.UserName,".log");
 	if (FS.path_exist("$logs$"))
 		FS.update_path	(logFName,"$logs$",logFName);
 	if (!no_log){
@@ -157,7 +158,7 @@ void CreateLog			(BOOL nl)
 	strcpy(buf,__DATE__);
 	sscanf(buf,"%s %d %d",mon,&dnum, &ynum);
 	for (int i=0; i<12; i++) {
-		if (_stricmp(month[i],mon)==0) mnum=i;
+		if (stricmp(month[i],mon)==0) mnum=i;
 	}
 	for (mcnt=6; mcnt<mnum; mcnt++) build+=day_in_month[mcnt];
 	build+=dnum;

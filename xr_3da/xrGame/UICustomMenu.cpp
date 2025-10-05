@@ -49,7 +49,7 @@ CUICustomMenuItem* UILoadMenu		(CUICustomMenu* owner, LPCSTR ini_name, LPCSTR se
 {
 	// check ini exist
 	CUICustomMenuItem*	I=0;
-	string_path			fn;
+	string256			fn;
 	if (FS.exist(fn,"$game_data$",ini_name))
 	{
 		CInifile* ini		= CInifile::Create(fn);

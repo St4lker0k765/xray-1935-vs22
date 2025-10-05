@@ -835,7 +835,7 @@ void  CCustomZone::Hit(float P, Fvector &dir,
 	Fmatrix M;
 	M.identity();
 	M.translate_over(position_in_object_space);
-	M.mulA_43(XFORM());
+	M.mulA(XFORM());
 	PlayBulletParticles(M.c);	
 }
 

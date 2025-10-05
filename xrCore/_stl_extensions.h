@@ -6,23 +6,6 @@ using std::swap;
 #include <type_traits>
 #include <functional>
 
-#if __cplusplus >= 201703L
-namespace std {
-
-#ifndef _STL_BINARY_FUNCTION_DEFINED
-#define _STL_BINARY_FUNCTION_DEFINED
-	template <class Arg1, class Arg2, class Result>
-	struct binary_function {
-		using first_argument_type = Arg1;
-		using second_argument_type = Arg2;
-		using result_type = Result;
-	};
-#endif
-
-} // namespace std
-#endif
-
-
 #ifdef	__BORLANDC__
 #define M_NOSTDCONTAINERS_EXT
 #endif
@@ -218,32 +201,22 @@ protected:
 	_C c;
 };
 
-template <typename T, typename allocator = xalloc<T> >
-using xr_list = std::list<T, allocator>;
-
-template <typename K, class P = std::less<K>, typename allocator = xalloc<K> >
-using xr_set = std::set<K, P, allocator>;
-
-template <typename K, class P = std::less<K>, typename allocator = xalloc<K> >
-using xr_multiset = std::multiset<K, P, allocator>;
-
-template <typename K, class V, class P = std::less<K>, typename allocator = xalloc<std::pair<const K, V> > >
-using xr_map = std::map<K, V, P, allocator>;
-
-template <typename K, class V, class P = std::less<K>, typename allocator = xalloc<std::pair<const K, V> > >
-using xr_multimap = std::multimap<K, V, P, allocator>;
+template	<typename T, typename allocator = xalloc<T> >									class	xr_list : public std::list<T, allocator> { public: u32 size() const { return (u32)__super::size(); } };
+template	<typename K, class P = std::less<K>, typename allocator = xalloc<K> >				class	xr_set : public std::set<K, P, allocator> { public: u32 size() const { return (u32)__super::size(); } };
+template	<typename K, class P = std::less<K>, typename allocator = xalloc<K> >				class	xr_multiset : public std::multiset<K, P, allocator> { public: u32 size() const { return (u32)__super::size(); } };
+template	<typename K, class V, class P = std::less<K>, typename allocator = xalloc<std::pair<K, V> > >	class	xr_map : public std::map<K, V, P, allocator> { public: u32 size() const { return (u32)__super::size(); } };
+template	<typename K, class V, class P = std::less<K>, typename allocator = xalloc<std::pair<K, V> > >	class	xr_multimap : public std::multimap<K, V, P, allocator> { public: u32 size() const { return (u32)__super::size(); } };
 
 #endif
 
 template	<class _Ty1, class _Ty2> inline	std::pair<_Ty1, _Ty2>		mk_pair(_Ty1 _Val1, _Ty2 _Val2) { return (std::pair<_Ty1, _Ty2>(_Val1, _Val2)); }
 
-struct pred_str {
+struct pred_str : public std::binary_function<char*, char*, bool> {
 	IC bool operator()(const char* x, const char* y) const { return xr_strcmp(x, y) < 0; }
 };
-struct pred_stri {
-	IC bool operator()(const char* x, const char* y) const { return _stricmp(x, y) < 0; }
+struct pred_stri : public std::binary_function<char*, char*, bool> {
+	IC bool operator()(const char* x, const char* y) const { return stricmp(x, y) < 0; }
 };
-
 
 // STL extensions
 #define DEF_VECTOR(N,T)				typedef xr_vector< T > N;		typedef N::iterator N##_it;

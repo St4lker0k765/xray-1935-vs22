@@ -16,7 +16,7 @@ public:
 	T			m_radius;
 public:
 	IC SelfRef	invalidate	()	{ m_center.set(0,0,0); m_direction.set(0,0,0); m_height=0; m_radius=0; return *this; }
-    IC int		intersect	(const _vector3<T>& start, const _vector3<T>& dir, T afT[2]) const
+    IC int		intersect	(const _vector3<T>& start, const _vector3<T>& dir, T afT[2])
     {
         T fEpsilon = 1e-12f;
 
@@ -24,16 +24,6 @@ public:
         _vector3<T> kU, kV, kW = m_direction;
         _vector3<T>::generate_orthonormal_basis(kW,kU,kV);
         _vector3<T> kD; kD.set(kU.dotproduct(dir),kV.dotproduct(dir),kW.dotproduct(dir));
-#ifdef DEBUG
-		if(kD.square_magnitude() <= std::numeric_limits<T>::min())
-		{
-			Msg("dir :%f,%f,%f",dir.x,dir.y,dir.z);
-			Msg("kU :%f,%f,%f",kU.x,kU.y,kU.z);
-			Msg("kV :%f,%f,%f",kV.x,kV.y,kV.z);
-			Msg("kW :%f,%f,%f",kW.x,kW.y,kW.z);
-			VERIFY2(0,"KD is zero");
-		}
-#endif
         T fDLength = kD.normalize_magn();
         T fInvDLength = 1.0f/fDLength;
         _vector3<T> kDiff; kDiff.sub(start,m_center);
@@ -114,7 +104,7 @@ public:
         fDiscr = fB*fB - fA*fC;
         if ( fDiscr < 0.0f ){
             // line does not intersect cylinder wall
-            //VERIFY( iQuantity == 0 );
+            assert( iQuantity == 0 );
             return 0;
         }else if ( fDiscr > 0.0f ){
             fRoot = _sqrt(fDiscr);
@@ -155,27 +145,13 @@ public:
 
         return iQuantity;
     }
-	enum ERP_Result{
-		rpNone			= 0,
-		rpOriginInside	= 1,
-		rpOriginOutside	= 2,
-		fcv_forcedword	= u32(-1)
-	};
-    IC ERP_Result	intersect	(const _vector3<T>& start, const _vector3<T>& dir, T& dist) const
+    IC bool		intersect	(const _vector3<T>& start, const _vector3<T>& dir, T& dist)
     {
-    	T				afT[2];
-        int cnt;
-		if (0!=(cnt=intersect(start,dir,afT))){
-			bool		o_inside	= false;
-			bool		b_result	= false;
-			for (int k=0; k<cnt; k++){
-				if (afT[k]<0.f)		{if(cnt==2)o_inside=true;	continue;	}
-				if (afT[k]<dist)	{dist=afT[k];		b_result=true;				}
-			}
-			return		b_result?(o_inside?rpOriginInside:rpOriginOutside):rpNone;
-		}else{
-			return		rpNone;
-		}
+    	T afT[2];
+        int cnt = intersect(start,dir,afT);
+        bool bResult=false;
+        for (int k=0; k<cnt; k++) if (afT[k]<dist){ dist = afT[k]; bResult=true; }
+        return bResult;
     }
 //----------------------------------------------------------------------------
 };

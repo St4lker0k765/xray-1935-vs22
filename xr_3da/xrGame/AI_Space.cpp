@@ -26,7 +26,6 @@ CAI_Space::CAI_Space				()
 	m_graph_engine			= xr_new<CGraphEngine>(game_graph().header().vertex_count());
 	m_cover_manager			= xr_new<CCoverManager>();
 	m_script_engine			= xr_new<CScriptEngine>();
-	script_engine().init	();
 	m_level_graph			= 0;
 	m_cross_table			= 0;
 	m_alife_simulator		= 0;
@@ -48,7 +47,7 @@ CAI_Space::~CAI_Space				()
 void CAI_Space::load				(LPCSTR level_name)
 {
 	unload					(true);
-	u64						start = CPU::GetCLK();
+	u64						start = CPU::GetCycleCount();
 	Memory.mem_compact		();
 	u32						mem_usage = Memory.mem_usage();
 	m_level_graph			= xr_new<CLevelGraph>();
@@ -70,8 +69,8 @@ void CAI_Space::load				(LPCSTR level_name)
 
 	m_cover_manager->compute_static_cover	();
 
-	u64						finish = CPU::GetCLK();
-	Msg						("* Loading ai space is successfully completed (%.3fs, %7.3f Mb)",float(finish - start)*CPU::clk_to_seconds,float(Memory.mem_usage() - mem_usage)/1048576.0);
+	u64						finish = CPU::GetCycleCount();
+	Msg						("* Loading ai space is successfully completed (%.3fs, %7.3f Mb)",float(finish - start)*CPU::cycles2seconds,float(Memory.mem_usage() - mem_usage)/1048576.0);
 }
 
 void CAI_Space::unload				(bool reload)

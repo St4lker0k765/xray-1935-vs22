@@ -198,7 +198,7 @@ float CBaseMonster::GetRealDistToEnemy(const CEntity *pE)
 	Fmatrix global_transform;
 	global_transform.set(XFORM());
 	
-	global_transform.mulB_43(smart_cast<CKinematics*>(Visual())->LL_GetBoneInstance(smart_cast<CKinematics*>(Visual())->LL_BoneID("bip01_head")).mTransform);
+	global_transform.mulB(smart_cast<CKinematics*>(Visual())->LL_GetBoneInstance(smart_cast<CKinematics*>(Visual())->LL_BoneID("bip01_head")).mTransform);
 	
 	Fvector dir; 
 	dir.sub(enemy_center, global_transform.c);
@@ -268,7 +268,7 @@ float CBaseMonster::GetEnemyDistances(float &min_dist, float &max_dist, const CE
 //
 //	Fmatrix global_transform;
 //	global_transform.set(XFORM());
-//	global_transform.mulB_43(bone_transform);
+//	global_transform.mulB(bone_transform);
 //
 //	return global_transform.c;
 //}

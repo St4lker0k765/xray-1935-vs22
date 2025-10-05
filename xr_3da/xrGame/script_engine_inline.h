@@ -8,19 +8,44 @@
 
 #pragma once
 
-IC	void CScriptEngine::add_script_process		(const EScriptProcessors &process_id, CScriptProcess *script_process)
+IC	void CScriptEngine::add_script_process		(LPCSTR process_name, CScriptProcess *script_process)
 {
-	CScriptProcessStorage::const_iterator	I = m_script_processes.find(process_id);
+	CScriptProcessStorage::const_iterator	I = m_script_processes.find(process_name);
 	VERIFY									(I == m_script_processes.end());
-	m_script_processes.insert				(std::make_pair(process_id,script_process));
+	m_script_processes.insert				(std::make_pair(process_name,script_process));
 }
 
-CScriptProcess *CScriptEngine::script_process	(const EScriptProcessors &process_id) const
+CScriptProcess *CScriptEngine::script_process	(LPCSTR process_name) const
 {
-	CScriptProcessStorage::const_iterator	I = m_script_processes.find(process_id);
+	CScriptProcessStorage::const_iterator	I = m_script_processes.find(process_name);
 	if ((I != m_script_processes.end()))
 		return								((*I).second);
 	return									(0);
+}
+
+IC	void CScriptEngine::set_current_thread		(CScriptStackTracker *new_thread)
+{
+#ifdef DEBUG
+	VERIFY									((!m_current_thread && new_thread) || (m_current_thread && !new_thread));
+#endif
+	m_current_thread						= new_thread;
+}
+
+IC	CScriptStackTracker *CScriptEngine::current_thread			()
+{
+	return									(m_current_thread);
+}
+
+IC	CScriptStackTracker	&CScriptEngine::script_stack_tracker	()
+{
+	if (!current_thread())
+		return								(*this);
+	return									(*current_thread());
+}
+
+IC	void CScriptEngine::reload_modules		(bool flag)
+{
+	m_reload_modules						= flag;
 }
 
 IC	void CScriptEngine::parse_script_namespace(LPCSTR function_to_call, LPSTR name_space, LPSTR function)
@@ -35,7 +60,7 @@ IC	void CScriptEngine::parse_script_namespace(LPCSTR function_to_call, LPSTR nam
 	if (!J)
 		strcpy				(function,function_to_call);
 	else {
-		CopyMemory		(name_space,function_to_call, u32(J - function_to_call)*sizeof(char));
+		Memory.mem_copy		(name_space,function_to_call, u32(J - function_to_call)*sizeof(char));
 		name_space[u32(J - function_to_call)] = 0;
 		strcpy				(function,J + 1);
 	}
@@ -48,19 +73,7 @@ IC	bool CScriptEngine::functor(LPCSTR function_to_call, luabind::functor<_result
 	if (!function_object(function_to_call,object))
 		return				(false);
 
-	try {
-		lua_function		= luabind::object_cast<luabind::functor<_result_type> >(object);
-	}
-	catch(...) {
-		return				(false);
-	}
+	lua_function			= luabind::object_cast<luabind::functor<_result_type> >(object);
 
 	return					(true);
 }
-
-#ifdef USE_DEBUGGER
-IC CScriptDebugger *CScriptEngine::debugger			()
-{
-	return m_scriptDebugger;
-}
-#endif

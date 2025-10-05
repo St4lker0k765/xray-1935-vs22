@@ -15,7 +15,7 @@ IC CGameLevelCrossTable::CGameLevelCrossTable()
 #endif
 {
 #ifndef AI_COMPILER
-	string_path							fName;
+	string256							fName;
 	FS.update_path						(fName,"$level$",CROSS_TABLE_NAME);
 #endif
 	m_tpCrossTableVFS					= FS.r_open(fName);

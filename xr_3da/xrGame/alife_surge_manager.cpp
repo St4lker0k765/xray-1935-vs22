@@ -39,7 +39,7 @@ void CALifeSurgeManager::surge		()
 	}
 #endif
 	
-	random().seed						(u32(CPU::GetCLK() & 0xffffffff));
+	random().seed						(u32(CPU::GetCycleCount() & 0xffffffff));
 	m_alive_spawn_objects.assign		(spawns().header().count(),false);
 	
 	// update all the objects

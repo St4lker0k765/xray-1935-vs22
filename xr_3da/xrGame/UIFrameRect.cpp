@@ -22,16 +22,16 @@ void CUIFrameRect::Init(LPCSTR base_name, int x, int y, int w, int h, DWORD alig
 	// init graphics
 	string256		buf;
 	// back
-	back.CreateShader(xr_strconcat(buf,base_name,"_back"),	"hud\\default");			//back.SetAlign		(align);
+	back.CreateShader(strconcat(buf,base_name,"_back"),	"hud\\default");			//back.SetAlign		(align);
 	// frame
-	frame[fmL].CreateShader	(xr_strconcat(buf,base_name,"_l"),		"hud\\default");	//frame[fmL].SetAlign	(align); 
-	frame[fmR].CreateShader	(xr_strconcat(buf,base_name,"_r"),		"hud\\default");	//frame[fmR].SetAlign	(align);	
-	frame[fmT].CreateShader	(xr_strconcat(buf,base_name,"_t"),		"hud\\default");	//frame[fmT].SetAlign	(align);	
-	frame[fmB].CreateShader	(xr_strconcat(buf,base_name,"_b"),		"hud\\default");	//frame[fmB].SetAlign	(align);	
-	frame[fmLT].CreateShader(xr_strconcat(buf,base_name,"_lt"),	"hud\\default");	//frame[fmLT].SetAlign(align);
-	frame[fmRT].CreateShader(xr_strconcat(buf,base_name,"_rt"),	"hud\\default");	//frame[fmRT].SetAlign(align);
-	frame[fmRB].CreateShader(xr_strconcat(buf,base_name,"_rb"),	"hud\\default");	//frame[fmRB].SetAlign(align);
-	frame[fmLB].CreateShader(xr_strconcat(buf,base_name,"_lb"),	"hud\\default");	//frame[fmLB].SetAlign(align);
+	frame[fmL].CreateShader	(strconcat(buf,base_name,"_l"),		"hud\\default");	//frame[fmL].SetAlign	(align); 
+	frame[fmR].CreateShader	(strconcat(buf,base_name,"_r"),		"hud\\default");	//frame[fmR].SetAlign	(align);	
+	frame[fmT].CreateShader	(strconcat(buf,base_name,"_t"),		"hud\\default");	//frame[fmT].SetAlign	(align);	
+	frame[fmB].CreateShader	(strconcat(buf,base_name,"_b"),		"hud\\default");	//frame[fmB].SetAlign	(align);	
+	frame[fmLT].CreateShader(strconcat(buf,base_name,"_lt"),	"hud\\default");	//frame[fmLT].SetAlign(align);
+	frame[fmRT].CreateShader(strconcat(buf,base_name,"_rt"),	"hud\\default");	//frame[fmRT].SetAlign(align);
+	frame[fmRB].CreateShader(strconcat(buf,base_name,"_rb"),	"hud\\default");	//frame[fmRB].SetAlign(align);
+	frame[fmLB].CreateShader(strconcat(buf,base_name,"_lb"),	"hud\\default");	//frame[fmLB].SetAlign(align);
 }
 //--------------------------------------------------------------------
 

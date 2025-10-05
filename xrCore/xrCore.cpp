@@ -10,67 +10,35 @@
 
 XRCORE_API		xrCore Core;
 
-#ifndef XRCORE_STATIC
-
-//. why ??? 
-#ifdef _EDITOR
-	BOOL WINAPI DllEntryPoint(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
-#else
-	BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
-#endif
+BOOL APIENTRY	DllMain(	HANDLE hModule, 
+							DWORD  ul_reason_for_call, 
+							LPVOID lpReserved
+						)
 {
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		{
-			_clear87		();
-			_control87		( _PC_53,   MCW_PC );
-			_control87		( _RC_CHOP, MCW_RC );
-			_control87		( _RC_NEAR, MCW_RC );
-			_control87		( _MCW_EM,  MCW_EM );
-		}
-		break;
 	case DLL_THREAD_ATTACH:
-		CoInitializeEx	(NULL, COINIT_MULTITHREADED);
-		break;
 	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:
 		break;
 	}
     return TRUE;
 }
-#endif
 
 namespace CPU
 {
 	extern	void			Detect	();
 };
 static u32	init_counter	= 0;
-
-void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, LPCSTR fs_fname)
+void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs)
 {
-	strcpy					(ApplicationName,_ApplicationName);
 	if (0==init_counter){	
-#ifdef XRCORE_STATIC	
-		_clear87	();
-		_control87	( _PC_53,   MCW_PC );
-		_control87	( _RC_CHOP, MCW_RC );
-		_control87	( _RC_NEAR, MCW_RC );
-		_control87	( _MCW_EM,  MCW_EM );
-#endif
 		// Init COM so we can use CoCreateInstance
 		CoInitializeEx		(NULL, COINIT_MULTITHREADED);
 
-		_strlwr				(strcpy(Params,GetCommandLine()));
-
-		// application path
-        string_path		fn,dr,di;
-        GetModuleFileName(GetModuleHandle(MODULE_NAME),fn,sizeof(fn));
-        _splitpath		(fn,dr,di,0,0);
-        xr_strconcat		(ApplicationPath,dr,di);                                       
-
-		// working path
-		GetCurrentDirectory(sizeof(WorkingPath),WorkingPath);
+		strcpy				(ApplicationName,_ApplicationName);
+		strlwr				(strcpy(Params,GetCommandLine()));
 
 		// User/Comp Name
 		DWORD	sz_user		= sizeof(UserName);
@@ -83,7 +51,7 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 		CPU::Detect			();
 		if (strstr(Params,"-mem_debug"))	Memory._initialize		(TRUE);
 		else								Memory._initialize		(FALSE);
-		_initialize_cpu		();
+		InitMath			();
 		Debug._initialize	();
 
 		rtc_initialize		();
@@ -97,18 +65,7 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 #ifdef	DEBUG
 		if (0==strstr(Params,"-nocache"))flags |= CLocatorAPI::flCacheFiles;
 #endif
-#ifdef	_EDITOR // for EDITORS - no cache
-		flags 				&=~ CLocatorAPI::flCacheFiles;
-#endif
-		flags |= CLocatorAPI::flScanAppRoot;
-		
-#ifndef	_EDITOR
-	#ifndef ELocatorAPIH
-		if (0!=strstr(Params,"-file_activity"))	 flags |= CLocatorAPI::flDumpFileActivity;
-	#endif
-#endif
-
-		FS._initialize		(flags,0,fs_fname);
+		FS._initialize		(flags);
 		EFS._initialize		();
 	}
 	SetLogCB				(cb);

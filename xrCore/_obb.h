@@ -47,20 +47,10 @@ public:
 	Tvector			m_translate;
 	Tvector			m_halfsize;
 
-	IC bool operator==(SelfCRef Left)
-	{
-		return Left.m_translate == m_translate && Left.m_rotate == m_rotate && Left.m_halfsize == m_halfsize;
-	}
-
 	IC SelfRef		invalidate() {
 		m_rotate.identity	();
 		m_translate.set		(0,0,0);
 		m_halfsize.set		(0,0,0);
-		return *this;
-	}
-	IC SelfRef		identity() {
-		invalidate();
-		m_halfsize.set( T(0.5), T(0.5), T(0.5) );
 		return *this;
 	}
 	IC void			xform_get(Tmatrix& D) const
@@ -129,7 +119,7 @@ typedef		_obb<double>	Dobb;
 template <class T>
 BOOL	_valid			(const _obb<T>& m)		
 { 
-	return _valid(m.m_rotate) && _valid(m.m_translate) && _valid(m.m_halfsize);
+	return _valid(m_rotate) && _valid(m_translate) && _valid(m_halfsize);
 }
 
 #endif

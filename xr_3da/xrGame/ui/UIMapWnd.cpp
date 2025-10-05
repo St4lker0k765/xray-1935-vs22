@@ -110,7 +110,7 @@ void CUIMapWnd::Init()
 	xml_init.InitFrameLine(uiXml, "map_header_frame_line", 0, &UIPDAHeader);
 
 	string128 buf;
-	xr_strconcat(buf, ALL_PDA_HEADER_PREFIX, "/Map");
+	strconcat(buf, ALL_PDA_HEADER_PREFIX, "/Map");
 
 	UIPDAHeader.UITitleText.SetText(buf);
 
@@ -768,7 +768,7 @@ void CUIMapWnd::InitLocalMaps()
 	// Получаем список уровней игры
 	const CGameGraph::LEVEL_MAP &levelMap		= ai().get_game_graph()->header().levels();
 	
-	string_path			gameLtxPath;
+	string256			gameLtxPath;
 	FS.update_path					(gameLtxPath, "$game_data$", "game.ltx");
 	CInifile			gameLtx		(gameLtxPath);
 	// Loop through all levels in graph and initialize its map data

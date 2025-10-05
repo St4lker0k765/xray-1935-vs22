@@ -391,7 +391,7 @@ void CHelicopter::UpdateCL()
 		K->CalculateBones	();
 		//smoke
 		m_particleXFORM	= K->LL_GetTransform(m_smoke_bone);
-		m_particleXFORM.mulA_43(XFORM());
+		m_particleXFORM.mulA(XFORM());
 		UpdateHeliParticles();
 		return;
 	}
@@ -495,25 +495,25 @@ void CHelicopter::UpdateCL()
 
 	//smoke
 	m_particleXFORM	= K->LL_GetTransform(m_smoke_bone);
-	m_particleXFORM.mulA_43(XFORM());
+	m_particleXFORM.mulA(XFORM());
 	UpdateHeliParticles();
 
 	if( m_curState==CHelicopter::eMovingByAttackTraj ){
 
 		m_fire_bone_xform	= K->LL_GetTransform(m_fire_bone);
 
-		m_fire_bone_xform.mulA_43(XFORM());
+		m_fire_bone_xform.mulA(XFORM());
 		m_fire_pos.set(0,0,0); 
 		m_fire_bone_xform.transform_tiny(m_fire_pos);
 		m_fire_dir.set(0,0,1);
 		m_fire_bone_xform.transform_dir(m_fire_dir);
 
 		m_left_rocket_bone_xform	= K->LL_GetTransform(m_left_rocket_bone);
-		m_left_rocket_bone_xform.mulA_43(XFORM());
+		m_left_rocket_bone_xform.mulA(XFORM());
 		m_left_rocket_bone_xform.c.y += 1.0f;
 		//.fake
 		m_right_rocket_bone_xform	= K->LL_GetTransform(m_right_rocket_bone);
-		m_right_rocket_bone_xform.mulA_43(XFORM());
+		m_right_rocket_bone_xform.mulA(XFORM());
 		m_right_rocket_bone_xform.c.y += 1.0f;
 		//.fake
 

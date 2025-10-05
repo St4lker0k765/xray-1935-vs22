@@ -55,6 +55,19 @@ public:
 	}
 };
 //-----------------------------------------------------------------------
+class CCC_MemStat : public IConsole_Command
+{
+public:
+	CCC_MemStat(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
+	virtual void Execute(LPCSTR args) {
+		Memory.mem_statistic();
+		Msg	("* ----- shared memory -----");
+		g_pSharedMemoryContainer->dump();
+		Msg	("* ----- string storage -----");
+		g_pStringContainer->dump();
+	}
+};
+//-----------------------------------------------------------------------
 class CCC_E_Dump : public IConsole_Command
 {
 public:
@@ -128,7 +141,7 @@ public:
 		IReader* F = FS.r_open(str);
 		if (F!=NULL) {
 			while (!F->eof()) {
-				F->r_string		(str, sizeof(str));
+				F->r_string		(str);
 				Console->Execute	(str);
 			}
 			FS.r_close(F);
@@ -177,7 +190,7 @@ public:
 			Log		("! Please disconnect/unload first");
 			return	;
 		}
-		string_path	fn;
+		string256	fn;
 		if (FS.exist(fn,"",args,".save"))
 		{
 			Engine.Event.Defer("KERNEL:server_load",u64(xr_strdup(fn)));
@@ -286,6 +299,8 @@ void CCC_Register()
 
 
 #ifdef DEBUG
+	CMD1(CCC_MemStat,	"stat_mem"				);
+
 	CMD3(CCC_Mask,		"mt_sound",				&psDeviceFlags,			mtSound);
 	CMD3(CCC_Mask,		"mt_physics",			&psDeviceFlags,			mtPhysics);
 	CMD3(CCC_Mask,		"mt_network",			&psDeviceFlags,			mtNetwork);

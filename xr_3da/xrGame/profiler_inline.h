@@ -11,12 +11,12 @@
 IC	CProfilePortion::CProfilePortion	(LPCSTR timer_id)
 {
 	m_timer_id						= timer_id;
-	m_start							= CPU::GetCLK();
+	m_start							= CPU::GetCycleCount();
 }
 
 IC	CProfilePortion::~CProfilePortion	()
 {
-	m_stop							= CPU::GetCLK();
+	m_stop							= CPU::GetCycleCount();
 	if (psAI_Flags.test(aiStats))
 		profiler().add_profile_portion	(*this);
 }

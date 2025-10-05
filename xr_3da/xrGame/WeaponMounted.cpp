@@ -23,7 +23,7 @@ void  CWeaponMounted::BoneCallbackX(CBoneInstance *B)
 
 	if (P->Owner()){
 		Fmatrix rX;		rX.rotateX		(P->camera->pitch);
-		B->mTransform.mulB_43(rX);
+		B->mTransform.mulB(rX);
 	}
 }
 
@@ -33,7 +33,7 @@ void  CWeaponMounted::BoneCallbackY(CBoneInstance *B)
 
 	if (P->Owner()){
 		Fmatrix rY;		rY.rotateY		(P->camera->yaw);
-		B->mTransform.mulB_43(rY);
+		B->mTransform.mulB(rY);
 	}
 }
 //----------------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ void	CWeaponMounted::UpdateCL()
 		K->CalculateBones	();
 		// update fire pos & fire_dir
 		fire_bone_xform		= K->LL_GetTransform(fire_bone);
-		fire_bone_xform.mulA_43(XFORM());
+		fire_bone_xform.mulA(XFORM());
 		fire_pos.set		(0,0,0); 
 		fire_bone_xform.transform_tiny	(fire_pos);
 		fire_dir.set		(0,0,1); 

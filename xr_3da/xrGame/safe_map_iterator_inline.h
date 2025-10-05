@@ -91,13 +91,13 @@ IC	typename CSSafeMapIterator::_iterator	&CSSafeMapIterator::next	()
 TEMPLATE_SPEZIALIZATION
 IC	void CSSafeMapIterator::start_timer			()
 {
-	m_start_time		= CPU::GetCLK();
+	m_start_time		= CPU::GetCycleCount();
 }
 
 TEMPLATE_SPEZIALIZATION
 IC	bool CSSafeMapIterator::time_over			()
 {
-	return				(use_time_limit && !m_first_update && (CPU::GetCLK() >= (m_start_time + m_max_process_time)));
+	return				(use_time_limit && !m_first_update && (CPU::GetCycleCount() >= (m_start_time + m_max_process_time)));
 }
 
 TEMPLATE_SPEZIALIZATION

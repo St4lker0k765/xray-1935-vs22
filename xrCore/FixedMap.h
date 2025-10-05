@@ -28,15 +28,15 @@ private:
 	{
 		u32	newLimit = limit + SG_REALLOC_ADVANCE;
 		VERIFY(newLimit%SG_REALLOC_ADVANCE == 0);
-		TNode*	newNodes = xr_alloc<TNode>	(newLimit);
+		TNode*	newNodes = (TNode*) xr_malloc	(Size(newLimit));
 		VERIFY(newNodes);
 
 		ZeroMemory(newNodes, Size(newLimit));
-		if (limit) CopyMemory	(newNodes, nodes, Size(limit));
+		if (limit) PSGP.memCopy(newNodes, nodes, Size(limit));
 
 		for (u32 I=0; I<pool; I++)
 		{
-			VERIFY	(nodes);
+			VERIFY(nodes);
 			TNode*	Nold	= nodes	+ I;
 			TNode*	Nnew	= newNodes + I;
 
@@ -49,7 +49,7 @@ private:
 				Nnew->right		= newNodes + Rid;
 			}
 		}
-		if (nodes) xr_free	(nodes);
+		if (nodes) xr_free(nodes);
 
 		nodes = newNodes;
 		limit = newLimit;
@@ -61,8 +61,8 @@ private:
 		TNode *node = nodes + pool;
 		node->key	= key;
 		node->right = node->left = 0;
-		pool++		;
-		return node	;
+		pool++;
+		return node;
 	}
 	IC TNode*	CreateChild	(TNode* &parent, const K& key)
 	{
@@ -115,14 +115,9 @@ public:
 		nodes	= 0; 
 	}
 	~FixedMAP() {
-		destroy	();
-	}
-	void		destroy()
-	{
 		if (nodes) {
-			for (TNode* cur = begin(); cur!=last(); cur++)
-				cur->~TNode();
 			xr_free(nodes);
+			nodes	= 0;
 		}
 	}
 	IC TNode*	insert(const K& k) {

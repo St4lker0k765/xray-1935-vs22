@@ -91,12 +91,12 @@ void CShootingObject::LoadFireParams(LPCSTR section, LPCSTR prefix)
 	string256 full_name;
 
 	//сила выстрела и его мощьность
-	iHitPower			= pSettings->r_s32		(section,xr_strconcat(full_name, prefix, "hit_power"));
-	fHitImpulse			= pSettings->r_float	(section,xr_strconcat(full_name, prefix, "hit_impulse"));
+	iHitPower			= pSettings->r_s32		(section,strconcat(full_name, prefix, "hit_power"));
+	fHitImpulse			= pSettings->r_float	(section,strconcat(full_name, prefix, "hit_impulse"));
 	//максимальное расстояние полета пули
-	fireDistance		= pSettings->r_float	(section,xr_strconcat(full_name, prefix, "fire_distance"));
+	fireDistance		= pSettings->r_float	(section,strconcat(full_name, prefix, "fire_distance"));
 	//начальная скорость пули
-	m_fStartBulletSpeed = pSettings->r_float	(section,xr_strconcat(full_name, prefix, "bullet_speed"));
+	m_fStartBulletSpeed = pSettings->r_float	(section,strconcat(full_name, prefix, "bullet_speed"));
 }
 
 
@@ -107,12 +107,12 @@ void CShootingObject::LoadLights(LPCSTR section, LPCSTR prefix)
 	// light
 	if(m_bShotLight) 
 	{
-		Fvector clr			= pSettings->r_fvector3		(section, xr_strconcat(full_name, prefix, "light_color"));
+		Fvector clr			= pSettings->r_fvector3		(section, strconcat(full_name, prefix, "light_color"));
 		light_base_color.set(clr.x,clr.y,clr.z,1);
-		light_base_range	= pSettings->r_float		(section, xr_strconcat(full_name, prefix, "light_range")		);
-		light_var_color		= pSettings->r_float		(section, xr_strconcat(full_name, prefix, "light_var_color")	);
-		light_var_range		= pSettings->r_float		(section, xr_strconcat(full_name, prefix, "light_var_range")	);
-		light_lifetime		= pSettings->r_float		(section, xr_strconcat(full_name, prefix, "light_time")		);
+		light_base_range	= pSettings->r_float		(section, strconcat(full_name, prefix, "light_range")		);
+		light_var_color		= pSettings->r_float		(section, strconcat(full_name, prefix, "light_var_color")	);
+		light_var_range		= pSettings->r_float		(section, strconcat(full_name, prefix, "light_var_range")	);
+		light_lifetime		= pSettings->r_float		(section, strconcat(full_name, prefix, "light_time")		);
 		light_time			= -1.f;
 	}
 }
@@ -196,12 +196,12 @@ void CShootingObject::UpdateParticles (CParticlesObject*& pParticles,
 void CShootingObject::LoadShellParticles (LPCSTR section, LPCSTR prefix)
 {
 	string256 full_name;
-	xr_strconcat(full_name, prefix, "shell_particles");
+	strconcat(full_name, prefix, "shell_particles");
 
 	if(pSettings->line_exist(section,full_name)) 
 	{
 		m_sShellParticles = pSettings->r_string (section,full_name);
-		vShellPoint	= pSettings->r_fvector3	(section,xr_strconcat(full_name, prefix, "shell_point"));
+		vShellPoint	= pSettings->r_fvector3	(section,strconcat(full_name, prefix, "shell_point"));
 	}
 }
 
@@ -210,15 +210,15 @@ void CShootingObject::LoadFlameParticles (LPCSTR section, LPCSTR prefix)
 	string256 full_name;
 
 	// flames
-	xr_strconcat(full_name, prefix, "flame_particles");
+	strconcat(full_name, prefix, "flame_particles");
 	if(pSettings->line_exist(section, full_name))
 		m_sFlameParticles	= pSettings->r_string (section, full_name);
 
-	xr_strconcat(full_name, prefix, "smoke_particles");
+	strconcat(full_name, prefix, "smoke_particles");
 	if(pSettings->line_exist(section, full_name))
 		m_sSmokeParticles = pSettings->r_string (section, full_name);
 
-	xr_strconcat(full_name, prefix, "shot_particles");
+	strconcat(full_name, prefix, "shot_particles");
 	if(pSettings->line_exist(section, full_name))
 		m_sShotParticles = pSettings->r_string (section, full_name);
 

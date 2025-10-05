@@ -2,34 +2,34 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Kernel">
-      <UniqueIdentifier>{831ed48b-173b-43a7-a24b-213c3e94dd90}</UniqueIdentifier>
+      <UniqueIdentifier>{0e1ae353-f8da-4ee2-847f-d7e3dad39588}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math">
-      <UniqueIdentifier>{2d21bb74-1011-4f3c-9999-73992f8213c5}</UniqueIdentifier>
+      <UniqueIdentifier>{4a2d6177-fd57-4cfd-b8a6-29a2aafe9487}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math\CPU">
-      <UniqueIdentifier>{07d1587b-1658-4a7f-be9c-ba67419f9ffd}</UniqueIdentifier>
+      <UniqueIdentifier>{feaab4c5-3ecf-4851-9eff-474aa41a21ca}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math\STLext">
-      <UniqueIdentifier>{daff57f7-96d0-413b-bd4f-4bf46b4d69b9}</UniqueIdentifier>
+      <UniqueIdentifier>{e7fafb0c-71c9-489a-bcb0-e2caacb20f01}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math\Extensions">
-      <UniqueIdentifier>{4e53ce09-19be-45c2-b496-1f449c374ec2}</UniqueIdentifier>
+      <UniqueIdentifier>{d0954b5a-885d-44af-abcb-d4fc4b7515bc}</UniqueIdentifier>
     </Filter>
     <Filter Include="FS">
-      <UniqueIdentifier>{e0e9bf06-9160-43fb-9b05-aeae30ca1009}</UniqueIdentifier>
+      <UniqueIdentifier>{68c9cd24-97f9-4ad5-b7da-27d3b61a853c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Memory manager">
-      <UniqueIdentifier>{9d7cd64c-fe6a-4e9f-93d9-f5ce9700cc40}</UniqueIdentifier>
+      <UniqueIdentifier>{3c03e439-f5dd-4b71-8454-a91ebb4dc8c8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Debug core">
-      <UniqueIdentifier>{16cce6b2-148e-4a89-88c2-296711ccd5c6}</UniqueIdentifier>
+      <UniqueIdentifier>{442262ad-f286-4209-b722-50aae8551496}</UniqueIdentifier>
     </Filter>
     <Filter Include="Compression">
-      <UniqueIdentifier>{1a57c70a-2d0a-4eab-be8a-53671a4077e5}</UniqueIdentifier>
+      <UniqueIdentifier>{dffc61e4-91ea-41ad-bedd-007cf41f062d}</UniqueIdentifier>
     </Filter>
     <Filter Include="shared memory/string library">
-      <UniqueIdentifier>{ed8ae506-8798-4d0f-b2b0-11281b885f4d}</UniqueIdentifier>
+      <UniqueIdentifier>{9dc6240d-99a8-414b-90f7-801fc9ca72e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -75,12 +75,6 @@
     <ClCompile Include="LocatorAPI.cpp">
       <Filter>FS</Filter>
     </ClCompile>
-    <ClCompile Include="LocatorAPI_auth.cpp">
-      <Filter>FS</Filter>
-    </ClCompile>
-    <ClCompile Include="LocatorAPI_defs.cpp">
-      <Filter>FS</Filter>
-    </ClCompile>
     <ClCompile Include="LocatorAPI_Notifications.cpp">
       <Filter>FS</Filter>
     </ClCompile>
@@ -94,6 +88,9 @@
       <Filter>Memory manager</Filter>
     </ClCompile>
     <ClCompile Include="xrMemory_align.cpp">
+      <Filter>Memory manager</Filter>
+    </ClCompile>
+    <ClCompile Include="xrMemory_debug.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
     <ClCompile Include="xrMemory_POOL.cpp">
@@ -129,9 +126,6 @@
     <ClCompile Include="crc32.cpp">
       <Filter>shared memory/string library</Filter>
     </ClCompile>
-    <ClCompile Include="xr_shared.cpp">
-      <Filter>shared memory/string library</Filter>
-    </ClCompile>
     <ClCompile Include="xrsharedmem.cpp">
       <Filter>shared memory/string library</Filter>
     </ClCompile>
@@ -139,24 +133,6 @@
       <Filter>shared memory/string library</Filter>
     </ClCompile>
     <ClCompile Include="xrSyncronize.cpp" />
-    <ClCompile Include="string_concatenations.cpp">
-      <Filter>FS</Filter>
-    </ClCompile>
-    <ClCompile Include="file_stream_reader.cpp">
-      <Filter>FS</Filter>
-    </ClCompile>
-    <ClCompile Include="stream_reader.cpp">
-      <Filter>FS</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_alloc_pure.cpp">
-      <Filter>Memory manager</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_alloc_xr.cpp">
-      <Filter>Memory manager</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_usage.cpp">
-      <Filter>Memory manager</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -208,9 +184,6 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="_plane.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_plane2.h">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="_quaternion.h">
@@ -282,7 +255,7 @@
     <ClInclude Include="LocatorAPI.h">
       <Filter>FS</Filter>
     </ClInclude>
-    <ClInclude Include="LocatorAPI_defs.h">
+    <ClInclude Include="LocatorAPI_Notifications.h">
       <Filter>FS</Filter>
     </ClInclude>
     <ClInclude Include="log.h">
@@ -327,12 +300,6 @@
     <ClInclude Include="rt_lzo_config.h">
       <Filter>Compression</Filter>
     </ClInclude>
-    <ClInclude Include="xr_resource.h">
-      <Filter>shared memory/string library</Filter>
-    </ClInclude>
-    <ClInclude Include="xr_shared.h">
-      <Filter>shared memory/string library</Filter>
-    </ClInclude>
     <ClInclude Include="xrsharedmem.h">
       <Filter>shared memory/string library</Filter>
     </ClInclude>
@@ -340,26 +307,8 @@
       <Filter>shared memory/string library</Filter>
     </ClInclude>
     <ClInclude Include="xrSyncronize.h" />
-    <ClInclude Include="string_concatenations.h">
-      <Filter>FS</Filter>
-    </ClInclude>
-    <ClInclude Include="file_stream_reader.h">
-      <Filter>FS</Filter>
-    </ClInclude>
-    <ClInclude Include="stream_reader.h">
-      <Filter>FS</Filter>
-    </ClInclude>
-    <ClInclude Include="stream_reader_inline.h">
-      <Filter>FS</Filter>
-    </ClInclude>
-    <ClInclude Include="xrMemory_pure.h">
-      <Filter>Memory manager</Filter>
-    </ClInclude>
-    <ClInclude Include="memory_alloc_pure.h">
-      <Filter>Memory manager</Filter>
-    </ClInclude>
-    <ClInclude Include="memory_alloc_xr.h">
-      <Filter>Memory manager</Filter>
+    <ClInclude Include="xr_resource.h">
+      <Filter>Math\Extensions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -368,11 +317,8 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="FileSystem.h">
+    <CustomBuildStep Include="FileSystem.h">
       <Filter>FS</Filter>
-    </CustomBuild>
-    <CustomBuild Include="LocatorAPI_Notifications.h">
-      <Filter>FS</Filter>
-    </CustomBuild>
+    </CustomBuildStep>
   </ItemGroup>
 </Project>
