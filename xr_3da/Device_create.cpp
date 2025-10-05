@@ -84,25 +84,36 @@ void CRenderDevice::Create	()
 	fHeight_2	= float(dwHeight/2);
 	fFOV		= 90.f;
 	fASPECT		= 1.f;
+
+	if (!psDeviceFlags.test(rsFullscreen))
 	{
-		// When moving from fullscreen to windowed mode, it is important to
-		// adjust the window size after recreating the device rather than
-		// beforehand to ensure that you get the window size you want.  For
-		// example, when switching from 640x480 fullscreen to windowed with
-		// a 1000x600 window on a 1024x768 desktop, it is impossible to set
-		// the window size to 1000x600 until after the display mode has
-		// changed to 1024x768, because windows cannot be larger than the
-		// desktop.
-		if( !psDeviceFlags.test(rsFullscreen) )
+		BOOL bCenter = FALSE;
+		if (strstr(Core.Params, "-center_screen"))
+			bCenter = TRUE;
+
+		RECT m_rcWindowBounds;
+		if (bCenter)
 		{
-			RECT m_rcWindowBounds = {0, 0, dwWidth, dwHeight };
-			AdjustWindowRect( &m_rcWindowBounds, dwWindowStyle, FALSE );
-			SetWindowPos( m_hWnd, HWND_TOP,
-				m_rcWindowBounds.left, m_rcWindowBounds.top,
-				( m_rcWindowBounds.right - m_rcWindowBounds.left ),
-				( m_rcWindowBounds.bottom - m_rcWindowBounds.top ),
-				SWP_SHOWWINDOW|SWP_NOCOPYBITS|SWP_DRAWFRAME );
+			RECT DesktopRect;
+			GetClientRect(GetDesktopWindow(), &DesktopRect);
+
+			SetRect(&m_rcWindowBounds,
+				(DesktopRect.right - dwWidth) / 2,
+				(DesktopRect.bottom - dwHeight) / 2,
+				(DesktopRect.right + dwWidth) / 2,
+				(DesktopRect.bottom + dwHeight) / 2);
 		}
+		else
+		{
+			SetRect(&m_rcWindowBounds, 0, 0, dwWidth, dwHeight);
+		}
+
+		AdjustWindowRect(&m_rcWindowBounds, dwWindowStyle, FALSE);
+		SetWindowPos(m_hWnd, HWND_TOP,
+			m_rcWindowBounds.left, m_rcWindowBounds.top,
+			(m_rcWindowBounds.right - m_rcWindowBounds.left),
+			(m_rcWindowBounds.bottom - m_rcWindowBounds.top),
+			SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
 	}
 
 	// Hide the cursor if necessary
