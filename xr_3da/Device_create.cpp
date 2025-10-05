@@ -77,47 +77,13 @@ void CRenderDevice::Create	()
 	if (bReady)	return;		// prevent double call
 	Log("Starting RENDER device...");
 
-	u32 dwWindowStyle = HW.CreateDevice(m_hWnd,dwWidth,dwHeight);
+	HW.CreateDevice(m_hWnd);
 	dwWidth		= HW.DevPP.BackBufferWidth;
 	dwHeight	= HW.DevPP.BackBufferHeight;
 	fWidth_2	= float(dwWidth/2);
 	fHeight_2	= float(dwHeight/2);
 	fFOV		= 90.f;
 	fASPECT		= 1.f;
-
-	if (!psDeviceFlags.test(rsFullscreen))
-	{
-		BOOL bCenter = FALSE;
-		if (strstr(Core.Params, "-center_screen"))
-			bCenter = TRUE;
-
-		RECT m_rcWindowBounds;
-		if (bCenter)
-		{
-			RECT DesktopRect;
-			GetClientRect(GetDesktopWindow(), &DesktopRect);
-
-			SetRect(&m_rcWindowBounds,
-				(DesktopRect.right - dwWidth) / 2,
-				(DesktopRect.bottom - dwHeight) / 2,
-				(DesktopRect.right + dwWidth) / 2,
-				(DesktopRect.bottom + dwHeight) / 2);
-		}
-		else
-		{
-			SetRect(&m_rcWindowBounds, 0, 0, dwWidth, dwHeight);
-		}
-
-		AdjustWindowRect(&m_rcWindowBounds, dwWindowStyle, FALSE);
-		SetWindowPos(m_hWnd, HWND_TOP,
-			m_rcWindowBounds.left, m_rcWindowBounds.top,
-			(m_rcWindowBounds.right - m_rcWindowBounds.left),
-			(m_rcWindowBounds.bottom - m_rcWindowBounds.top),
-			SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
-	}
-
-	// Hide the cursor if necessary
-	ShowCursor		(FALSE);
 
 	string256		fname; 
 	FS.update_path	(fname,"$game_data$","shaders.xr");

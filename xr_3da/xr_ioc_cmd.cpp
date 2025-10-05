@@ -25,18 +25,7 @@ xr_token							snd_model_token							[ ]={
 	{ "High",						3											},
 	{ 0,							0											}
 };
-xr_token							vid_mode_token							[ ]={
-#ifdef DEBUG
-	{ "320x240",					320											},
-	{ "512x384",					512											},
-#endif
-	{ "640x480",					640											},
-	{ "800x600",					800											},
-	{ "1024x768",					1024										},
-	{ "1280x1024",					1280										},
-	{ "1600x1200",					1600										},
-	{ 0,							0											}
-};
+extern xr_token*							vid_mode_token;
 xr_token							vid_bpp_token							[ ]={
 	{ "16",							16											},
 	{ "32",							32											},
@@ -219,6 +208,34 @@ public:
 		}
 	}
 };
+class CCC_VidMode : public CCC_Token
+{
+	u32		_dummy;
+public :
+					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
+	virtual void	Execute(LPCSTR args){
+		u32 _w, _h;
+		int cnt = sscanf		(args,"%dx%d",&_w,&_h);
+		if(cnt==2){
+			psCurrentVidMode[0] = _w;
+			psCurrentVidMode[1] = _h;
+		}else{
+			Msg("! Wrong video mode [%s]", args);
+			return;
+		}
+	}
+	virtual void	Status	(TStatus& S)	
+	{ 
+		sprintf_s(S,sizeof(S),"%dx%d",psCurrentVidMode[0],psCurrentVidMode[1]); 
+	}
+	virtual xr_token* GetToken()				{return vid_mode_token;}
+	virtual void	Info	(TInfo& I)
+	{	
+		strcpy_s(I,sizeof(I),"change screen resolution WxH");
+	}
+
+
+};
 //-----------------------------------------------------------------------
 class CCC_SND_Restart : public IConsole_Command
 {
@@ -344,7 +361,7 @@ void CCC_Register()
 	CMD4(CCC_Integer,	"net_dedicated_sleep",	&psNET_DedicatedSleep,		0,	64	);
 
 	// General video control
-	CMD3(CCC_Token,		"vid_mode",				&psCurrentMode, vid_mode_token);
+	CMD1(CCC_VidMode,	"vid_mode"				);
 	CMD3(CCC_Token,		"vid_bpp",				&psCurrentBPP,	vid_bpp_token);
 	CMD1(CCC_VID_Reset, "vid_restart"			);
 	

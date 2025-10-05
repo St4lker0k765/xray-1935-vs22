@@ -18,7 +18,7 @@ void CRenderDevice::Initialize()
         WNDCLASS wndClass = { 0, WndProc, 0, 0, hInstance,
                               LoadIcon( hInstance, MAKEINTRESOURCE(IDI_XRAY) ),
                               LoadCursor( NULL, IDC_ARROW ),
-                              (HBRUSH)GetStockObject(GRAY_BRUSH),
+                              (HBRUSH)GetStockObject(BLACK_BRUSH),
                               NULL, wndclass };
         RegisterClass( &wndClass );
 
