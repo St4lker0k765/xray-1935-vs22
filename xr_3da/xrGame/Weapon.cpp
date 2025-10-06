@@ -51,7 +51,7 @@ CWeapon::CWeapon(LPCSTR name)
 
 	eHandDependence		= hdNone;
 
-	m_fZoomFactor		= DEFAULT_FOV;
+	m_fZoomFactor		= g_fov;
 	m_fZoomRotationFactor = 0.f;
 
 
@@ -905,7 +905,7 @@ void CWeapon::OnZoomIn()
 void CWeapon::OnZoomOut()
 {
 	m_bZoomMode = false;
-	m_fZoomFactor = DEFAULT_FOV;
+	m_fZoomFactor = g_fov;
 }
 CUIStaticItem* CWeapon::ZoomTexture()
 {

@@ -725,7 +725,7 @@ void CActor::UpdateCL()
 		cam_Update(dt, pWeapon->GetZoomFactor());
 	
 	else 
-		cam_Update(dt, DEFAULT_FOV);
+		cam_Update(dt, g_fov);
 
 	if(pWeapon)
 	{

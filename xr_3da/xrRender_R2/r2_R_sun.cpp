@@ -426,7 +426,7 @@ void CRender::render_sun				()
 	// calculate view-frustum bounds in world space
 	Fmatrix	ex_project, ex_full, ex_full_inverse;
 	{
-		ex_project.build_projection	(deg2rad(Device.fFOV*Device.fASPECT),Device.fASPECT,ps_r2_sun_near,g_pGamePersistent->Environment().CurrentEnv.far_plane);
+		ex_project.build_projection	(deg2rad(Device.fFOV),Device.fASPECT,ps_r2_sun_near,g_pGamePersistent->Environment().CurrentEnv.far_plane);
 		ex_full.mul					(ex_project,Device.mView);
 		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
 	}
@@ -765,7 +765,7 @@ void CRender::render_sun				()
 		b_receivers		= view_clipper.clipped_AABB	(s_receivers,xform);
 		Fmatrix	x_project, x_full, x_full_inverse;
 		{
-			x_project.build_projection	(deg2rad(Device.fFOV*Device.fASPECT),Device.fASPECT,ps_r2_sun_near,ps_r2_sun_near+tweak_guaranteed_range);
+			x_project.build_projection	(deg2rad(Device.fFOV),Device.fASPECT,ps_r2_sun_near,ps_r2_sun_near+tweak_guaranteed_range);
 			x_full.mul					(x_project,Device.mView);
 			D3DXMatrixInverse			((D3DXMATRIX*)&x_full_inverse,0,(D3DXMATRIX*)&x_full);
 		}
@@ -861,7 +861,7 @@ void CRender::render_sun_near	()
 	// calculate view-frustum bounds in world space
 	Fmatrix	ex_project, ex_full, ex_full_inverse;
 	{
-		ex_project.build_projection	(deg2rad(Device.fFOV*Device.fASPECT),Device.fASPECT,VIEWPORT_NEAR,ps_r2_sun_near); 
+		ex_project.build_projection	(deg2rad(Device.fFOV),Device.fASPECT,VIEWPORT_NEAR,ps_r2_sun_near); 
 		ex_full.mul					(ex_project,Device.mView);
 		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
 	}
@@ -938,7 +938,7 @@ void CRender::render_sun_near	()
 
 		// projection: box
 		float	_D					= ps_r2_sun_near;
-		float	a0					= deg2rad(Device.fFOV*Device.fASPECT)/2.f;
+		float	a0					= deg2rad(Device.fFOV)/2.f;
 		float	a1					= deg2rad(Device.fFOV)/2.f;
 		float	c0					= _D/_cos(a0);
 		float	c1					= _D/_cos(a1);

@@ -220,7 +220,7 @@ void CActor::IR_OnMouseMove(int dx, int dy)
 	VERIFY(!fis_zero(m_controlled_mouse_scale_factor));
 
 	CCameraBase* C	= cameras	[cam_active];
-	float scale		= (C->f_fov/DEFAULT_FOV)*psMouseSens * psMouseSensScale/50.f  / m_controlled_mouse_scale_factor;
+	float scale		= (C->f_fov/g_fov)*psMouseSens * psMouseSensScale/50.f  / m_controlled_mouse_scale_factor;
 	if (dx){
 		float d = float(dx)*scale;
 		cam_Active()->Move((d<0)?kLEFT:kRIGHT, _abs(d));
