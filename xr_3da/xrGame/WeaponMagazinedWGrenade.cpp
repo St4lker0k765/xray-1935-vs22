@@ -352,9 +352,11 @@ void CWeaponMagazinedWGrenade::ReloadMagazine()
 //	psActorFlags.set(AF_UNLIMITEDAMMO, UnlimitedAmmo);
 	
 	//перезарядка подствольного гранатомета
-	if(iAmmoElapsed && !getRocketCount()/*m_pRocket*/ && m_bGrenadeMode) 
+
+	if (iAmmoElapsed && m_bGrenadeMode && !getRocketCount())
 	{
-		shared_str fake_grenade_name = pSettings->r_string(*m_pAmmo->cNameSect(), "fake_grenade_name");
+		shared_str fake_grenade_name = pSettings->r_string(m_magazine.top().m_ammoSect, "fake_grenade_name");
+
 		CRocketLauncher::SpawnRocket(*fake_grenade_name, this);
 	}
 }
