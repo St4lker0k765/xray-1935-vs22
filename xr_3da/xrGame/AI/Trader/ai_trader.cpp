@@ -19,6 +19,7 @@
 #include "../../xrserver.h"
 
 CAI_Trader::CAI_Trader()
+	:CSoundPlayer::CSoundPlayer(this)
 {
 	InitTrade();
 	init();

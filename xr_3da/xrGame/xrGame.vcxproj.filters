@@ -4197,6 +4197,9 @@
     <ClCompile Include="ui\UIChatWnd.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Chat</Filter>
     </ClCompile>
+    <ClCompile Include="sound_collection_storage.cpp">
+      <Filter>AI\AComponents\SoundPlayer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="agent_manager.h">
@@ -7516,6 +7519,12 @@
     </ClInclude>
     <ClInclude Include="ui\UIChatWnd.h">
       <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_collection_storage.h">
+      <Filter>AI\AComponents\SoundPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_collection_storage_inline.h">
+      <Filter>AI\AComponents\SoundPlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

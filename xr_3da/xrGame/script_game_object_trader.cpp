@@ -121,7 +121,7 @@ u32	CScriptGameObject::add_sound		(LPCSTR prefix, u32 max_count, ESoundTypes typ
 		return					(0);
 	}
 	else
-		return					(sound_player->add(prefix,max_count,type,priority,mask,internal_type, bone_name, head_anim));
+		return					(sound_player->add(prefix,max_count,type,priority,mask,internal_type, bone_name/*, head_anim*/));
 }
 
 u32	CScriptGameObject::add_sound		(LPCSTR prefix, u32 max_count, ESoundTypes type, u32 priority, u32 mask, u32 internal_type)

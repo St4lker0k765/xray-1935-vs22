@@ -46,6 +46,7 @@ void CCustomMonster::SAnimState::Create(CSkeletonAnimated* K, LPCSTR base)
 //////////////////////////////////////////////////////////////////////
 
 CCustomMonster::CCustomMonster()
+	:CSoundPlayer::CSoundPlayer(this)
 {
 	init				();
 }
@@ -768,6 +769,7 @@ void CCustomMonster::net_Destroy()
 {
 	inherited::net_Destroy	();
 	CScriptMonster::net_Destroy();
+	CSoundPlayer::unload();
 	CMovementManager::net_Destroy();
 	//if (m_client_update_activated) {
 	//	processing_deactivate	();
