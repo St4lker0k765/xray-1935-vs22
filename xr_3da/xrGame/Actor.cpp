@@ -1129,35 +1129,12 @@ void CActor::OnItemTake			(CInventoryItem *inventory_item)
 {
 	CInventoryOwner::OnItemTake(inventory_item);
 	if (OnClient()) return;
-	
-/*	switch (GameID())
-	{
-	case GAME_DEATHMATCH:
-	case GAME_TEAMDEATHMATCH:
-	case GAME_ARTEFACTHUNT:
-		{
-			SpawnAmmoForWeapon(inventory_item);
-		}break;
-	};	
-*/
-	if (GameID()!=GAME_SINGLE)
-			SpawnAmmoForWeapon(inventory_item);
 }
 
 void CActor::OnItemDrop			(CInventoryItem *inventory_item)
 {
 	CInventoryOwner::OnItemDrop(inventory_item);
 	if (OnClient()) return;
-
-	switch (GameID())
-	{
-	case GAME_DEATHMATCH:
-	case GAME_TEAMDEATHMATCH:
-	case GAME_ARTEFACTHUNT:
-		{
-			RemoveAmmoForWeapon(inventory_item);
-		}break;
-	};
 }
 
 void	CActor::SpawnAmmoForWeapon	(CInventoryItem *pIItem)
