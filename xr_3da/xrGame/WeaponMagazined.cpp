@@ -54,9 +54,9 @@ void CWeaponMagazined::StopHUDSounds		()
 	HUD_SOUND::StopSound(sndEmptyClick);
 	HUD_SOUND::StopSound(sndReload);
 
-	//HUD_SOUND::StopSound(sndShot);
-	if(sndShot.enable && sndShot.snd._feedback())
-		sndShot.snd._feedback()->switch_to_3D();
+	HUD_SOUND::StopSound(sndShot);
+//.	if(sndShot.enable && sndShot.snd._feedback())
+//.		sndShot.snd._feedback()->switch_to_3D();
 
 	inherited::StopHUDSounds();
 }
@@ -72,11 +72,11 @@ void CWeaponMagazined::Load	(LPCSTR section)
 	inherited::Load		(section);
 		
 	// Sounds
-	HUD_SOUND::LoadSound(section,"snd_draw"		, sndShow		, TRUE, m_eSoundShow		);
-	HUD_SOUND::LoadSound(section,"snd_holster"	, sndHide		, TRUE, m_eSoundHide		);
-	HUD_SOUND::LoadSound(section,"snd_shoot"	, sndShot		, TRUE, m_eSoundShot		);
-	HUD_SOUND::LoadSound(section,"snd_empty"	, sndEmptyClick	, TRUE, m_eSoundEmptyClick	);
-	HUD_SOUND::LoadSound(section,"snd_reload"	, sndReload		, TRUE, m_eSoundReload		);
+	HUD_SOUND::LoadSound(section,"snd_draw"		, sndShow		, m_eSoundShow		);
+	HUD_SOUND::LoadSound(section,"snd_holster"	, sndHide		, m_eSoundHide		);
+	HUD_SOUND::LoadSound(section,"snd_shoot"	, sndShot		, m_eSoundShot		);
+	HUD_SOUND::LoadSound(section,"snd_empty"	, sndEmptyClick	, m_eSoundEmptyClick	);
+	HUD_SOUND::LoadSound(section,"snd_reload"	, sndReload		, m_eSoundReload		);
 	
 	m_pSndShotCurrent = &sndShot;
 		
@@ -100,7 +100,7 @@ void CWeaponMagazined::Load	(LPCSTR section)
 			m_sSilencerFlameParticles = pSettings->r_string(section, "silencer_flame_particles");
 		if(pSettings->line_exist(section, "silencer_smoke_particles"))
 			m_sSilencerSmokeParticles = pSettings->r_string(section, "silencer_smoke_particles");
-		HUD_SOUND::LoadSound(section,"snd_silncer_shot", sndSilencerShot, TRUE, m_eSoundShot);
+		HUD_SOUND::LoadSound(section,"snd_silncer_shot", sndSilencerShot, m_eSoundShot);
 	}
 }
 
@@ -427,19 +427,19 @@ void CWeaponMagazined::UpdateSounds	()
 	dwUpdateSounds_Frame = Device.dwFrame;
 
 	// ref_sound positions
-	if (sndShow.snd._feedback() || 
-		sndHide.snd._feedback() || 
-		sndShot.snd._feedback() || 
-		sndReload.snd._feedback() || 
-		sndEmptyClick.snd._feedback())
+	if (sndShow.playing() || 
+		sndHide.playing() ||
+		sndShot.playing() ||
+		sndReload.playing() ||
+		sndEmptyClick.playing())
 	{
 		UpdateFP					();
 
-		if (sndShow.snd._feedback())		sndShow.set_position		(vLastFP);
-		if (sndHide.snd._feedback())		sndHide.set_position		(vLastFP);
-		if (sndShot.snd._feedback())		sndShot.set_position		(vLastFP);
-		if (sndReload.snd._feedback())		sndReload.set_position		(vLastFP);
-		if (sndEmptyClick.snd._feedback())	sndEmptyClick.set_position	(vLastFP);
+		if (sndShow.playing())		sndShow.set_position		(vLastFP);
+		if (sndHide.playing())		sndHide.set_position		(vLastFP);
+		if (sndShot.playing())		sndShot.set_position		(vLastFP);
+		if (sndReload.playing())		sndReload.set_position		(vLastFP);
+		if (sndEmptyClick.playing())	sndEmptyClick.set_position	(vLastFP);
 	}
 }
 

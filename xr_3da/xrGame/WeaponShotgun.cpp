@@ -26,7 +26,7 @@ void CWeaponShotgun::Load	(LPCSTR section)
 	inherited::Load		(section);
 
 	// Звук и анимация для выстрела дуплетом
-	HUD_SOUND::LoadSound(section, "snd_shoot_duplet", sndShotBoth, TRUE, m_eSoundShotBoth);
+	HUD_SOUND::LoadSound(section, "snd_shoot_duplet", sndShotBoth, m_eSoundShotBoth);
 	animGet	(mhud_shot_boths,	pSettings->r_string(*hud_sect,"anim_shoot_both"));
 }
 
@@ -181,7 +181,7 @@ void CWeaponShotgun::UpdateSounds()
 	inherited::UpdateSounds();
 
 	//UpdateFP();
-	if (sndShotBoth.snd._feedback())		sndShotBoth.set_position		(vLastFP);
+	if (sndShotBoth.playing())		sndShotBoth.set_position		(vLastFP);
 }
 
 

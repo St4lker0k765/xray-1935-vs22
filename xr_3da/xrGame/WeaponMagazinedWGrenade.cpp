@@ -43,9 +43,9 @@ void CWeaponMagazinedWGrenade::Load	(LPCSTR section)
 	
 	
 	//// Sounds
-	HUD_SOUND::LoadSound(section,"snd_shoot_grenade"	, sndShotG		, TRUE, m_eSoundShot);
-	HUD_SOUND::LoadSound(section,"snd_reload_grenade"	, sndReloadG	, TRUE, m_eSoundReload);
-	HUD_SOUND::LoadSound(section,"snd_switch"			, sndSwitch		, TRUE, m_eSoundReload);
+	HUD_SOUND::LoadSound(section,"snd_shoot_grenade"	, sndShotG		, m_eSoundShot);
+	HUD_SOUND::LoadSound(section,"snd_reload_grenade"	, sndReloadG	, m_eSoundReload);
+	HUD_SOUND::LoadSound(section,"snd_switch"			, sndSwitch		, m_eSoundReload);
 	
 
 	m_sFlameParticles2 = pSettings->r_string(section, "grenade_flame_particles");
@@ -587,15 +587,15 @@ void CWeaponMagazinedWGrenade::UpdateSounds	()
 	inherited::UpdateSounds();
 
 	// ref_sound positions
-	if (sndShotG.snd._feedback() || 
-		sndReloadG.snd._feedback() || 
-		sndSwitch.snd._feedback())
+	if (sndShotG.playing() ||
+		sndReloadG.playing() ||
+		sndSwitch.playing())
 	{
 		UpdateFP					();
 
-		if (sndShotG.snd._feedback())		sndShotG.set_position		(vLastFP);
-		if (sndReloadG.snd._feedback())	sndReloadG.set_position		(vLastFP);
-		if (sndSwitch.snd._feedback())		sndSwitch.set_position		(vLastFP);
+		if (sndShotG.playing())		sndShotG.set_position		(vLastFP);
+		if (sndReloadG.playing())	sndReloadG.set_position		(vLastFP);
+		if (sndSwitch.playing())		sndSwitch.set_position		(vLastFP);
 	}
 }
 

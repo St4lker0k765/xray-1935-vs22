@@ -27,7 +27,7 @@ void CWeaponPistol::Load	(LPCSTR section)
 {
 	inherited::Load		(section);
 
-	HUD_SOUND::LoadSound(section, "snd_close", sndClose, TRUE, m_eSoundClose);
+	HUD_SOUND::LoadSound(section, "snd_close", sndClose, m_eSoundClose);
 
 	animGet				(mhud_empty,		pSettings->r_string(*hud_sect, "anim_empty"));
 	animGet				(mhud_shot_l,		pSettings->r_string(*hud_sect, "anim_shot_last"));
@@ -153,5 +153,5 @@ void CWeaponPistol::UpdateSounds()
 	inherited::UpdateSounds();
 
 	UpdateFP();
-	if (sndClose.snd._feedback()) sndClose.set_position(vLastFP);
+	if (sndClose.playing()) sndClose.set_position(vLastFP);
 }
