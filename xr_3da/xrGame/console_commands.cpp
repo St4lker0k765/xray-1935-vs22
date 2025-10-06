@@ -22,6 +22,7 @@
 #include "ui/UIMainIngameWnd.h"
 #include "PhysicsGamePars.h"
 #include "string_table.h"
+#include "actor.h"
 
 extern void show_smart_cast_stats		();
 extern void clear_smart_cast_stats		();
@@ -66,9 +67,30 @@ public:
 	virtual void Execute(LPCSTR args) {
 		R_ASSERT(g_pGameLevel);
 
+#ifndef	DEBUG
+		if (GameID() != GAME_SINGLE) 
+		{
+			Msg("For this game type entity-spawning is disabled.");
+			return;
+		};
+#endif
 		char	Name[128];	Name[0]=0;
 		sscanf	(args,"%s", Name);
-		Level().g_cl_Spawn	(Name,0xff,M_SPAWN_OBJECT_LOCAL);
+
+		if (!pSettings->section_exist(Name))
+		{
+			Msg("! Cannot spawn: section [%s] not found.", Name);
+			return;
+		}
+
+		CObject* l_pObj = Level().CurrentEntity();
+		CActor* l_pPlayer = smart_cast<CActor*>(l_pObj);
+		if (l_pPlayer)
+		{
+			Fvector pos = l_pPlayer->Position();
+			pos.y += 2.0f;
+			Level().g_cl_Spawn(Name, 0xff, M_SPAWN_OBJECT_LOCAL, pos);
+		}
 	}
 	virtual void	Info	(TInfo& I)		
 	{
