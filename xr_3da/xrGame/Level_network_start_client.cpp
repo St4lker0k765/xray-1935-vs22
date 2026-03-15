@@ -5,6 +5,7 @@
 #include "PHdynamicdata.h"
 #include "Physics.h"
 #include "level.h"
+#include "xrserver.h"
 
 extern	pureFrame*				g_pNetProcessor;
 
@@ -52,7 +53,15 @@ BOOL CLevel::net_Start_client	( LPCSTR options )
 		// Waiting for connection/configuration completition
 		pApp->LoadTitle						("CLIENT: Spawning...");
 		while (!net_isCompleted_Connect())	Sleep(5);
-		//while (!net_isCompleted_Sync())		{ ClientReceive(); Sleep(5); }
+
+		net_Syncronize();
+		while (!net_isCompleted_Sync())
+		{
+			ClientReceive();
+			Sleep(5);
+			if (Server)
+				Server->Update();
+		}
 		while (!game_configured)			{ ClientReceive(); Sleep(5); }
 		
 		// HUD
