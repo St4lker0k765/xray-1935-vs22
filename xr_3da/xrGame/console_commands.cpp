@@ -1112,6 +1112,17 @@ struct CCC_JumpToLevel : public IConsole_Command {
 	}
 };
 
+class CCC_TimeFactor : public IConsole_Command {
+public:
+	CCC_TimeFactor(LPCSTR N) : IConsole_Command(N) {}
+	virtual void	Execute(LPCSTR args)
+	{
+		float				time_factor = (float)atof(args);
+		clamp(time_factor, .001f, 1000.f);
+		Device.time_factor(time_factor);
+	}
+};
+
 void CCC_RegisterCommands()
 {
 	// game
@@ -1135,6 +1146,8 @@ void CCC_RegisterCommands()
 	CMD1(CCC_ALifeProcessTime,	"al_process_time"		);		// set process time
 	CMD1(CCC_ALifeSwitchFactor,	"al_switch_factor"		);		// set switch factor
 	CMD1(CCC_JumpToLevel,		"jump_to_level"			);
+
+	CMD1(CCC_TimeFactor,		"time_factor");	
 #ifdef ALIFE_SUPPORT_CONSOLE_COMMANDS
 	CMD1(CCC_ALifeScheduleMin,	"al_schedule_min"		);		// set min schedule
 	CMD1(CCC_ALifeScheduleMax,	"al_schedule_max"		);		// set max schedule

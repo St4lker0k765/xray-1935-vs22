@@ -135,6 +135,18 @@ public:
 	void Initialize							(void);
 	void ShutDown							(void);
 
+	void time_factor(const float& time_factor)
+	{
+		Timer.time_factor(time_factor);
+		TimerGlobal.time_factor(time_factor);
+	}
+
+	IC	const float& time_factor() const
+	{
+		VERIFY(Timer.time_factor() == TimerGlobal.time_factor());
+		return					(Timer.time_factor());
+	}
+
 	// Multi-threading
 	CRITICAL_SECTION	mt_csEnter;
 	CRITICAL_SECTION	mt_csLeave;
