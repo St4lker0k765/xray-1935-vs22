@@ -229,7 +229,7 @@ IDirect3DBaseTexture9*	CRender::texture_load(LPCSTR fRName)
 #ifdef _EDITOR
 	ELog.Msg(mtError,"Can't find texture '%s'",fname);
 #else
-	Debug.fatal(DEBUG_INFO, "Can't find texture '%s'",fname);
+	Msg("Can't find texture '%s'",fname);
 #endif
 	return 0;
 
