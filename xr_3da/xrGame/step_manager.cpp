@@ -164,7 +164,7 @@ Fvector	CStepManager::get_foot_position(ELegType leg_type)
 
 	Fmatrix global_transform;
 	global_transform.set(m_object->XFORM());
-	global_transform.mulB(bone_transform);
+	global_transform.mulB_43(bone_transform);
 
 	return global_transform.c;
 }
@@ -175,8 +175,8 @@ void CStepManager::reload_foot_bones()
 	if(ini&&ini->section_exist("foot_bones")){
 
 		CInifile::Sect& data = ini->r_section("foot_bones");
-		for (CInifile::SectIt I=data.begin(); I!=data.end(); I++){
-			CInifile::Item& item	= *I;
+		for (CInifile::SectCIt I=data.Data.begin(); I!=data.Data.end(); I++){
+			const CInifile::Item& item	= *I;
 
 			u16 index = PKinematics(m_object->Visual())->LL_BoneID(*item.second);
 			VERIFY3(index != BI_NONE, "foot bone not found", *item.second);

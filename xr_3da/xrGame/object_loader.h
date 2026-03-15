@@ -129,13 +129,13 @@ struct CLoader {
 
 	IC	static void load_data(shared_str &data, M &stream, const P &p)
 	{
-		stream.r_stringZ				(data);
+		stream.r_stringZ(data, sizeof(data));
 	}
 
 	IC	static void load_data(xr_string &data, M &stream, const P &p)
 	{
 		shared_str						S;
-		stream.r_stringZ				(S);
+		stream.r_stringZ(S, sizeof(S));
 		data							= *S;
 	}
 

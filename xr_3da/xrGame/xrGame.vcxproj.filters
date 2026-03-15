@@ -1459,9 +1459,6 @@
     <Filter Include="Core\Common\Profiler">
       <UniqueIdentifier>{77e005d4-d9b0-49b9-bef2-fc2d706e4ca7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Common\IntrusivePtr">
-      <UniqueIdentifier>{34c893a6-e408-461b-9cf3-269dfcbdcf73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Common\SmartCast">
       <UniqueIdentifier>{e43b603c-8968-4c6a-8262-699c9b95d08d}</UniqueIdentifier>
     </Filter>
@@ -6841,12 +6838,6 @@
     </ClInclude>
     <ClInclude Include="profiler_inline.h">
       <Filter>Core\Common\Profiler</Filter>
-    </ClInclude>
-    <ClInclude Include="intrusive_ptr.h">
-      <Filter>Core\Common\IntrusivePtr</Filter>
-    </ClInclude>
-    <ClInclude Include="intrusive_ptr_inline.h">
-      <Filter>Core\Common\IntrusivePtr</Filter>
     </ClInclude>
     <ClInclude Include="smart_cast.h">
       <Filter>Core\Common\SmartCast</Filter>

@@ -688,7 +688,7 @@ void	IPureClient::net_Syncronize	()
 {
 	net_Syncronised		= FALSE;
 	net_DeltaArray.clear();
-	_beginthread		(sync_thread,0,this);
+	thread_spawn(sync_thread, "network-time-sync", 0, this);
 }
 
 void	IPureClient::ClearStatistic()

@@ -45,7 +45,7 @@ public:
 		tFileStream.r				(&m_tNextSurgeTime,	sizeof(m_tNextSurgeTime));
 		m_fTimeFactor				= tFileStream.r_float();
 		m_fNormalTimeFactor			= tFileStream.r_float();
-		m_qwStartProcessorCycle		= CPU::GetCycleCount();
+		m_qwStartProcessorCycle		= CPU::GetCLK();
 		m_dwStartTime				= Device.TimerAsync();
 	};
 	

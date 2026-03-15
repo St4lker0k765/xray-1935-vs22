@@ -116,7 +116,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 /*	case GE_BUY: //cs & dm
 		{
 			string64			i_name;
-			P.r_stringZ			(i_name);
+			P.r_stringZ(i_name, sizeof(i_name));
 			CSE_Abstract*		E			= game->get_entity_from_eid	(destination);
 			if (E) {
 				xrClientData*		C			= E->owner;

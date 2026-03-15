@@ -41,6 +41,11 @@ typedef const char*			pcstr;
 
 #define flt_max			type_max(float)
 #define flt_min			type_min(float)
+//#define FLT_MAX         3.402823466e+38F        /* max value */
+//#define FLT_MIN         1.175494351e-38F        /* min positive value */
+#define FLT_MAX			flt_max
+#define FLT_MIN			flt_min
+
 #define flt_zero		type_zero(float)
 #define flt_eps			type_epsilon(float)
 
@@ -59,6 +64,6 @@ typedef	char	string1024	[1024];
 typedef	char	string2048	[2048];
 typedef	char	string4096	[4096];
 
-typedef	char	string_path	[_MAX_PATH];
+typedef	char	string_path	[2*_MAX_PATH];
 
 #endif

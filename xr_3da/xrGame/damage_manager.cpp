@@ -50,7 +50,7 @@ void CDamageManager::reload				(LPCSTR section)
 
 	if (pSettings->line_exist(section,"damage")) {
 		CInifile::Sect					&damages = pSettings->r_section(pSettings->r_string(section,"damage"));
-		for (CInifile::SectIt i=damages.begin(); damages.end() != i; ++i) {
+		for (CInifile::SectCIt i=damages.Data.begin(); damages.Data.end() != i; ++i) {
 			if (!xr_strcmp(*(*i).first,"default"))
 			{
                 m_default_hit_factor	= (float)atof(_GetItem(*(*i).second,0,buffer));

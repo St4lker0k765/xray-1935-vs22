@@ -113,7 +113,7 @@ namespace PS
 		virtual				~CParticleGroup	();
 		virtual void	 	OnFrame			(u32 dt);
 
-		virtual void		Copy			(IRender_Visual* pFrom) {Debug.fatal("Can't duplicate particle system - NOT IMPLEMENTED");}
+		virtual void		Copy			(IRender_Visual* pFrom) {FATAL("Can't duplicate particle system - NOT IMPLEMENTED");}
 
 		virtual void 		OnDeviceCreate	();
 		virtual void 		OnDeviceDestroy	();

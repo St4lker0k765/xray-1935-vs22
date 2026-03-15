@@ -26,10 +26,10 @@ Flags32		psAI_Flags	= {aiLua};
 void CCustomMonster::SAnimState::Create(CSkeletonAnimated* K, LPCSTR base)
 {
 	char	buf[128];
-	fwd		= K->ID_Cycle_Safe(strconcat(buf,base,"_fwd"));
-	back	= K->ID_Cycle_Safe(strconcat(buf,base,"_back"));
-	ls		= K->ID_Cycle_Safe(strconcat(buf,base,"_ls"));
-	rs		= K->ID_Cycle_Safe(strconcat(buf,base,"_rs"));
+	fwd		= K->ID_Cycle_Safe(strconcat(sizeof(buf), buf,base,"_fwd"));
+	back	= K->ID_Cycle_Safe(strconcat(sizeof(buf), buf,base,"_back"));
+	ls		= K->ID_Cycle_Safe(strconcat(sizeof(buf), buf,base,"_ls"));
+	rs		= K->ID_Cycle_Safe(strconcat(sizeof(buf), buf,base,"_rs"));
 }
 
 //void __stdcall CCustomMonster::TorsoSpinCallback(CBoneInstance* B)
@@ -403,7 +403,7 @@ void CCustomMonster::UpdateCL	()
 		if (use_model_pitch()) {
 			Fmatrix M;
 			M.setXYZi (NET_Last.o_torso.pitch, 0.0f, 0.0f);
-			XFORM().mulB(M);
+			XFORM().mulB_43(M);
 		}
 	}
 }

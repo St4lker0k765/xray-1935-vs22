@@ -223,14 +223,14 @@ public:
 		A.mul			(s);
 	}
 
-	IC void		r_stringZ		( LPSTR S )
+	IC void		r_stringZ(LPSTR S , sizeof(LPSTR S ))
 	{
 		LPCSTR	data	= LPCSTR(&B.data[r_pos]);
 		size_t	len		= xr_strlen(data);
 		r		(S,(u32)len+1);
 	}
     
-	void 		r_stringZ		(shared_str& dest)
+	void 		r_stringZ(shared_str& dest, sizeof(shared_str& dest))
     {
         dest		= LPCSTR(&B.data[r_pos]);
         r_advance	(dest.size()+1);

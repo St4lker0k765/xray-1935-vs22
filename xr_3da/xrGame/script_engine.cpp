@@ -63,14 +63,14 @@ void CScriptEngine::lua_error			(CLuaVirtualMachine *L)
 {
 	print_error				(L,LUA_ERRRUN);
 
-	Debug.fatal				("LUA error: %s",lua_tostring(L,-1));
+	Debug.fatal(DEBUG_INFO, "LUA error: %s",lua_tostring(L,-1));
 }
 
 void lua_cast_failed(CLuaVirtualMachine *L, LUABIND_TYPE_INFO info)
 {
 //	print_output			(L,ai().script_engine().current_thread(),0);
 	ai().script_engine().print_error	(L,LUA_ERRRUN);
-	Debug.fatal				("LUA error: cannot cast lua value to %s",info->name());
+	Debug.fatal(DEBUG_INFO, "LUA error: cannot cast lua value to %s",info->name());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -421,7 +421,7 @@ void CScriptEngine::load_common_scripts()
     return;
 #endif
 
-    char S[256];
+    string_path S;
     FS.update_path(S, "$game_data$", "script.ltx");
     CInifile* l_tpIniFile = xr_new<CInifile>(S);
     R_ASSERT(l_tpIniFile);
@@ -457,7 +457,7 @@ void CScriptEngine::load_common_scripts()
 
 void CScriptEngine::process	()
 {
-	string256					S,S1;
+	string_path					S,S1;
 	for (u32 i=0, n=m_load_queue.size(); !m_load_queue.empty(); ++i) {
 		LPSTR					S2 = m_load_queue.front();
 		m_load_queue.pop_front	();
@@ -465,7 +465,7 @@ void CScriptEngine::process	()
 		if ((!*S2 && !m_global_script_loaded) || ((m_reload_modules && (i < n)) || !namespace_loaded(S2))) {
 			if (!*S2)
 				m_global_script_loaded = true;
-			FS.update_path		(S,"$game_scripts$",strconcat(S1,S2,".script"));
+			FS.update_path		(S,"$game_scripts$",strconcat(sizeof(S1), S1,S2,".script"));
 			Msg					("* loading script %s",S1);
 			load_file			(S,true);
 		}
@@ -494,7 +494,7 @@ void CScriptEngine::load_class_registrators		()
 #ifdef DBG_DISABLE_SCRIPTS
 	return;
 #endif
-	string256		S;
+	string_path		S;
 	FS.update_path	(S,"$game_data$","script.ltx");
 	CInifile		*l_tpIniFile = xr_new<CInifile>(S);
 	R_ASSERT		(l_tpIniFile);

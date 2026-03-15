@@ -114,7 +114,7 @@ void CSE_ALifeTraderAbstract::STATE_Read	(NET_Packet &tNetPacket, u16 size)
 
 SPECIFIC_CHARACTER_INDEX CSE_ALifeTraderAbstract::specific_character()
 {
-	if (GameID() != GAME_SINGLE) return m_iSpecificCharacter;
+	if (g_pGameLevel && Level().game && (GameID() != GAME_SINGLE)) return m_iSpecificCharacter;
 
 	if(NO_SPECIFIC_CHARACTER != m_iSpecificCharacter) 
 		return m_iSpecificCharacter;
@@ -246,7 +246,7 @@ PROFILE_INDEX CSE_ALifeTraderAbstract::character_profile()
 			if(NO_PROFILE == m_iCharacterProfile)
 			{
 				CSE_ALifeObject* O = smart_cast<CSE_ALifeObject*>(base()); VERIFY(O);
-				Debug.fatal("wrong profile id %s, for %s at level %s", profile_id, O->name_replace(),ai().game_graph().header().level(ai().game_graph().vertex(O->m_tGraphID)->level_id()).name());
+				Debug.fatal(DEBUG_INFO, "wrong profile id %s, for %s at level %s",profile_id, O->name_replace(),ai().game_graph().header().level(ai().game_graph().vertex(O->m_tGraphID)->level_id()).name());
 			}
 		}
 	}

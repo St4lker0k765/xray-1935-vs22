@@ -50,7 +50,10 @@ public:
 	void				clean			();
 	void				dump			();
 	u32					stat_economy	();
-	~smem_container		();
+#ifdef PROFILE_CRITICAL_SECTIONS
+						smem_container	():cs(MUTEX_PROFILE_ID(smem_container)){}
+#endif // PROFILE_CRITICAL_SECTIONS
+						~smem_container	();
 };
 XRCORE_API	extern		smem_container*	g_pSharedMemoryContainer;
 
@@ -83,11 +86,12 @@ public:
 	T*					operator*	() const						{	return p_?(T*)p_->value:0;									}
 	bool				operator!	() const						{	return p_ == 0;												}
 	T&					operator[]	(size_t id)						{	return ((T*)(p_->value))[id];								}
-
+const T&				operator[]	(size_t id)	const				{	return ((T*)(p_->value))[id];								}
 	// misc func
 	u32					size		()								{	if (0==p_) return 0; else return p_->dwLength/sizeof(T);	}
 	void				swap		(ref_smem<T> & rhs)				{	smem_value* tmp = p_; p_ = rhs.p_; rhs.p_ = tmp;			}
 	bool				equal		(ref_smem<T> & rhs)				{	return p_ == rhs.p_;										}
+	u32					ref_count	()								{	if (0==p_) return 0; else return p_->dwReference;			}
 };
 
 // res_ptr == res_ptr

@@ -938,7 +938,7 @@ void CUIMainIngameWnd::RenderQuickInfos()
 		if (fuzzyShowInfo>0.5f)
 		{
 			UIStaticQuickHelp.SetTextColor(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
-//			strconcat(text, object_name, ": ");
+//			strconcat   (sizeof(text), text,object_name,": ");
 			strcpy(text, m_pActor->GetDefaultActionForObject());
 			UIStaticQuickHelp.SetText(text);
 		}

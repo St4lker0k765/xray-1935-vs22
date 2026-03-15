@@ -20,10 +20,10 @@ public:
 		string256	S1, S2;
 		CMotionDef	*tpMotionDef;
 		for (int i=0; ; ++i)
-			if (0 != (tpMotionDef = tpKinematics->ID_Cycle_Safe(strconcat(S1,caBaseName,itoa(i,S2,10)))))
+			if (0 != (tpMotionDef = tpKinematics->ID_Cycle_Safe(strconcat(sizeof(S1), S1,caBaseName,itoa(i,S2,10)))))
 				A.push_back(tpMotionDef);
 			else
-				if (0 != (tpMotionDef = tpKinematics->ID_FX_Safe(strconcat(S1,caBaseName,itoa(i,S2,10)))))
+				if (0 != (tpMotionDef = tpKinematics->ID_FX_Safe(strconcat(sizeof(S1), S1,caBaseName,itoa(i,S2,10)))))
 					A.push_back(tpMotionDef);
 				else
 					break;
@@ -42,7 +42,7 @@ public:
 		for (; caBaseNames[j]; ++j);
 		A.resize	(j);
 		for (int i=0; i<j; ++i)
-			A[i] = tpKinematics->ID_Cycle_Safe(strconcat(S,caBaseName,caBaseNames[i]));
+			A[i] = tpKinematics->ID_Cycle_Safe(strconcat(sizeof(S), S,caBaseName,caBaseNames[i]));
 	}
 };
 
@@ -58,6 +58,6 @@ public:
 		for (; caBaseNames[j]; ++j);
 		A.resize	(j);
 		for (int i=0; i<j; ++i)
-			A[i].Load	(tpKinematics,strconcat(S,caBaseName,caBaseNames[i]));
+			A[i].Load	(tpKinematics,strconcat(sizeof(S), S,caBaseName,caBaseNames[i]));
 	}
 };

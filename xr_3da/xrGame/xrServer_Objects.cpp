@@ -309,7 +309,7 @@ void CSE_Target_CS_Cask::UPDATE_Write		(NET_Packet	&tNetPacket)
 
 void CSE_Target_CS_Cask::STATE_Read			(NET_Packet	&tNetPacket, u16 size)
 {
-	tNetPacket.r_stringZ		(s_Model);
+	tNetPacket.r_stringZ			(s_Model);
 }
 
 void CSE_Target_CS_Cask::STATE_Write		(NET_Packet	&tNetPacket)
@@ -343,7 +343,7 @@ void CSE_Target_CS::UPDATE_Write			(NET_Packet	&tNetPacket)
 
 void CSE_Target_CS::STATE_Read				(NET_Packet	&tNetPacket, u16 size)
 {
-	tNetPacket.r_stringZ		(s_Model);
+	tNetPacket.r_stringZ			(s_Model);
 }
 
 void CSE_Target_CS::STATE_Write				(NET_Packet	&tNetPacket)

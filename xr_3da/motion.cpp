@@ -43,7 +43,7 @@ void CCustomMotion::Save(IWriter& F)
 
 bool CCustomMotion::Load(IReader& F)
 {
-	F.r_stringZ	(name);
+	F.r_stringZ(name);
 	iFrameStart	= F.r_u32();
 	iFrameEnd	= F.r_u32();
 	fFPS		= F.r_float();
@@ -390,7 +390,7 @@ bool CSMotion::Load(IReader& F)
             bone_mots.resize(F.r_u32());
             string64 	buf;
             for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
-                F.r_stringZ		(buf);
+                F.r_stringZ		(buf,sizeof(buf));
                 bm_it->SetName	(buf);
                 bm_it->m_Flags.assign((u8)F.r_u32());
                 for (int ch=0; ch<ctMaxChannel; ch++){
@@ -409,7 +409,7 @@ bool CSMotion::Load(IReader& F)
             bone_mots.resize(F.r_u16());
             string64 	buf;
             for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
-                F.r_stringZ		(buf);
+                F.r_stringZ		(buf,sizeof(buf));
                 bm_it->SetName	(buf);
                 bm_it->m_Flags.assign(F.r_u8());
                 for (int ch=0; ch<ctMaxChannel; ch++){

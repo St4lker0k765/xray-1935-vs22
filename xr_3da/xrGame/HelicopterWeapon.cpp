@@ -8,7 +8,7 @@ CHelicopter::BoneMGunCallbackX(CBoneInstance *B)
 {
 	CHelicopter	* P = static_cast<CHelicopter*>(B->Callback_Param);
 	Fmatrix rX;		rX.rotateX		(P->m_cur_x_rot);
-	B->mTransform.mulB(rX);
+	B->mTransform.mulB_43(rX);
 }
 
 void 
@@ -16,7 +16,7 @@ CHelicopter::BoneMGunCallbackY(CBoneInstance *B)
 {
 	CHelicopter	* P = static_cast<CHelicopter*>(B->Callback_Param);
 	Fmatrix rY;		rY.rotateY		(P->m_cur_y_rot);
-	B->mTransform.mulB(rY);
+	B->mTransform.mulB_43(rY);
 }
 
 

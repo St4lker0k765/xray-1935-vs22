@@ -342,8 +342,8 @@ const Fmatrix CScriptMonster::GetUpdatedMatrix(shared_str caBoneName, const Fvec
 
 	if (xr_strlen(caBoneName)) {
 		CBoneInstance	&l_tBoneInstance = smart_cast<CKinematics*>(Visual())->LL_GetBoneInstance(smart_cast<CKinematics*>(Visual())->LL_BoneID(caBoneName));
-		l_tMatrix.mulA	(l_tBoneInstance.mTransform);
-		l_tMatrix.mulA	(XFORM());
+		l_tMatrix.mulA_43	(l_tBoneInstance.mTransform);
+		l_tMatrix.mulA_43	(XFORM());
 	}
 
 	return			(l_tMatrix);
@@ -449,15 +449,15 @@ bool CScriptMonster::bfAssignMovement(CScriptEntityAction *tpEntityAction)
 			l_tpMovementManager->set_path_type(MovementManager::ePathTypeLevelPath);
 			l_tpMovementManager->set_dest_position(l_tMovementAction.m_tDestinationPosition);
 			
-//			u64					start = CPU::GetCycleCount();
+//			u64					start = CPU::GetCLK();
 			u32					vertex_id;
 			vertex_id			= ai().level_graph().vertex(level_vertex_id(),l_tMovementAction.m_tDestinationPosition);
 			if (!ai().level_graph().valid_vertex_id(vertex_id)) {
 				vertex_id		= ai().level_graph().check_position_in_direction(level_vertex_id(),Position(),l_tMovementAction.m_tDestinationPosition);
 			}
-//			u64					stop = CPU::GetCycleCount();
+//			u64					stop = CPU::GetCLK();
 #ifdef _DEBUG
-//			Msg					("%6d Searching for node for script object %s (%.5f seconds)",Level().timeServer(),*cName(),float(s64(stop - start))*CPU::cycles2seconds);
+//			Msg					("%6d Searching for node for script object %s (%.5f seconds)",Level().timeServer(),*cName(),float(s64(stop - start))*CPU::clk_to_seconds);
 #endif
 			VERIFY				(ai().level_graph().valid_vertex_id(vertex_id));
 			l_tpMovementManager->CLevelPathManager::set_dest_vertex(vertex_id);

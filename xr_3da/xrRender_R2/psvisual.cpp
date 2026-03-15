@@ -23,7 +23,7 @@ CPSVisual::~CPSVisual()
 //----------------------------------------------------
 void CPSVisual::Copy(IRender_Visual* pFrom)
 {
-	Debug.fatal("Can't duplicate particle system - NOT IMPLEMENTED");
+	FATAL("Can't duplicate particle system - NOT IMPLEMENTED");
 }
 //----------------------------------------------------
 //////////////////////////////////////////////////

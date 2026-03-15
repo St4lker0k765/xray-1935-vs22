@@ -25,7 +25,7 @@ void CLAItem::InitDefault(){
 void CLAItem::Load(IReader& F)
 {
 	R_ASSERT(F.find_chunk(CHUNK_ITEM_COMMON));
-    F.r_stringZ		(cName);
+    F.r_stringZ(cName);
     fFPS			= F.r_float();
     iFrameCount		= F.r_u32();
 
@@ -190,7 +190,7 @@ void ELightAnimLibrary::Unload()
 
 void ELightAnimLibrary::Load()
 {
-	string256 fn;
+	string_path fn;
     FS.update_path(fn,_game_data_,"lanims.xr");
 	IReader* fs=FS.r_open(fn);
     if (fs){
@@ -223,7 +223,7 @@ void ELightAnimLibrary::Save()
     }
 	F.close_chunk	();
 
-	string256 fn;
+	string_path fn;
     FS.update_path(fn,_game_data_,"lanims.xr");
     F.save_to(fn);
 }

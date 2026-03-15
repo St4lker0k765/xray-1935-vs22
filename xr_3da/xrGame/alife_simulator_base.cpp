@@ -301,7 +301,7 @@ void CALifeSimulatorBase::register_object	(CSE_ALifeDynamicObject *object, bool 
 //			if (psAI_Flags.test(aiALife)) {
 				Msg						("[LSS] Specified item [%s][%d] is already attached to the specified object [%s][%d]",item->base()->s_name_replace,item->base()->ID,II->s_name_replace,II->ID);
 //			}
-			Debug.fatal					("[LSS] Cannot recover from the previous error!");
+			FATAL("[LSS] Cannot recover from the previous error!");
 		}
 #endif
 		II->children.push_back			(item->base()->ID);

@@ -145,6 +145,10 @@ void CPda::feel_touch_delete(CObject* O)
 			{
 				CPda* pPda = (*it);
 				//if(O == pPda->H_Parent())
+				if (pPda == nullptr)
+				{
+					return;
+				}
 				if(O->ID() == pPda->GetOriginalOwnerID())
 		//		if(!pPda->GetOriginalOwner())
 				{

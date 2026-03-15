@@ -26,8 +26,8 @@ enum	{
 
 IC u32 TimeGlobal(CTimer* timer)
 {
-	u64	qTime	= timer->GetElapsed_clk();
-	return		u32((qTime*u64(1000))/CPU::cycles_per_second);
+	u64	qTime	= timer->GetElapsed_ticks();
+	return		u32((qTime*u64(1000))/CPU::clk_per_second);
 }
 IC u32 TimerAsync				(CTimer* timer) 
 {

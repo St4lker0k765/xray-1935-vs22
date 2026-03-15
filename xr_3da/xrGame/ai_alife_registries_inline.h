@@ -85,7 +85,7 @@ IC	CSE_ALifeGraphRegistry::_iterator &CSE_ALifeGraphRegistry::next		()
 
 IC	bool CSE_ALifeGraphRegistry::time_over		()
 {
-	return						(CPU::GetCycleCount() - m_start_time > m_max_process_time);
+	return						(CPU::GetCLK() - m_start_time > m_max_process_time);
 }
 
 IC	void CSE_ALifeGraphRegistry::set_process_time(u64 process_time)
@@ -127,7 +127,7 @@ IC	CSE_ALifeScheduleRegistry::_iterator &CSE_ALifeScheduleRegistry::next				()
 
 IC	bool CSE_ALifeScheduleRegistry::time_over		()
 {
-	return						(CPU::GetCycleCount() - m_start_time > m_max_process_time);
+	return						(CPU::GetCLK() - m_start_time > m_max_process_time);
 }
 
 IC	void CSE_ALifeScheduleRegistry::set_process_time(u64 process_time)

@@ -14,7 +14,7 @@ private:
 	{
 		// Allocate
 		VERIFY				(0==list);
-		list				= (T*)		xr_malloc	(granularity*sizeof(T));
+		list				= xr_alloc<T>	(granularity);
 		blocks.push_back	(list);
 
 		// Partition
@@ -50,5 +50,12 @@ public:
 		list			= P;
 		P				= NULL;
 	}
+    void				clear			()
+    {
+    	list			= 0;
+		for (u32 b=0; b<blocks.size(); b++)
+			xr_free	(blocks[b]);
+        blocks.clear	();
+    }
 };
 #endif

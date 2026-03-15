@@ -34,7 +34,7 @@ SHARED_HUD_INFO::SHARED_HUD_INFO(LPCSTR section, CHudItem* pHudItem)
 		LPCSTR fire_bone			= pSettings->r_string					(section,"fire_bone");
 		iFireBone					= smart_cast<CKinematics*>(pVisual)->LL_BoneID	(fire_bone);
 		if (iFireBone>=smart_cast<CKinematics*>(pVisual)->LL_BoneCount())	
-			Debug.fatal	("There is no '%s' bone for weapon '%s'.",fire_bone, section);
+			Debug.fatal(DEBUG_INFO, "There is no '%s' bone for weapon '%s'.",fire_bone, section);
 
 		vFirePoint					= pSettings->r_fvector3					(section,"fire_point");
 	}

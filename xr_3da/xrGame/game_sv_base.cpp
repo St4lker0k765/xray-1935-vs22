@@ -109,7 +109,7 @@ xr_vector<u16>*		game_sv_GameState::get_children				(ClientID id)
 s32					game_sv_GameState::get_option_i				(LPCSTR lst, LPCSTR name, s32 def)
 {
 	string64		op;
-	strconcat		(op,"/",name,"=");
+	strconcat(sizeof(op), op,"/",name,"=");
 	if (strstr(lst,op))	return atoi	(strstr(lst,op)+xr_strlen(op));
 	else				return def;
 }
@@ -119,7 +119,7 @@ string64&			game_sv_GameState::get_option_s				(LPCSTR lst, LPCSTR name, LPCSTR 
 	static string64	ret;
 
 	string64		op;
-	strconcat		(op,"/",name,"=");
+	strconcat(sizeof(op), op,"/",name,"=");
 	LPCSTR			start	= strstr(lst,op);
 	if (start)		
 	{
@@ -238,7 +238,7 @@ void game_sv_GameState::OnPlayerDisconnect		(ClientID /**id_who/**/, LPSTR, u16 
 
 void game_sv_GameState::Create					(shared_str &options)
 {
-	string256	fn_game;
+	string_path	fn_game;
 	if (FS.exist(fn_game, "$level$", "level.game")) 
 	{
 		IReader *F = FS.r_open	(fn_game);
@@ -275,7 +275,7 @@ void game_sv_GameState::Create					(shared_str &options)
 
 	// loading scripts
 	ai().script_engine().remove_script_process("game");
-	string256					S;
+	string_path					S;
 	FS.update_path				(S,"$game_data$","script.ltx");
 	CInifile					*l_tpIniFile = xr_new<CInifile>(S);
 	R_ASSERT					(l_tpIniFile);
@@ -373,7 +373,7 @@ void game_sv_GameState::Update		()
 
 game_sv_GameState::game_sv_GameState()
 {
-/*	m_qwStartProcessorTime		= CPU::GetCycleCount();
+/*	m_qwStartProcessorTime		= CPU::GetCLK();
 	m_qwStartGameTime			= 12*60*60*1000;
 	m_fTimeFactor				= pSettings->r_float("alife","time_factor");
 */
@@ -390,7 +390,7 @@ game_sv_GameState::~game_sv_GameState()
 /*
 ALife::_TIME_ID game_sv_GameState::GetGameTime()
 {
-	return			(m_qwStartGameTime + iFloor(m_fTimeFactor*float(CPU::GetCycleCount() - m_qwStartProcessorTime)*CPU::cycles2milisec));
+	return			(m_qwStartGameTime + iFloor(m_fTimeFactor*float(CPU::GetCLK() - m_qwStartProcessorTime)*CPU::cycles2milisec));
 }
 
 float game_sv_GameState::GetGameTimeFactor()
@@ -401,7 +401,7 @@ float game_sv_GameState::GetGameTimeFactor()
 void game_sv_GameState::SetGameTimeFactor (const float fTimeFactor)
 {
 	m_qwStartGameTime			= GetGameTime();
-	m_qwStartProcessorTime		= CPU::GetCycleCount();
+	m_qwStartProcessorTime		= CPU::GetCLK();
 	m_fTimeFactor				= fTimeFactor;
 }
 

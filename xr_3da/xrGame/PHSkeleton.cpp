@@ -200,7 +200,7 @@ void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po)
 	PHNETSTATE_I i=saved_bones.begin(),e=saved_bones.end();
 	for(u16 bone=0;e!=i;i++,bone++)
 	{
-		R_ASSERT(bone<obj->PHGetSyncItemsNumber());
+		//R_ASSERT(bone<obj->PHGetSyncItemsNumber());
 		obj->PHGetSyncItem(bone)->set_State(*i);
 	}
 	saved_bones.clear();

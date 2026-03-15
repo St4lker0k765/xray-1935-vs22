@@ -13,7 +13,12 @@
 #include <d3dx9.h>
 #pragma warning(default:4995)
 
+#include "x_ray.h"
+
 ENGINE_API CRenderDevice Device;
+ENGINE_API BOOL g_bRendering = FALSE; 
+
+BOOL g_bLoaded = FALSE;
 
 BOOL CRenderDevice::Begin	()
 {
@@ -36,8 +41,11 @@ BOOL CRenderDevice::Begin	()
 
 	CHK_DX					(HW.pDevice->BeginScene());
 	RCache.OnFrameBegin		();
+	RCache.set_CullMode		(CULL_CW);
+	RCache.set_CullMode		(CULL_CCW);
 	if (HW.Caps.SceneMode)	overdrawBegin	();
 	FPU::m24r	();
+	g_bRendering = 	TRUE;
 	return		TRUE;
 }
 
@@ -61,7 +69,7 @@ void CRenderDevice::End		(void)
 	if (dwPrecacheFrame)
 	{
 		dwPrecacheFrame	--;
-		CHK_DX			(HW.pDevice->Clear(0,0,D3DCLEAR_TARGET,D3DCOLOR_ARGB(0,0,0,0),1,0));
+//.		CHK_DX			(HW.pDevice->Clear(0,0,D3DCLEAR_TARGET,D3DCOLOR_ARGB(0,0,0,0),1,0));
 		if (0==dwPrecacheFrame)
 		{
 			Memory.mem_compact		();
@@ -69,6 +77,7 @@ void CRenderDevice::End		(void)
 		}
 	}
 
+	g_bRendering = 	FALSE;
 	// end scene
 	RCache.OnFrameEnd	();
     CHK_DX(HW.pDevice->EndScene());
@@ -78,38 +87,9 @@ void CRenderDevice::End		(void)
 	R_ASSERT2		(SUCCEEDED(_hr),	"Presentation failed. Driver upgrade needed?");
 }
 
-#pragma pack(push,8)
-struct THREAD_NAME
-{
-	DWORD	dwType;
-	LPCSTR	szName;
-	DWORD	dwThreadID;
-	DWORD	dwFlags;
-};
-
-void	SetThreadName(LPCSTR name)
-{
-	THREAD_NAME		tn;
-	tn.dwType		= 0x1000;
-	tn.szName		= name;
-	tn.dwThreadID	= DWORD(-1);
-	tn.dwFlags		= 0;
-	__try
-	{
-		RaiseException(0x406D1388,0,sizeof(tn)/sizeof(DWORD),(DWORD*)&tn);
-	}
-	__except(EXCEPTION_CONTINUE_EXECUTION)
-	{
-	}
-}
-
-#pragma pack(pop)
-
 
 volatile u32	mt_Thread_marker		= 0x12345678;
-void __cdecl	mt_Thread	(void *ptr)	{
-	SetThreadName			("X-RAY Secondary thread");
-
+void 			mt_Thread	(void *ptr)	{
 	while (true) {
 		// waiting for Device permission to execute
 		EnterCriticalSection	(&Device.mt_csEnter);
@@ -141,11 +121,11 @@ void CRenderDevice::PreCache	(u32 amount)
 
 void CRenderDevice::Run			()
 {
-    MSG         msg;
-    BOOL		bGotMsg;
-
+	g_bLoaded		= FALSE;
+	MSG				msg;
+    BOOL			bGotMsg;
 	Log				("Starting engine...");
-	SetThreadName	("X-RAY Primary thread");
+	thread_name		("X-RAY Primary thread");
 
 	// Startup timers and calculate timer delta
 	dwTimeGlobal				= 0;
@@ -163,12 +143,14 @@ void CRenderDevice::Run			()
 	InitializeCriticalSection	(&mt_csLeave);
 	EnterCriticalSection		(&mt_csEnter);
 	mt_bMustExit				= FALSE;
-    _beginthread				( mt_Thread, 0, (void *) 0  );
+	thread_spawn				(mt_Thread,"X-RAY Secondary thread",0,0);
 
 	// Message cycle
     PeekMessage					( &msg, NULL, 0U, 0U, PM_NOREMOVE );
 
 	seqAppCycleStart.Process	(rp_AppCycleStart);
+
+	CHK_DX(HW.pDevice->Clear(0,0,D3DCLEAR_TARGET,D3DCOLOR_XRGB(0,0,0),1,0));
 
 	while( WM_QUIT != msg.message  )
     {
@@ -212,12 +194,12 @@ void CRenderDevice::Run			()
 				if (bActive)							{
 					if (Begin())				{
 						seqRender.Process					(rp_Render);
-						Statistic.Show						();
+							Statistic.Show						();
 						End									();
 					}
 				}
 				Statistic.RenderTOTAL_Real.End			();
-				Statistic.RenderTOTAL_Real.FrameEnd		();
+				Statistic.RenderTOTAL_Real.FrameEnd	();
 				Statistic.RenderTOTAL.accum	= Statistic.RenderTOTAL_Real.accum;
 
 				// *** Suspend threads
@@ -229,12 +211,12 @@ void CRenderDevice::Run			()
 				// Ensure, that second thread gets chance to execute anyway
 				if (dwFrame!=mt_Thread_marker)			seqFrameMT.Process	(rp_Frame);
 			} else {
-				Sleep	(100);
+				Sleep		(100);
 			}
+			if (!bActive)	Sleep	(1);
         }
     }
 
-	seqAppCycleEnd.Process	(rp_AppCycleEnd);
 
 	// Stop Balance-Thread
 	mt_bMustExit = TRUE;
@@ -248,6 +230,7 @@ void CRenderDevice::FrameMove()
 {
 	dwFrame			++;
 
+	dwTimeContinual	= TimerMM.GetElapsed_ms	();
 	if (psDeviceFlags.test(rsConstantFPS))	{
 		// 20ms = 50fps
 		fTimeDelta		=	0.020f;			
@@ -258,13 +241,14 @@ void CRenderDevice::FrameMove()
 		// Timer
 		float fPreviousFrameTime = Timer.GetElapsed_sec(); Timer.Start();	// previous frame
 		fTimeDelta = 0.1f * fTimeDelta + 0.9f*fPreviousFrameTime;			// smooth random system activity - worst case ~7% error
-		if (fTimeDelta>.06666f) fTimeDelta=.06666f;							// limit to 15fps minimum
+		if (fTimeDelta>.1f) fTimeDelta=.1f;									// limit to 15fps minimum
 
-		u64	qTime		= TimerGlobal.GetElapsed_clk();
-		fTimeGlobal		= float(qTime)*CPU::cycles2seconds;
 
-		dwTimeGlobal	= u32((qTime*u64(1000))/CPU::cycles_per_second);
-		dwTimeDelta		= iFloor(fTimeDelta*1000.f+0.5f);
+//		u64	qTime		= TimerGlobal.GetElapsed_clk();
+		fTimeGlobal		= TimerGlobal.GetElapsed_sec(); //float(qTime)*CPU::cycles2seconds;
+		u32	_old_global	= dwTimeGlobal;
+		dwTimeGlobal	= TimerGlobal.GetElapsed_ms	();	//u32((qTime*u64(1000))/CPU::cycles_per_second);
+		dwTimeDelta		= dwTimeGlobal-_old_global;
 	}
 
 	// Frame move

@@ -102,7 +102,7 @@ bool CAI_Stalker::bfAssignWatch(CScriptEntityAction *tpEntityAction)
 				Fmatrix			l_tMatrix;
 
 				l_tMatrix		= l_tBoneInstance.mTransform;
-				l_tMatrix.mulA	(l_tWatchAction.m_tpObjectToWatch->XFORM());
+				l_tMatrix.mulA_43	(l_tWatchAction.m_tpObjectToWatch->XFORM());
 
 				l_tWatchAction.m_tWatchVector	= l_tMatrix.c;
 			}

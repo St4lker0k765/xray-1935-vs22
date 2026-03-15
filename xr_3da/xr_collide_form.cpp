@@ -36,10 +36,10 @@ BOOL CCF_Polygonal::LoadModel( CInifile* ini, const char *section )
 	R_ASSERT			(section);
 
 	// Locate file
-	string256			full_path;
+	string_path			full_path;
 	LPCSTR				N = ini->r_string(section,"cform");
 	if (!FS.exist(full_path, "$level$", N)) {
-		Debug.fatal("Can't find cform file '%s'.",N);
+		Debug.fatal(DEBUG_INFO, "Can't find cform file '%s'.",N);
 	}
 
 	// Actual load
@@ -287,7 +287,7 @@ CCF_Rigid::CCF_Rigid(CObject* O) : ICollisionForm(O,cftObject)
 			bv_box.set		(pV->vis.box);
 			bv_box.getsphere(bv_sphere.P,bv_sphere.R);
 		}else{
-			Debug.fatal("Unsuported visual type.");
+			FATAL("Unsuported visual type.");
 		}
 	}
 }

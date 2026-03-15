@@ -304,13 +304,13 @@ bool CWeaponThrust::Action(s32 cmd, u32 flags) {
 
 void CWeaponThrust::SoundCreate(sound& dest, LPCSTR s_name, int iType, BOOL bCtrlFreq) {
 	string256	name,temp;
-	strconcat	(name,"weapons\\",Name(),"_",s_name,".wav");
+	strconcat(sizeof(name), name,"weapons\\",Name(),"_",s_name,".wav");
 	if (FS.exist(temp,"$game_sounds$",name)) 
 	{
 		dest.create		(TRUE,name,iType);
 		return;
 	}
-	strconcat	(name,"weapons\\","generic_",s_name,".wav");
+	strconcat(sizeof(name), name,"weapons\\","generic_",s_name,".wav");
 	if (FS.exist(temp,"$game_sounds$",name))	
 	{
 		dest.create		(TRUE,name,iType);

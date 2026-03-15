@@ -21,7 +21,7 @@ CSoundPlayer::CSoundPlayer			(CObject *object)
 {
 	VERIFY							(object);
 	m_object						= object;
-	seed							(u32(CPU::GetCycleCount() & 0xffffffff));
+	seed							(u32(CPU::GetCLK() & 0xffffffff));
 	m_sound_prefix					= "";
 }
 
@@ -222,12 +222,12 @@ IC	Fvector CSoundPlayer::compute_sound_point(const CSoundSingle &sound)
 
 CSoundPlayer::CSoundCollection::CSoundCollection	(const CSoundCollectionParams &params)
 {
-	seed								(u32(CPU::GetCycleCount() & 0xffffffff));
+	seed								(u32(CPU::GetCLK() & 0xffffffff));
 	m_sounds.clear						();
 	for (int j=0, N = _GetItemCount(*params.m_sound_prefix); j<N; ++j) {
 		string_path						fn, s, temp;
 		_GetItem						(*params.m_sound_prefix,j,temp);
-		strconcat(s, *params.m_sound_player_prefix, temp);
+		strconcat(sizeof(s), s,*params.m_sound_player_prefix,temp);
 		if (FS.exist(fn,"$game_sounds$",s,".ogg")) {
 			ref_sound					*temp = add(params.m_type,s);
 			if (temp)

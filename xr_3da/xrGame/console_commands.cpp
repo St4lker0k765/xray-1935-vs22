@@ -249,9 +249,9 @@ public:
 						Msg("! invalid vertex number (%d)!",_min(id1,id2));
 					else {
 						Sleep				(1);
-						u64 t1x = CPU::GetCycleCount();
+						u64 t1x = CPU::GetCLK();
 						//						float fValue = ai().m_tpAStar->ffFindMinimalPath(id1,id2);
-						u64 t2x = CPU::GetCycleCount();
+						u64 t2x = CPU::GetCLK();
 						t2x -= t1x;
 						//						Msg("* %7.2f[%d] : %11I64u cycles (%.3f microseconds)",fValue,ai().m_tpAStar->m_tpaNodes.size(),t2x,CPU::cycles2microsec*t2x);
 					}
@@ -614,7 +614,7 @@ public:
 		};
 		//#endif
 		Console->Hide	();
-		char fn[256]; strconcat(fn,args,".xrdemo");
+		char fn[256]; strconcat   (sizeof(fn), fn,args,".xrdemo");
 		g_pGameLevel->Cameras.AddEffector(xr_new<CDemoRecord> (fn));
 	}
 };
@@ -630,7 +630,7 @@ public:
 			  Msg	("! There are no level(s) started");
 		  } else {
 			  Console->Hide				();
-			  char fn[256]; strconcat	(fn,args,".xrdemo");
+			  char fn[256]; strconcat   (sizeof(fn), fn,args,".xrdemo");
 			  g_pGameLevel->Cameras.AddEffector(xr_new<CDemoPlay> (fn,1.0f));
 		  }
 	  }

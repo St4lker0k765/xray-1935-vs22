@@ -82,11 +82,11 @@ void CGamePersistent::OnAppCycleStart()
 extern void clean_game_globals	();
 void CGamePersistent::OnAppCycleEnd	()
 {
-	__super::OnAppCycleEnd		();
-
 	clean_game_globals			();
 
 	GMLib.Unload				();
+
+	__super::OnAppCycleEnd		();
 }
 
 void CGamePersistent::OnFrame		()
@@ -102,7 +102,7 @@ void CGamePersistent::OnFrame		()
 		
 		// Read params
 		string512			params;
-		pDemoFile->r_string	(params);
+		pDemoFile->r_string	(params, sizeof(params));
 		string256			o_server, o_client, o_demo;	u32 o_time;
 		sscanf				(params,"%[^,],%[^,],%[^,],%d",o_server,o_client,o_demo,&o_time);
 

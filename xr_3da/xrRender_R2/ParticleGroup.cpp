@@ -71,8 +71,8 @@ BOOL CPGDef::Load(IReader& F)
 
 #ifdef _EDITOR
     if (F.find_chunk(PGD_CHUNK_OWNER)){
-	    F.r_stringZ	(m_OwnerName);
-	    F.r_stringZ	(m_ModifName);
+	    F.r_stringZ(m_OwnerName, sizeof(m_OwnerName));
+	    F.r_stringZ(m_ModifName, sizeof(m_ModifName));
         F.r			(&m_CreateTime,sizeof(m_CreateTime));
         F.r			(&m_ModifTime,sizeof(m_ModifTime));
     }
@@ -165,7 +165,7 @@ void CParticleGroup::SItem::StartFreeChild(LPCSTR nm, PAPI::Particle& m)
 #ifdef _EDITOR        
         Msg			("!Can't use looped effect '%s' as 'On Birth' child for group.",nm);
 #else
-        Debug.fatal	("Can't use looped effect '%s' as 'On Birth' child for group.",nm);
+        Debug.fatal(DEBUG_INFO, "Can't use looped effect '%s' as 'On Birth' child for group.",nm);
 #endif
     }
 }

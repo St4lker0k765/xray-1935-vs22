@@ -55,7 +55,7 @@ CPatternFunction::~CPatternFunction()
 
 void CPatternFunction::vfLoadEF(LPCSTR caFileName, CEF_Storage *tpAI_DDD)
 {
-	string256		caPath;
+	string_path		caPath;
 	if (!FS.exist(caPath,"$game_ai$",caFileName)) {
 		Msg			("! Evaluation function : File not found \"%s\"",caPath);
 		R_ASSERT	(false);

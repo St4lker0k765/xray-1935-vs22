@@ -17,7 +17,7 @@ public:
 	IC void		Begin()
 	{	count++; T.Start(); }
 	IC void		End()
-	{	accum += T.GetElapsed_clk(); }
+	{	accum += T.GetElapsed_ticks(); }
 };
 
 #endif

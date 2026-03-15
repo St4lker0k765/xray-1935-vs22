@@ -23,7 +23,7 @@ bool r_eof(NET_Packet *self)
 LPCSTR r_stringZ(NET_Packet *self)
 {
 	shared_str			temp;
-	self->r_stringZ	(temp);
+	self->r_stringZ (temp);
 	return			(*temp);
 }
 

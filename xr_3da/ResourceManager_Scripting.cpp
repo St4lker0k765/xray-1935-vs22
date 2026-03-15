@@ -80,7 +80,7 @@ void LuaLog(LPCSTR caMessage)
 }
 void LuaError(lua_State* L)
 {
-	Debug.fatal("LUA error: %s",lua_tostring(L,-1));
+	Debug.fatal(DEBUG_INFO, "LUA error: %s",lua_tostring(L,-1));
 }
 
 // export
@@ -164,12 +164,12 @@ void	CResourceManager::LS_Load			()
 	// load shaders
 	xr_vector<char*>*	folder	= FS.file_list_open	("$game_shaders$",::Render->getShaderPath(),FS_ListFiles|FS_RootOnly);
 	for (u32 it=0; it<folder->size(); it++)	{
-		string256						namesp,fn;
+		string_path						namesp,fn;
 		strcpy							(namesp,(*folder)[it]);
 		if	(0==strext(namesp) || 0!=xr_strcmp(strext(namesp),".s"))	continue;
 		*strext	(namesp)=0;
 		if		(0==namesp[0])			strcpy	(namesp,"_G");
-		strconcat						(fn,::Render->getShaderPath(),(*folder)[it]);
+		strconcat(sizeof(fn), fn,::Render->getShaderPath(),(*folder)[it]);
 		FS.update_path					(fn,"$game_shaders$",fn);
 		Script::bfLoadFileIntoNamespace	(LSVM,fn,namesp,true);
 	}

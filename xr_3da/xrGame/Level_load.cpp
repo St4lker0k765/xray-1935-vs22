@@ -13,7 +13,7 @@ BOOL CLevel::Load_GameSpecific_Before()
 {
 	// AI space
 	pApp->LoadTitle						("Loading AI objects...");
-	string256							fn_game;
+	string_path							fn_game;
 	
 	if (!ai().get_alife() && FS.exist(fn_game,"$level$","level.ai"))
 		ai().load						(net_SessionName());
@@ -31,7 +31,7 @@ BOOL CLevel::Load_GameSpecific_Before()
 BOOL CLevel::Load_GameSpecific_After()
 {
 	// loading static particles
-	string256		fn_game;
+	string_path		fn_game;
 	if (FS.exist(fn_game, "$level$", "level.ps_static")) {
 		IReader *F = FS.r_open	(fn_game);
 		IRender_Sector* S;
@@ -41,7 +41,7 @@ BOOL CLevel::Load_GameSpecific_After()
 		Fmatrix			transform;
 		Fvector			zero_vel={0.f,0.f,0.f};
 		for (IReader *OBJ = F->open_chunk(chunk++); OBJ; OBJ = F->open_chunk(chunk++)){
-			OBJ->r_stringZ				(ref_name);
+			OBJ->r_stringZ(ref_name, sizeof(ref_name));
 			OBJ->r						(&transform,sizeof(Fmatrix));transform.c.y+=0.01f;
 			S							= ::Render->detectSector	(transform.c);
 			pStaticParticles			= xr_new<CParticlesObject>	(ref_name,S,false);
@@ -62,7 +62,7 @@ BOOL CLevel::Load_GameSpecific_After()
 			static_Sounds.push_back	(xr_new<ref_sound>());
 			ref_sound* S			= static_Sounds.back();
 
-			OBJ->r_stringZ		(wav_name);
+			OBJ->r_stringZ(wav_name, sizeof(wav_name));
 			S->create			(wav_name, st_Effect, sg_SourceType);
 			OBJ->r_fvector3		(params.position);
 			params.volume		= OBJ->r_float();
@@ -86,8 +86,8 @@ BOOL CLevel::Load_GameSpecific_After()
 	if (pSettings->section_exist("sounds_random"))	
 	{ 
 		CInifile::Sect& S		= pSettings->r_section("sounds_random");
-		Sounds_Random.reserve	(S.size());
-		for (CInifile::SectIt I=S.begin(); S.end()!=I; ++I) {
+		Sounds_Random.reserve	(S.Data.size());
+		for (CInifile::SectCIt I=S.Data.begin(); S.Data.end()!=I; ++I) {
 			Sounds_Random.push_back	(ref_sound());
 			Sound->create			(Sounds_Random.back(),*I->first, st_Effect, sg_SourceType);
 		}
@@ -124,7 +124,7 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 		CDB::TRI* T						= tris + it;
 		xr_map<u32,u16>::iterator index	= translator.find(T->material);
 		if (index==translator.end())
-			Debug.fatal	("Game material '%d' not found",T->material);
+			Debug.fatal(DEBUG_INFO, "Game material '%d' not found",T->material);
 		T->material						= index->second;
 	}
 }

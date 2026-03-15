@@ -291,7 +291,7 @@ public:
     	m_Flags.assign	(flags);
     	OnBtnClickEvent	= 0;
     	btn_num			= -1;
-    	std::string 	v;
+        xr_string 	v;
         int cnt=_GetItemCount(val.c_str()); 
         for (int k=0; k<cnt; ++k)
         	value.push_back(_GetItem(val.c_str(),k,v));

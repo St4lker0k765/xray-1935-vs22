@@ -20,7 +20,7 @@ void CLevel::ClientReceive()
 			{
 				// Begin analysis
 				string64			s_name;
-				P->r_stringZ		(s_name);
+				P->r_stringZ(s_name);
 
 				// Create DC (xrSE)
 				CSE_Abstract*		E	= F_entity_Create	(s_name);

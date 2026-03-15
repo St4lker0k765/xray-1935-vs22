@@ -31,7 +31,7 @@ public:
 	HRESULT __stdcall	Open	(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
 	{
 		string256				pname;
-		IReader*		R		= FS.r_open	("$game_shaders$",strconcat(pname,::Render->getShaderPath(),pFileName));
+		IReader*		R		= FS.r_open	("$game_shaders$",strconcat(sizeof(pname), pname,::Render->getShaderPath(),pFileName));
 		if (0==R)				return			E_FAIL;
 
 		// duplicate and zero-terminate
@@ -168,7 +168,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		LPD3DXSHADER_CONSTANTTABLE	pConstants	= NULL;
 		HRESULT						_hr			= S_OK;
 		string_path					cname;
-		strconcat					(cname,::Render->getShaderPath(),_name,".vs");
+		strconcat(sizeof(cname), cname,::Render->getShaderPath(),_name,".vs");
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		IReader*					fs			= FS.r_open(cname);
@@ -254,8 +254,8 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 
 		// Open file
 		includer					Includer;
-		string256					cname;
-		FS.update_path				(cname,	"$game_shaders$", strconcat(cname,::Render->getShaderPath(),name,".ps"));
+		string_path					cname;
+		FS.update_path				(cname,	"$game_shaders$", strconcat(sizeof(cname), cname,::Render->getShaderPath(),name,".ps"));
 
 		// duplicate and zero-terminate
 		IReader*		R		= FS.r_open(cname);

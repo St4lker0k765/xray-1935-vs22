@@ -265,7 +265,7 @@ void CSoundStream::LoadADPCM( )
 	sxr_hdr			hdr;
 
 	string256		fn;
- xr_strconcat		(fn,fName,".ogg");
+ xr_strconcat   (sizeof(fn), fn,fName,".ogg");
 
 	DataPos			= NULL;
 

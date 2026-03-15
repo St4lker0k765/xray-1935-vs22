@@ -152,7 +152,7 @@ void CSE_ALifeSimulator::Save()
 
 void CSE_ALifeSimulator::Save(LPCSTR caSaveName)
 {
-	strconcat					(m_caSaveName,caSaveName,SAVE_EXTENSION);
+	strconcat(sizeof(m_caSaveName), m_caSaveName,caSaveName,SAVE_EXTENSION);
 	CMemoryWriter				tStream;
 	CSE_ALifeHeader::Save		(tStream);
 	CSE_ALifeGameTime::Save		(tStream);
@@ -178,7 +178,7 @@ void CSE_ALifeSimulator::Load	(LPCSTR caSaveName)
 	m_tpActor					= 0;
 	m_tGameTime					= 0;
 	m_bActorEnabled				= true;
-	strconcat					(m_caSaveName,caSaveName,SAVE_EXTENSION);
+	strconcat(sizeof(m_caSaveName), m_caSaveName,caSaveName,SAVE_EXTENSION);
 
 	// loading default settings from 'system.ltx'
 	Log							("* Loading parameters...");
@@ -245,7 +245,7 @@ void CSE_ALifeSimulator::Load	(LPCSTR caSaveName)
 		R_ASSERT2				(l_cpPointer,"Invalid server options!");
 		xr_map<_LEVEL_ID,CGameGraph::SLevel>::const_iterator I = ai().game_graph().header().levels().find(ai().game_graph().vertex(m_tpActor->m_tGraphID)->level_id());
 		R_ASSERT2				(ai().game_graph().header().levels().end() != I,"Graph point level ID not found!");
-		strconcat				(*m_cppServerOptions,(*I).second.name(),l_cpPointer);
+		strconcat(sizeof(*m_cppServerOptions), *m_cppServerOptions,(*I).second.name(),l_cpPointer);
 
 		int						id = pApp->Level_ID((*I).second.name());
 		VERIFY					(id >= 0);
@@ -398,7 +398,7 @@ void CSE_ALifeSimulator::vfCreateItem	(CSE_ALifeObject *object)
 void CSE_ALifeSimulator::vfSetProcessTime			(int	iMicroSeconds)
 {
 	m_max_process_time	= iMicroSeconds;
-	CSE_ALifeGraphRegistry::set_process_time	(u64(float(m_max_process_time) - float(m_max_process_time)*m_update_monster_factor)*CPU::cycles_per_microsec);
-	CSE_ALifeScheduleRegistry::set_process_time	(u64(float(m_max_process_time)*m_update_monster_factor)*CPU::cycles_per_microsec);
-	m_max_process_time	*= CPU::cycles_per_microsec;
+	CSE_ALifeGraphRegistry::set_process_time	(u64(float(m_max_process_time) - float(m_max_process_time)*m_update_monster_factor)*CPU::clk_per_microsec);
+	CSE_ALifeScheduleRegistry::set_process_time	(u64(float(m_max_process_time)*m_update_monster_factor)*CPU::clk_per_microsec);
+	m_max_process_time	*= CPU::clk_per_microsec;
 }

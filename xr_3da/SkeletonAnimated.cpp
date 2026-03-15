@@ -152,7 +152,7 @@ u16 CSkeletonAnimated::LL_PartID		(LPCSTR B)
 CMotionDef*	CSkeletonAnimated::ID_Cycle	(LPCSTR  N)
 {
 	mdef::iterator I = m_cycle->find(LPSTR(N));
-	if (I==m_cycle->end())	{ Debug.fatal("! MODEL: can't find cycle: %s", N); return 0; }
+	if (I==m_cycle->end())	{ Debug.fatal(DEBUG_INFO, "! MODEL: can't find cycle: %s", N); return 0; }
 	return &I->second;
 }
 CMotionDef*	CSkeletonAnimated::ID_Cycle_Safe(LPCSTR  N)
@@ -165,14 +165,14 @@ CBlend*	CSkeletonAnimated::PlayCycle		(LPCSTR  N, BOOL bMixIn, PlayCallback Call
 {
 	mdef::iterator I = m_cycle->find(LPSTR(N));
 	if (I!=m_cycle->end())	return I->second.PlayCycle(this,bMixIn,Callback,CallbackParam);
-	else					{ Debug.fatal("! MODEL: can't find cycle: %s", N); return 0; }
+	else					{ Debug.fatal(DEBUG_INFO, "! MODEL: can't find cycle: %s", N); return 0; }
 }
 
 // fx'es
 CMotionDef*	CSkeletonAnimated::ID_FX			(LPCSTR  N)
 {
 	mdef::iterator I = m_fx->find(LPSTR(N));
-	if (I==m_fx->end())		{ Debug.fatal("! MODEL: can't find FX: %s", N); return 0; }
+	if (I==m_fx->end())		{ Debug.fatal(DEBUG_INFO, "! MODEL: can't find FX: %s", N); return 0; }
 	return &I->second;
 }
 CMotionDef*	CSkeletonAnimated::ID_FX_Safe		(LPCSTR  N)
@@ -185,7 +185,7 @@ CBlend*	CSkeletonAnimated::PlayFX			(LPCSTR  N, float power_scale)
 {
 	mdef::iterator I = m_fx->find(LPSTR(N));
 	if (I!=m_fx->end())		return I->second.PlayFX(this,power_scale);
-	else					{ Debug.fatal("! MODEL: can't find FX: %s", N); return 0; }
+	else					{ Debug.fatal(DEBUG_INFO, "! MODEL: can't find FX: %s", N); return 0; }
 }
 
 CBlend*	CSkeletonAnimated::LL_PlayFX		(u16 bone, u16 motion, float blendAccrue, float blendFalloff, float Speed, float Power)
@@ -508,7 +508,7 @@ CBlend*	CSkeletonAnimated::IBlend_Create	()
 	CBlend *I=blend_pool.begin(), *E=blend_pool.end();
 	for (; I!=E; I++)
 		if (I->blend == CBlend::eFREE_SLOT) return I;
-	Debug.fatal("Too many blended motions requisted");
+	FATAL ("Too many blended motions requisted");
 	return 0;
 }
 
@@ -528,12 +528,12 @@ bool CSkeletonAnimated::LoadMotions(LPCSTR N, IReader *data)
         part_count 				= MP->r_u16();
         for (u16 part_i=0; part_i<part_count; part_i++){
             CPartDef&	PART	= (*partition)[part_i];
-            MP->r_stringZ		(buf);
+            MP->r_stringZ		(buf, sizeof(buf));
             PART.Name			= _strlwr(buf);
             PART.bones.resize	(MP->r_u16());
 //				Log					("Part:",buf);
             for (xr_vector<u32>::iterator b_it=PART.bones.begin(); b_it<PART.bones.end(); b_it++){
-                MP->r_stringZ	(buf);
+                MP->r_stringZ	(buf, sizeof(buf));
                 u16 m_idx 		= u16		(MP->r_u32());
                 *b_it			= LL_BoneID	(buf); 
 //					Msg				("Bone: #%2d, ID: %2d, Name: '%s'",b_it-PART.bones.begin(),*b_it,buf);
@@ -565,7 +565,7 @@ bool CSkeletonAnimated::LoadMotions(LPCSTR N, IReader *data)
             // motion defs (cycle&fx)
             u16 mot_count			= MP->r_u16();
             for (u16 mot_i=0; mot_i<mot_count; mot_i++){
-                MP->r_stringZ(buf);
+                MP->r_stringZ(buf, sizeof(buf));
                 u32 dwFlags		= MP->r_u32();
                 CMotionDef	D;		D.Load(this,MP,dwFlags);
                 if (dwFlags&esmFX)	m_fx->insert(mk_pair(shared_str(_strlwr(buf)),D));
@@ -574,7 +574,7 @@ bool CSkeletonAnimated::LoadMotions(LPCSTR N, IReader *data)
         }
         MP->close();
     }else{
-        Debug.fatal	("Old skinned model version unsupported! (%s)",N);
+        Debug.fatal	(DEBUG_INFO, "Old skinned model version unsupported! (%s)",N);
     }
 
     if (!bRes)	return false;
@@ -593,7 +593,7 @@ bool CSkeletonAnimated::LoadMotions(LPCSTR N, IReader *data)
     for (u32 m_idx=0; m_idx<dwCNT; m_idx++){
         string128			mname;
         R_ASSERT			(MS->find_chunk(m_idx+1));             
-        MS->r_stringZ		(mname);
+        MS->r_stringZ		(mname, sizeof(mname));
 
         shared_str	m_key		= shared_str(strlwr(mname));
 //		CKinematics::accel_map::iterator it = motion_map->find(m_key);
@@ -636,14 +636,14 @@ void CSkeletonAnimated::Load(const char* N, IReader *data, u32 dwFlags)
 	// Load animation
     if (data->find_chunk(OGF_S_MOTION_REFS)){
     	string_path	fn,nm;
-        data->r_stringZ	(nm);
+        data->r_stringZ	(nm, sizeof(nm));
         if (!FS.exist(fn, "$level$", nm, ".omf")){
             if (!FS.exist(fn, "$game_meshes$", nm, ".omf")){
 #ifdef _EDITOR
                 Msg			("!Can't find motion file '%s'.",nm);
                 return;
 #else            
-                Debug.fatal("Can't find motion file '%s'.",nm);
+                Debug.fatal(DEBUG_INFO, "Can't find motion file '%s'.",nm);
 #endif
             }
 		}

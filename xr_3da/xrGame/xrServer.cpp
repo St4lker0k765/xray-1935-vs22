@@ -443,7 +443,7 @@ void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 //	string256 ChatMsg;
 //	u16 PlayerID = P->r_u16();
 	s16 team = P->r_s16();
-//	P->r_stringZ(ChatMsg);
+//	P->r_stringZ(ChatMsg, sizeof(ChatMsg));
 	if (!CL->net_Ready) return;
 	game_PlayerState* Cps = CL->ps;
 	for (u32 client=0; client<net_Players.size(); ++client)

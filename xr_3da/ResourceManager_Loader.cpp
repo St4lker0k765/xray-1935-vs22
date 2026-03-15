@@ -74,7 +74,7 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 	{
 		IReader*	fs		= F->open_chunk	(0);
 		while (fs && !fs->eof())	{
-			fs->r_stringZ	(name);
+			fs->r_stringZ(name, sizeof(name));
 			CConstant*	C	= _CreateConstant	(name);
 			C->Load			(fs);
 		}
@@ -85,7 +85,7 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 	{
 		IReader*	fs		= F->open_chunk(1);
 		while (fs&&!fs->eof())	{
-			fs->r_stringZ	(name);
+			fs->r_stringZ(name, sizeof(name));
 			CMatrix*	M	= _CreateMatrix	(name);
 			M->Load			(fs);
 		}
@@ -127,7 +127,7 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 	}
 
 	// Load detail textures association
-	string256		fname;		
+	string_path		fname;
 	FS.update_path	(fname,"$game_textures$","textures.ltx");
 	LPCSTR	Iname	= fname;
 	if (FS.exist(Iname))
@@ -137,12 +137,12 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 		CInifile&	ini	= *m_description;
 		if (ini.section_exist("association")){
 			CInifile::Sect& 	data = ini.r_section("association");
-			for (CInifile::SectIt I=data.begin(); I!=data.end(); I++)	{
+			for (CInifile::SectCIt I=data.Data.begin(); I!=data.Data.end(); I++)	{
 				texture_detail			D;
 				string256				T;
 				float					s;
 
-				CInifile::Item& item	= *I;
+				const CInifile::Item& item	= *I;
 				sscanf					(*item.second,"%[^,],%f",T,&s);
 
 				//
@@ -168,7 +168,7 @@ void	CResourceManager::OnDeviceCreate	(LPCSTR shName)
 	F->r		(&id,8);
 	if (0==strncmp(id,ID,8))
 	{
-		Debug.fatal			("Unsupported blender library. Compressed?");
+		FATAL("Unsupported blender library. Compressed?");
 	}
 	OnDeviceCreate			(F);
 	FS.r_close				(F);

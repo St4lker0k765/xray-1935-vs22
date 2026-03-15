@@ -847,7 +847,7 @@ void CSE_ALifeSimulator::vfPerformSurge()
 		Msg							("[LSS] Surge started");
 	}
 #endif
-	seed							(s32(CPU::GetCycleCount() & 0xffffffff));
+	seed							(s32(CPU::GetCLK() & 0xffffffff));
 	vfGenerateAnomalousZones		();
 	vfGenerateAnomalyMap			();
 	vfKillCreatures					();

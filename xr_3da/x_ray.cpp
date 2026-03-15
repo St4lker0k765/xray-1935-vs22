@@ -19,6 +19,54 @@
 #include "ispatial.h"
 #include "CopyProtection.h"
 
+// computing build id
+XRCORE_API	LPCSTR	build_date;
+XRCORE_API	u32		build_id;
+
+//#define NO_SINGLE
+#define NO_MULTI_INSTANCES
+
+static LPSTR month_id[12] = {
+	"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
+};
+
+static int days_in_month[12] = {
+	31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+};
+
+static int start_day = 31;	// 31
+static int start_month = 1;	// January
+static int start_year = 1999;	// 1999
+
+void compute_build_id()
+{
+	build_date = __DATE__;
+
+	int					days;
+	int					months = 0;
+	int					years;
+	string16			month;
+	string256			buffer;
+	strcpy_s(buffer, __DATE__);
+	sscanf(buffer, "%s %d %d", month, &days, &years);
+
+	for (int i = 0; i < 12; i++) {
+		if (_stricmp(month_id[i], month))
+			continue;
+
+		months = i;
+		break;
+	}
+
+	build_id = (years - start_year) * 365 + days - start_day;
+
+	for (int i = 0; i < months; ++i)
+		build_id += days_in_month[i];
+
+	for (int i = 0; i < start_month - 1; ++i)
+		build_id -= days_in_month[i];
+}
+
 // 2446363
 // umbt@ukr.net
 //////////////////////////////////////////////////////////////////////////
@@ -53,7 +101,7 @@ void InitEngine()
 
 void InitSettings()
 {
-	string256					fname; 
+	string_path					fname; 
 	FS.update_path				(fname,"$game_data$","system.ltx");
 	pSettings					= xr_new<CInifile>	(fname,TRUE);
 }
@@ -274,7 +322,8 @@ void	test_rtc	()
 }
 */
 
-int APIENTRY WinMain(HINSTANCE hInstance,
+
+int APIENTRY WinMain_impl(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      char *    lpCmdLine,
                      int       nCmdShow)
@@ -285,6 +334,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 		MAKEINTRESOURCE(IDD_STARTUP),
 		0, logDlgProc );
 
+	compute_build_id();
 	Core._initialize		("xray",NULL);
 	FPU::m24r				();
 
@@ -337,13 +387,45 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	Startup	 				();
 	Core._destroy			();
 
-	// check for need to execute something external
-	if (strstr(lpCmdLine,"-exec ")) 
-	{
-		char *N = strstr(lpCmdLine,"-exec ")+6;
-		return (int)_execl(N,N,0);
-	}
 	return 0;
+}
+
+int stack_overflow_exception_filter(int exception_code)
+{
+	if (exception_code == EXCEPTION_STACK_OVERFLOW)
+	{
+		// Do not call _resetstkoflw here, because
+		// at this point, the stack is not yet unwound.
+		// Instead, signal that the handler (the __except block)
+		// is to be executed.
+		return EXCEPTION_EXECUTE_HANDLER;
+	}
+	else
+		return EXCEPTION_CONTINUE_SEARCH;
+}
+
+int APIENTRY WinMain(HINSTANCE hInstance,
+	HINSTANCE hPrevInstance,
+	char* lpCmdLine,
+	int       nCmdShow)
+{
+	__try
+	{
+#ifdef DEDICATED_SERVER
+		Debug._initialize(true);
+#else // DEDICATED_SERVER
+		Debug._initialize(false);
+#endif // DEDICATED_SERVER
+
+		WinMain_impl(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
+	}
+	__except (stack_overflow_exception_filter(GetExceptionCode()))
+	{
+		_resetstkoflw();
+		FATAL("stack overflow");
+	}
+
+	return					(0);
 }
 
 CApplication::CApplication()
@@ -414,7 +496,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 			if (strstr(Core.Params,"-$")) {
 				string256				buf,cmd,param;
 				sscanf					(strstr(Core.Params,"-$")+2,"%[^ ] %[^ ] ",cmd,param);
-				strconcat				(buf,cmd," ",param);
+				strconcat(sizeof(buf), buf,cmd," ",param);
 				Console->Execute		(buf);
 			}
 		} else {
@@ -518,11 +600,11 @@ void CApplication::Level_Scan()
 	R_ASSERT			(folder&&folder->size());
 	for (u32 i=0; i<folder->size(); i++)
 	{
-		string256	N1,N2,N3,N4;
-		strconcat	(N1,(*folder)[i],"level");
-		strconcat	(N2,(*folder)[i],"level.ltx");
-		strconcat	(N3,(*folder)[i],"level.game");
-		strconcat	(N4,(*folder)[i],"level.cform");
+		string_path	N1,N2,N3,N4;
+		strconcat(sizeof(N1), N1,(*folder)[i],"level");
+		strconcat(sizeof(N2), N2,(*folder)[i],"level.ltx");
+		strconcat(sizeof(N3), N3,(*folder)[i],"level.game");
+		strconcat(sizeof(N4), N4,(*folder)[i],"level.cform");
 		if	(
 			FS.exist("$game_levels$",N1)		&&
 			FS.exist("$game_levels$",N2)		&&
@@ -552,7 +634,7 @@ void CApplication::Level_Set(u32 L)
 int CApplication::Level_ID(LPCSTR name)
 {
 	char buffer	[256];
-	strconcat	(buffer,name,"\\");
+	strconcat   (sizeof(buffer), buffer,name,"\\");
 	for (u32 I=0; I<Levels.size(); I++)
 	{
 		if (0==stricmp(buffer,Levels[I].folder))	return int(I);

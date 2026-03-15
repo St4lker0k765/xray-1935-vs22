@@ -185,7 +185,7 @@ u32	CSE_ALifeTrader::dwfGetItemCost(CSE_ALifeInventoryItem *tpALifeInventoryItem
 			else
 				l_dwPurchasedCount -= (*I).m_count;
 		}
-		Debug.fatal				("Data synchronization mismatch");
+		FATAL("Data synchronization mismatch");
 	}
 	return						(tpALifeInventoryItem->m_dwCost);
 }

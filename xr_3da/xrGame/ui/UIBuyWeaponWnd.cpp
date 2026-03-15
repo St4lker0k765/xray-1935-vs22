@@ -2394,7 +2394,7 @@ void CUIBuyWeaponWnd::FillItemInfo(CUIDragDropItemMP *pDDItemMP)
 		//	string128 buf;
 		//	if (pSettings->line_exist(pDDItemMP->GetSectionName(), "inv_weight"))
 		//	{
-		//		strconcat(buf, fieldsCaptionColor, *stbl("weight"), " %cdefault", pSettings->r_string(pDDItemMP->GetSectionName(), "inv_weight"));
+		//		strconcat(sizeof(buf), buf,fieldsCaptionColor,*stbl("weight"), " %cdefault", pSettings->r_string(pDDItemMP->GetSectionName(), "inv_weight"));
 		//		UIItemInfo.UIWeight.SetText(buf);
 		//	}
 		//	else

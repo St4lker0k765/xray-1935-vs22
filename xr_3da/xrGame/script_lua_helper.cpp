@@ -97,7 +97,7 @@ void CDbgLuaHelper::errormessageLuaBind(lua_State* l)
 	CScriptDebugger::GetDebugger()->Write(err_msg);
 	CScriptDebugger::GetDebugger()->Write("\n");
 	CScriptDebugger::GetDebugger()->ErrorBreak();
-	Debug.fatal("LUABIND error");
+	FATAL("LUABIND error");
 }
 
 int CDbgLuaHelper::errormessageLua(lua_State* l)
@@ -167,7 +167,7 @@ int CDbgLuaHelper::errormessageLua(lua_State* l)
 	if ( ar.source[0] == '@' )
 		szSource=ar.source+1;
 	CScriptDebugger::GetDebugger()->ErrorBreak(szSource, ar.currentline);
-	Debug.fatal("LUA error");
+	FATAL("LUA error");
 
 	return 0;
 }

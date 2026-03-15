@@ -44,16 +44,43 @@ public:
 	}
 };
 //-----------------------------------------------------------------------
-class CCC_MemStat : public IConsole_Command
+extern __declspec(dllimport)	size_t	__cdecl lua_memusage();
+
+class CCC_MemStats : public IConsole_Command
 {
 public:
-	CCC_MemStat(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
+	CCC_MemStats(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args) {
-		Memory.mem_statistic();
-		Msg	("* ----- shared memory -----");
-		g_pSharedMemoryContainer->dump();
-		Msg	("* ----- string storage -----");
-		g_pStringContainer->dump();
+		Memory.mem_compact();
+		u32		_crt_heap = mem_usage_impl((HANDLE)_get_heap_handle(), 0, 0);
+		u32		_process_heap = mem_usage_impl(GetProcessHeap(), 0, 0);
+#ifdef SEVERAL_ALLOCATORS
+		u32		_game_lua = game_lua_memory_usage();
+		u32		_engine_lua = engine_lua_memory_usage();
+		u32		_render = ::Render->memory_usage();
+#endif // SEVERAL_ALLOCATORS
+		int		_eco_strings = (int)g_pStringContainer->stat_economy();
+		int		_eco_smem = (int)g_pSharedMemoryContainer->stat_economy();
+		u32		m_base = 0, c_base = 0, m_lmaps = 0, c_lmaps = 0;
+
+		//if (Device.Resources)	Device.Resources->_GetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
+
+		log_vminfo();
+
+		Msg("* [ D3D ]: textures[%d K]", (m_base + m_lmaps) / 1024);
+
+#ifndef SEVERAL_ALLOCATORS
+		Msg("* [x-ray]: crt heap[%d K], process heap[%d K]", _crt_heap / 1024, _process_heap / 1024);
+#else // SEVERAL_ALLOCATORS
+		Msg("* [x-ray]: crt heap[%d K], process heap[%d K], game lua[%d K], engine lua[%d K], render[%d K]", _crt_heap / 1024, _process_heap / 1024, _game_lua / 1024, _engine_lua / 1024, _render / 1024);
+#endif // SEVERAL_ALLOCATORS
+
+		Msg("* [x-ray]: economy: strings[%d K], smem[%d K]", _eco_strings / 1024, _eco_smem);
+
+#ifdef DEBUG
+		Msg("* [x-ray]: file mapping: memory[%d K], count[%d]", g_file_mapped_memory / 1024, g_file_mapped_count);
+		dump_file_mappings();
+#endif // DEBUG
 	}
 };
 //-----------------------------------------------------------------------
@@ -130,7 +157,7 @@ public:
 		IReader* F = FS.r_open(str);
 		if (F!=NULL) {
 			while (!F->eof()) {
-				F->r_string		(str);
+				F->r_string		(str, sizeof(str));
 				Console->Execute	(str);
 			}
 			FS.r_close(F);
@@ -179,7 +206,7 @@ public:
 			Log		("! Please disconnect/unload first");
 			return	;
 		}
-		string256	fn;
+		string_path	fn;
 		if (FS.exist(fn,"",args,".save"))
 		{
 			Engine.Event.Defer("KERNEL:server_load",u64(xr_strdup(fn)));

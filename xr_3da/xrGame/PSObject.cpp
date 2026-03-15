@@ -76,7 +76,7 @@ void CPSObject::Stop				()
 
 void CPSObject::renderable_Render	()
 {
-	Debug.fatal("Unreachable function reached 'CPSObject::renderable_Render'");
+	FATAL("Unreachable function reached 'CPSObject::renderable_Render'");
 	/*
 	::Render->set_Transform			(&Fidentity);
 	::Render->add_Visual			(renderable.visual);

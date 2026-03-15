@@ -23,20 +23,23 @@ class	ENGINE_API	CGammaControl;
 class ENGINE_API CRenderDevice 
 {
 private:
-    // Main objects used for creating and rendering the 3D scene
-    u32										m_dwWindowStyle;
-    RECT									m_rcWindowBounds;
-    RECT									m_rcWindowClient;
+	// Main objects used for creating and rendering the 3D scene
+	u32										m_dwWindowStyle;
+	RECT									m_rcWindowBounds;
+	RECT									m_rcWindowClient;
 
 	u32										Timer_MM_Delta;
-	CTimer									Timer;
-	CTimer									TimerGlobal;
-	
+
+	CTimer_paused							Timer;
+	CTimer_paused							TimerGlobal;
+	CTimer									TimerMM;
+
 	void									_Create		(LPCSTR shName);
 	void									_Destroy	(BOOL	bKeepTextures);
 	void									_SetupStates();
+
 public:
-    HWND									m_hWnd;
+	HWND									m_hWnd;
 	LRESULT									MsgProc		(HWND,UINT,WPARAM,LPARAM);
 
 	u32										dwFrame;
@@ -47,6 +50,7 @@ public:
 	float									fWidth_2, fHeight_2;
 	BOOL									bReady;
 	BOOL									bActive;
+
 public:
 	// Registrators
 	CRegistrator	<pureDeviceDestroy	 >	seqDevDestroy;
@@ -69,6 +73,7 @@ public:
 	float									fTimeGlobal;
 	u32										dwTimeDelta;
 	u32										dwTimeGlobal;
+	u32										dwTimeContinual;
 
 	// Cameras & projection
 	Fvector									vCameraPosition;
@@ -81,13 +86,16 @@ public:
 	Fmatrix									mInvFullTransform;
 	float									fFOV;
 	float									fASPECT;
-	
-	CRenderDevice() 
+
+	CRenderDevice()
 	{
-	    m_hWnd              = NULL;
+		m_hWnd				= NULL;
 		bActive				= FALSE;
 		bReady				= FALSE;
-		Timer.Start			();
+
+		Timer.Start();
+		TimerGlobal.Start();
+		TimerMM.Start();
 	};
 
 	// Scene control
@@ -96,21 +104,26 @@ public:
 	void Clear								();
 	void End								();
 	void FrameMove							();
-	
+
 	void overdrawBegin						();
 	void overdrawEnd						();
 
 	// Mode control
 	void DumpFlags							();
-	IC CTimer* GetTimerGlobal				(){return &TimerGlobal;}
-	u32	 TimerAsync							()
+
+	IC CTimer_paused* GetTimerGlobal		()
 	{
-		u64	qTime		= TimerGlobal.GetElapsed_clk();
-		return u32((qTime*u64(1000))/CPU::cycles_per_second);
+		return &TimerGlobal;
 	}
-	u32	 TimerAsyncMM						(void)
+
+	u32 TimerAsync							()
 	{
-		return TimerAsync()+Timer_MM_Delta;
+		return TimerGlobal.GetElapsed_ms();
+	}
+
+	u32 TimerAsync_MMT						()
+	{
+		return TimerMM.GetElapsed_ms() + Timer_MM_Delta;
 	}
 
 	// Creation & Destroying
@@ -128,9 +141,9 @@ public:
 	volatile BOOL		mt_bMustExit;
 };
 
-extern		ENGINE_API		CRenderDevice		Device;
-extern		ENGINE_API		bool				g_bBenchmark;
+extern ENGINE_API CRenderDevice Device;
+extern ENGINE_API bool g_bBenchmark;
 
-#include	"R_Backend_Runtime.h"
+#include "R_Backend_Runtime.h"
 
 #endif

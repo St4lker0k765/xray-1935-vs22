@@ -46,7 +46,7 @@ void CUIPdaContactsWnd::Init(int x, int y, int width, int height)
 
 	UIFrameContacts.AttachChild(&UIContactsHeader);
 	xml_init.InitFrameLine(uiXml, "left_frame_line", 0, &UIContactsHeader);
-	strconcat(buf, ALL_PDA_HEADER_PREFIX, PDA_CONTACTS_HEADER_SUFFIX);
+	strconcat(sizeof(buf), buf,ALL_PDA_HEADER_PREFIX,PDA_CONTACTS_HEADER_SUFFIX);
 	UIContactsHeader.UITitleText.SetText(buf);
 
 	AttachChild(&UIRightFrame);

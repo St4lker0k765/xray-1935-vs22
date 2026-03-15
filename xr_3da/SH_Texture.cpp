@@ -133,13 +133,13 @@ void CTexture::Load		()
 	Preload							();
 
 	// Check for AVI
-	string256 fn;
+	string_path fn;
 	if (FS.exist(fn,"$game_textures$",*cName,".avi")){
 		// AVI
 		pAVI = xr_new<CAviPlayerCustom>();
 		if (!pAVI->Load(fn)) {
 			xr_delete(pAVI);
-			Debug.fatal("Can't open video stream");
+			FATAL("Can't open video stream");
 		} else {
 			flags.MemoryUsage	= pAVI->dwWidth*pAVI->dwHeight*4;
 
@@ -152,7 +152,7 @@ void CTexture::Load		()
 			pSurface	= pTexture;
 			if (FAILED(hrr))
 			{
-				Debug.fatal	("Invalid video stream");
+				FATAL("Invalid video stream");
 				R_CHK		(hrr);
 				xr_delete	(pAVI);
 				pSurface = 0;
@@ -166,18 +166,18 @@ void CTexture::Load		()
 		destructor<IReader>	fs(FS.r_open(fn));
 
 		flags.seqCycles	= FALSE;
-		fs().r_string	(buffer);
+		fs().r_string	(buffer, sizeof(buffer));
 		if (0==stricmp	(buffer,"cycled"))
 		{
 			flags.seqCycles	= TRUE;
-			fs().r_string	(buffer);
+			fs().r_string	(buffer, sizeof(buffer));
 		}
 		u32 fps	= atoi(buffer);
 		seqMSPF		= 1000/fps;
 
 		while (!fs().eof())
 		{
-			fs().r_string(buffer);
+			fs().r_string(buffer, sizeof(buffer));
 			_Trim		(buffer);
 			if (buffer[0])	{
 				// Load another texture

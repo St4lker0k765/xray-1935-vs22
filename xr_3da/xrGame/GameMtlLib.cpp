@@ -38,7 +38,7 @@ void SGameMtl::Load(IReader& fs)
 
 void CGameMtlLibrary::Load()
 {
-	string256			name;
+	string_path			name;
 	if (!FS.exist(name,	_game_data_,GAMEMTL_FILENAME)){
     	Log				("! Can't find game material file: ",name);
     	return;
@@ -130,15 +130,15 @@ void SGameMtlPair::Load(IReader& fs)
     else							OwnProps.assign	(own_mask);
 
 	R_ASSERT(fs.find_chunk(GAMEMTLPAIR_CHUNK_BREAKING));
-	fs.r_stringZ		(buf); 	BreakingSounds	= buf.size()?*buf:"";
+	fs.r_stringZ(buf, sizeof(buf)); 	BreakingSounds	= buf.size()?*buf:"";
 
 	R_ASSERT(fs.find_chunk(GAMEMTLPAIR_CHUNK_STEP));
-	fs.r_stringZ		(buf);	StepSounds		= buf.size()?*buf:"";
+	fs.r_stringZ(buf, sizeof(buf));	StepSounds		= buf.size()?*buf:"";
 
 	R_ASSERT(fs.find_chunk(GAMEMTLPAIR_CHUNK_COLLIDE));
-	fs.r_stringZ		(buf);	CollideSounds	= buf.size()?*buf:"";
-	fs.r_stringZ		(buf);	CollideParticles= buf.size()?*buf:"";
-	fs.r_stringZ		(buf);	CollideMarks	= buf.size()?*buf:"";
+	fs.r_stringZ(buf, sizeof(buf));	CollideSounds	= buf.size()?*buf:"";
+	fs.r_stringZ(buf, sizeof(buf));	CollideParticles= buf.size()?*buf:"";
+	fs.r_stringZ(buf, sizeof(buf));	CollideMarks	= buf.size()?*buf:"";
 }
 #endif
 

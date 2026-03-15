@@ -87,7 +87,7 @@ void CUISkinSelectorWnd::Init(const char *strSectionName)
 
 		int height = xml_doc.ReadAttribInt(path, index, "height");
 
-		shared_str base_name = xml_doc.Read(strconcat(buf,path,":base_texture"), index, NULL);
+		shared_str base_name = xml_doc.Read(strconcat   (sizeof(buf), buf,path,":base_texture"), index, NULL);
 
 		if(!base_name) return;
 
@@ -96,7 +96,7 @@ void CUISkinSelectorWnd::Init(const char *strSectionName)
 		// Единственное место, где надо установить не считанные данные, а вычесленные
 		pWnd->Init(*base_name, xC, yC, width, height);
 
-		strconcat(buf,path,":left_top_texture");
+		strconcat   (sizeof(buf), buf,path,":left_top_texture");
 		shared_str tex_name = xml_doc.Read(buf, index, NULL);
 
 		int x = xml_doc.ReadAttribInt(buf, index, "x");
@@ -105,7 +105,7 @@ void CUISkinSelectorWnd::Init(const char *strSectionName)
 		if(*tex_name) pWnd->InitLeftTop(*tex_name, x,y);
 
 
-		strconcat(buf,path,":left_bottom_texture");
+		strconcat   (sizeof(buf), buf,path,":left_bottom_texture");
 		tex_name = xml_doc.Read(buf, index, NULL);
 
 		x = xml_doc.ReadAttribInt(buf, index, "x");
@@ -114,7 +114,7 @@ void CUISkinSelectorWnd::Init(const char *strSectionName)
 		if(*tex_name) pWnd->InitLeftBottom(*tex_name, x,y);
 
 		//инициализировать заголовок окна
-		strconcat(buf,path,":title");
+		strconcat   (sizeof(buf), buf,path,":title");
 		if(xml_doc.NavigateToNode(buf,index)) xml_init.InitStatic(xml_doc, buf, index, &pWnd->UITitleText);
 
 		xC	+= width;

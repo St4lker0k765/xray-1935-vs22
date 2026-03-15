@@ -107,7 +107,7 @@ void Script::vfLoadStandardScripts(CLuaVirtualMachine *tpLuaVM)
 	u32				caNamespaceName = _GetItemCount(caScriptString);
 	string256		I;
 	for (u32 i=0; i<caNamespaceName; ++i) {
-		FS.update_path(S,"$game_scripts$",strconcat(S1,_GetItem(caScriptString,i,I),".script"));
+		FS.update_path(S,"$game_scripts$",strconcat(sizeof(S1), S1,_GetItem(caScriptString,i,I),".script"));
 		bfLoadFile	(tpLuaVM,S,true);
 		if (bfIsObjectPresent(tpLuaVM,"_G",strcat(I,"_initialize"),LUA_TFUNCTION))
 			lua_dostring(tpLuaVM,strcat(I,"()"));
@@ -117,7 +117,7 @@ void Script::vfLoadStandardScripts(CLuaVirtualMachine *tpLuaVM)
 
 void LuaError(lua_State* L)
 {
-	Debug.fatal("LUA error: %s",lua_tostring(L,-1));
+	Debug.fatal(DEBUG_INFO, "LUA error: %s",lua_tostring(L,-1));
 }
 
 void Script::vfExportToLua(CLuaVirtualMachine *tpLuaVM)
@@ -249,7 +249,7 @@ bool bfDoFile(CLuaVirtualMachine *tpLuaVM, LPCSTR caScriptName, LPCSTR caNameSpa
 	string256		l_caLuaFileName;
 	IReader			*l_tpFileReader = FS.r_open(caScriptName);
 	R_ASSERT		(l_tpFileReader);
-	strconcat		(l_caLuaFileName,"@",caScriptName);
+	strconcat(sizeof(l_caLuaFileName), l_caLuaFileName,"@",caScriptName);
 	
 	if (!bfLoadBuffer(tpLuaVM,static_cast<LPCSTR>(l_tpFileReader->pointer()),(size_t)l_tpFileReader->length(),l_caLuaFileName,caNameSpaceName)) {
 		lua_pop			(tpLuaVM,4);
@@ -342,7 +342,7 @@ bool Script::bfGetNamespaceTable(CLuaVirtualMachine *tpLuaVM, LPCSTR N)
 		else 
 			if (!lua_istable(tpLuaVM,-1)) { 
 				lua_pop		(tpLuaVM,2); 
-				Debug.fatal	(" Error : the namespace name is already being used by the non-table object!\n");
+				FATAL(" Error : the namespace name is already being used by the non-table object!\n");
 				return		(false); 
 			} 
 			lua_remove	(tpLuaVM,-2); 
@@ -376,7 +376,7 @@ CLuaVirtualMachine *Script::get_namespace_table(CLuaVirtualMachine *tpLuaVM, LPC
 		else 
 			if (!lua_istable(tpLuaVM,-1)) { 
 				lua_pop		(tpLuaVM,2); 
-				Debug.fatal	(" Error : the namespace name is already being used by the non-table object!\n");
+				FATAL(" Error : the namespace name is already being used by the non-table object!\n");
 				return		(0); 
 			} 
 

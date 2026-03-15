@@ -105,7 +105,7 @@ void CJumping::Execute()
 
 		Fmatrix global_transform;
 		global_transform.set(entity->XFORM());
-		global_transform.mulB(bone.mTransform);
+		global_transform.mulB_43(bone.mTransform);
 		target_pos = global_transform.c;
 		
 		target_pos.y -= 0.5f;

@@ -206,7 +206,7 @@ bool CScriptStorage::do_file	(LPCSTR caScriptName, LPCSTR caNameSpaceName, bool 
 	string256		l_caLuaFileName;
 	IReader			*l_tpFileReader = FS.r_open(caScriptName);
 	R_ASSERT3		(l_tpFileReader,"Cannot open script file ",caScriptName);
-	strconcat		(l_caLuaFileName,"@",caScriptName);
+	strconcat(sizeof(l_caLuaFileName), l_caLuaFileName,"@",caScriptName);
 	
 	if (!load_buffer(lua(),static_cast<LPCSTR>(l_tpFileReader->pointer()),(size_t)l_tpFileReader->length(),l_caLuaFileName,caNameSpaceName)) {
 		VERIFY		(lua_gettop(lua()) >= 4);
@@ -282,7 +282,7 @@ bool CScriptStorage::namespace_loaded(LPCSTR N, bool remove_from_stack)
 				VERIFY		(lua_gettop(lua()) >= 1);
 				lua_pop		(lua(),1); 
 				VERIFY		(start == lua_gettop(lua()));
-				Debug.fatal	(" Error : the namespace name is already being used by the non-table object!\n");
+				FATAL(" Error : the namespace name is already being used by the non-table object!\n");
 				return		(false); 
 			} 
 			lua_remove		(lua(),-2); 
@@ -463,8 +463,8 @@ bool CScriptStorage::print_stack_level(CLuaVirtualMachine *L, int iStackLevel)
 
 void CScriptStorage::flush_log()
 {
-	string256			log_file_name;
-	strconcat           (log_file_name,Core.ApplicationName,"_",Core.UserName,"_lua.log");
+	string_path			log_file_name;
+	strconcat(sizeof(log_file_name), log_file_name,Core.ApplicationName,"_",Core.UserName,"_lua.log");
 	FS.update_path      (log_file_name,"$logs$",log_file_name);
 	m_output.save_to	(log_file_name);
 }

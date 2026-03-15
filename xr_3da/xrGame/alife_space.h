@@ -294,7 +294,7 @@ namespace ALife {
 		else if (!stricmp(caHitType,"explosion"))
 				return(eHitTypeExplosion);
 		else
-				Debug.fatal("Unsupported hit type!");
+				FATAL("Unsupported hit type!");
 		NODEFAULT;
 #ifdef DEBUG
 		return(eHitTypeMax);

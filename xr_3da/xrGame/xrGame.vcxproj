@@ -2083,8 +2083,6 @@
     <ClInclude Include="string_table_defs.h" />
     <ClInclude Include="profiler.h" />
     <ClInclude Include="profiler_inline.h" />
-    <ClInclude Include="intrusive_ptr.h" />
-    <ClInclude Include="intrusive_ptr_inline.h" />
     <ClInclude Include="smart_cast.h" />
     <ClInclude Include="smart_cast_impl0.h" />
     <ClInclude Include="smart_cast_impl1.h" />

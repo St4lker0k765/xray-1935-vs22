@@ -76,7 +76,7 @@ IRender_Visual*	CModelPool::Instance_Create(u32 type)
 		break;
 #endif
 	default:
-		Debug.fatal("Unknown visual type");
+		FATAL("Unknown visual type");
 		break;
 	}
 	R_ASSERT	(V);
@@ -99,11 +99,11 @@ IRender_Visual*	CModelPool::Instance_Duplicate	(IRender_Visual* V)
 IRender_Visual*	CModelPool::Instance_Load		(const char* N, BOOL allow_register)
 {
 	IRender_Visual	*V;
-	string512		fn;
+	string_path		fn;
 	string512		name;
 
 	// Add default ext if no ext at all
-	if (0==strext(N))	strconcat	(name,N,".ogf");
+	if (0==strext(N))	strconcat   (sizeof(name), name,N,".ogf");
 	else				strcpy		(name,N);
 
 	// Load data from MESHES or LEVEL
@@ -114,7 +114,7 @@ IRender_Visual*	CModelPool::Instance_Load		(const char* N, BOOL allow_register)
 				Msg("!Can't find model file '%s'.",name);
                 return 0;
 #else            
-				Debug.fatal("Can't find model file '%s'.",name);
+				Debug.fatal(DEBUG_INFO, "Can't find model file '%s'.",name);
 #endif
 			}
 	} else {

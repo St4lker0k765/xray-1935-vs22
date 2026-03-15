@@ -178,7 +178,7 @@ BOOL CPEDef::Load(IReader& F)
 		return FALSE;
 
 	R_ASSERT		(F.find_chunk(PED_CHUNK_NAME));
-	F.r_stringZ		(m_Name);
+	F.r_stringZ(m_Name);
 
 	R_ASSERT		(F.find_chunk(PED_CHUNK_EFFECTDATA));
 	m_MaxParticles	= F.r_u32();
@@ -190,8 +190,8 @@ BOOL CPEDef::Load(IReader& F)
 
 	if (m_Flags.is(dfSprite)){
 		R_ASSERT	(F.find_chunk(PED_CHUNK_SPRITE));
-		F.r_stringZ	(m_ShaderName);
-		F.r_stringZ	(m_TextureName);
+		F.r_stringZ(m_ShaderName);
+		F.r_stringZ(m_TextureName);
 	}
 
 	if (m_Flags.is(dfFramed)){
@@ -225,8 +225,8 @@ BOOL CPEDef::Load(IReader& F)
 #ifdef _EDITOR
 	if (F.find_chunk(PED_CHUNK_OWNER)){
 		AnsiString tmp;
-		F.r_stringZ	(m_OwnerName);
-		F.r_stringZ	(m_ModifName);
+		F.r_stringZ(m_OwnerName, sizeof(m_OwnerName));
+		F.r_stringZ(m_ModifName, sizeof(m_ModifName));
 		F.r			(&m_CreateTime,sizeof(m_CreateTime));
 		F.r			(&m_ModifTime,sizeof(m_ModifTime));
 	}

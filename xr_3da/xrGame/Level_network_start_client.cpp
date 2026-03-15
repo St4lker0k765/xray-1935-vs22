@@ -52,7 +52,7 @@ BOOL CLevel::net_Start_client	( LPCSTR options )
 		// Waiting for connection/configuration completition
 		pApp->LoadTitle						("CLIENT: Spawning...");
 		while (!net_isCompleted_Connect())	Sleep(5);
-		while (!net_isCompleted_Sync())		{ ClientReceive(); Sleep(5); }
+		//while (!net_isCompleted_Sync())		{ ClientReceive(); Sleep(5); }
 		while (!game_configured)			{ ClientReceive(); Sleep(5); }
 		
 		// HUD

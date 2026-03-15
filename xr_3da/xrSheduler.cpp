@@ -38,13 +38,13 @@ void CSheduler::Destroy			()
 		for (u32 it=0; it<Items.size(); it++)
 		{
 			CObject*	O	= dynamic_cast<CObject*> (Items[it].Object);
-			if (O)			strconcat(_objects,*O->cName(),":",*O->cNameSect(),",");
+			if (O)			strconcat(sizeof(_objects), _objects,*O->cName(),":",*O->cNameSect(),",");
 			else			{ 
 				sprintf		(_hex,"%X",size_t(Items[it].Object));
-				strconcat	(_objects,"unknown:",_hex,",");
+				strconcat(sizeof(_objects), _objects,"unknown:",_hex,",");
 			}
 		}
-		Debug.fatal		("Sheduler work-list is not empty\n%s",_objects);
+		Debug.fatal(DEBUG_INFO, "Sheduler work-list is not empty\n%s",_objects);
 	}
 #endif
 
@@ -220,8 +220,8 @@ void CSheduler::Update				()
 
 	// Normal (sheduled)
 	Device.Statistic.Sheduler.Begin	();
-	cycles_limit					= CPU::cycles_per_microsec * u64(mcs);
-	cycles_start					= CPU::GetCycleCount();
+	cycles_limit					= CPU::clk_per_microsec * u64(mcs);
+	cycles_start					= CPU::GetCLK();
 	fibered							= TRUE;
 	SwitchToFiber					(fiber_thread);
 	Device.Statistic.Sheduler.End	();

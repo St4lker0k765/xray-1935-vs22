@@ -342,16 +342,16 @@ void CGameObject::validate_ai_locations			(bool decrement_reference)
 		return;
 	}
 
-//	u64								start = CPU::GetCycleCount();
+//	u64								start = CPU::GetCLK();
 	Fvector							center;
 	Center							(center);
 	center.x						= Position().x;
 	center.z						= Position().z;
 	u32								l_dwNewLevelVertexID = ai().level_graph().vertex(level_vertex_id(),center);
-//	u64								stop = CPU::GetCycleCount();
+//	u64								stop = CPU::GetCLK();
 
 #ifdef _DEBUG
-//	Msg								("%6d Searching for node for object %s (%.5f seconds)",Level().timeServer(),*cName(),float(s64(stop - start))*CPU::cycles2seconds);
+//	Msg								("%6d Searching for node for object %s (%.5f seconds)",Level().timeServer(),*cName(),float(s64(stop - start))*CPU::clk_to_seconds);
 #endif
 	VERIFY							(ai().level_graph().valid_vertex_id(l_dwNewLevelVertexID));
 

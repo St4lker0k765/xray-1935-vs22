@@ -3,25 +3,19 @@
 
 LPSTR _TrimLeft( LPSTR str )
 {
-	LPSTR p = str;
-	while (*p && (*p <= ' '))
-		p++;
-
-	if (p != str) {
-		LPSTR t = str;
-		while (*p) {
-			*t++ = *p++;
-		}
-		*t = 0;
-	}
-
+	LPSTR p 	= str;
+	while( *p && (u8(*p)<=u8(' ')) ) p++;
+    if (p!=str){
+        for (LPSTR t=str; *p; t++,p++) *t=*p;
+        *t = 0;
+    }
 	return str;
 }
 
 LPSTR _TrimRight( LPSTR str )
 {
 	LPSTR p 	= str+xr_strlen(str);
-	while( (p!=str) && ((*p)<=' ') ) p--;
+	while( (p!=str) && (u8(*p)<=u8(' ')) ) p--;
     *(++p) 		= 0;
 	return str;
 }
@@ -98,7 +92,7 @@ LPSTR _GetItems ( LPCSTR src, int idx_start, int idx_end, LPSTR dst, char separa
 	return dst;
 }
 
-u32 _ParseItem ( LPSTR src, xr_token* token_list )
+u32 _ParseItem ( LPCSTR src, xr_token* token_list )
 {
 	for( int i=0; token_list[i].name; i++ )
 		if( !stricmp(src,token_list[i].name) )
@@ -161,6 +155,13 @@ LPSTR _ChangeSymbol ( LPSTR name, char src, char dest )
 		sTmpName ++;
 	}
 	return						name;
+}
+
+xr_string& _ChangeSymbol	( xr_string& name, char src, char dest )
+{
+	for (xr_string::iterator it=name.begin(); it!=name.end(); it++) 
+    	if (*it==src) *it=xr_string::value_type(dest);
+    return  name;
 }
 
 #ifdef M_BORLAND
@@ -325,11 +326,23 @@ void _SequenceToList(RStringVec& lst, LPCSTR in, char separator)
 {
 	lst.clear	();
 	int t_cnt	= _GetItemCount(in,separator);
-	std::string	T;
+	xr_string	T;
 	for (int i=0; i<t_cnt; i++){
 		_GetItem(in,i,T,separator,0);
         _Trim	(T);
         if (T.size()) lst.push_back(T.c_str());
+	}
+}
+
+void _SequenceToList(SStringVec& lst, LPCSTR in, char separator)
+{
+	lst.clear	();
+	int t_cnt	= _GetItemCount(in,separator);
+	xr_string	T;
+	for (int i=0; i<t_cnt; i++){
+		_GetItem(in,i,T,separator,0);
+		_Trim	(T);
+		if (T.size()) lst.push_back(T.c_str());
 	}
 }
 
@@ -345,35 +358,36 @@ xr_string	_ListToSequence(const SStringVec& lst)
 	return out;
 }
 
-
-std::string& _TrimLeft( std::string& str )
+xr_string& _TrimLeft( xr_string& str )
 {
 	LPCSTR b		= str.c_str();
 	LPCSTR p 		= str.c_str();
-	while( *p && ((*p)<=' ') ) p++;
+	while( *p && (u8(*p)<=u8(' ')) ) p++;
     if (p!=b)
     	str.erase	(0,p-b);
 	return str;
 }
 
-std::string& _TrimRight( std::string& str )
+xr_string& _TrimRight( xr_string& str )
 {
 	LPCSTR b		= str.c_str();
     size_t l		= str.length();
-	LPCSTR p 		= str.c_str()+l-1;
-	while( (p!=b) && ((*p)<=' ') ) p--;
-    if (p!=(str+b))	str.erase	(p-b+1,l-(p-b));
+    if (l){
+        LPCSTR p 		= str.c_str()+l-1;
+        while( (p!=b) && (u8(*p)<=u8(' ')) ) p--;
+        if (p!=(str+b))	str.erase	(p-b+1,l-(p-b));
+    }
 	return str;
 }
 
-std::string& _Trim( std::string& str )
+xr_string& _Trim( xr_string& str )
 {
 	_TrimLeft		( str );
 	_TrimRight		( str );
 	return str;
 }
 
-LPCSTR _CopyVal ( LPCSTR src, std::string& dst, char separator )
+LPCSTR _CopyVal ( LPCSTR src, xr_string& dst, char separator )
 {
 	LPCSTR		p;
 	ptrdiff_t	n;
@@ -384,7 +398,7 @@ LPCSTR _CopyVal ( LPCSTR src, std::string& dst, char separator )
 	return		dst.c_str();
 }
 
-LPCSTR _GetItem ( LPCSTR src, int index, std::string& dst, char separator, LPCSTR def, bool trim )
+LPCSTR _GetItem ( LPCSTR src, int index, xr_string& dst, char separator, LPCSTR def, bool trim )
 {
 	LPCSTR	ptr;
 	ptr			= _SetPos	( src, index, separator );
@@ -396,12 +410,14 @@ LPCSTR _GetItem ( LPCSTR src, int index, std::string& dst, char separator, LPCST
 
 shared_str	_ListToSequence(const RStringVec& lst)
 {
-	string4096 		out;
+	xr_string		out;
 	if (lst.size()){
-    	strcpy		(out,*lst.front());
-		for (RStringVec::const_iterator s_it=lst.begin()+1; s_it!=lst.end(); s_it++)
-        	strconcat(out,",",**s_it);
+    	out			= *lst.front();
+		for (RStringVec::const_iterator s_it=lst.begin()+1; s_it!=lst.end(); s_it++){
+        	out		+= ",";
+            out		+= **s_it;
+        }
 	}
-	return shared_str	(out);
+	return shared_str	(out.c_str());
 }
 
